@@ -1,4 +1,4 @@
-# Checklist Completo do Casamento: página de vendas
+# CheckLove: página de vendas do Checklist Completo do Casamento
 
 - `index.html`: página de vendas (2 planos + pop-up). Preencha `window.OFERTA` no começo do arquivo:
   - `PIXEL_ID`: Pixel do Meta (vazio = desligado)
