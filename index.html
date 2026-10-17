@@ -87,11 +87,13 @@ header a.mini{white-space:nowrap;font-size:13px;font-weight:600;color:var(--tint
 .lista-ok li::before{content:'✓';position:absolute;left:0;top:0;color:var(--verde);font-weight:800}
 
 /* por dentro */
-.trilho{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 16px 18px;margin:24px -16px 0;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
-.trilho button{flex:none;width:200px;scroll-snap-align:center;border:0;background:none;padding:0;cursor:zoom-in}
-.trilho img{width:100%;border-radius:8px;box-shadow:0 10px 24px -14px rgba(40,20,80,.5);border:1px solid var(--linha)}
-.trilho span{display:block;font-size:12.5px;color:var(--suave);margin-top:8px;font-weight:500}
-.dica-arraste{text-align:center;font-size:12.5px;color:var(--mudo)}
+.esteira{overflow:hidden;margin:24px -16px 0;padding:6px 0 18px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.esteira-faixa{display:flex;gap:14px;width:max-content;animation:rola 28s linear infinite}
+.esteira figure{flex:none;width:200px;pointer-events:none;user-select:none}
+.esteira img{width:100%;border-radius:8px;box-shadow:0 10px 24px -14px rgba(40,20,80,.5);border:1px solid var(--linha);-webkit-user-drag:none}
+.esteira figcaption{font-size:12.5px;color:var(--suave);margin-top:8px;font-weight:500;text-align:center}
+@keyframes rola{to{transform:translateX(calc(-50% - 7px))}}
+@media (prefers-reduced-motion:reduce){.esteira-faixa{animation-duration:80s}}
 .itens{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
 .item{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:13px 14px;font-size:14px;font-weight:500;color:var(--tinta);display:flex;gap:8px;align-items:flex-start;line-height:1.35}
 .item i{font-style:normal}
@@ -155,13 +157,6 @@ header a.mini{white-space:nowrap;font-size:13px;font-weight:600;color:var(--tint
 footer{padding:28px 0 46px;text-align:center;font-size:12.5px;color:var(--mudo)}
 footer p+p{margin-top:6px}
 
-/* lightbox */
-.lb{position:fixed;inset:0;z-index:60;background:rgba(20,12,36,.92);display:none;align-items:center;justify-content:center;padding:14px}
-.lb.on{display:flex}
-.lb img{max-height:88vh;max-width:100%;border-radius:6px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
-.lb button{position:absolute;border:0;background:rgba(255,255,255,.14);color:#fff;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer}
-.lb .x{top:12px;right:12px}.lb .ant{left:8px;top:50%;margin-top:-22px}.lb .prox{right:8px;top:50%;margin-top:-22px}
-
 /* pop-up */
 .pop{position:fixed;inset:0;z-index:50;background:rgba(28,28,40,.62);display:none;align-items:center;justify-content:center;padding:16px}
 .pop.on{display:flex}
@@ -184,7 +179,7 @@ footer p+p{margin-top:6px}
   .botoes{grid-template-columns:1fr 1fr}
   .passos{grid-template-columns:repeat(3,1fr)}
   .planos{grid-template-columns:1fr 1fr;align-items:start}
-  .trilho button{width:230px}
+  .esteira figure{width:230px}
 }
 </style>
 </head>
@@ -203,7 +198,7 @@ footer p+p{margin-top:6px}
     </div>
     <div class="leque">
       <img class="l1" src="img/checklist-03.webp" alt="Página do cronograma do checklist" width="640" height="905">
-      <img class="l2" src="img/checklist-10.webp" alt="Checklist da cerimônia e da festa" width="640" height="905">
+      <img class="l2" src="img/checklist-08.webp" alt="Checklist da cerimônia e da festa" width="640" height="905">
       <img class="l3" src="img/checklist-01.webp" alt="Capa do Checklist Completo do Casamento" width="640" height="905">
     </div>
     <div class="mini-info"><span>✓ PDF para imprimir ou usar no celular</span><span>✓ Acesso imediato no e-mail</span></div>
@@ -251,12 +246,10 @@ footer p+p{margin-top:6px}
 <section id="dentro" style="padding-top:10px">
   <div class="wrap">
     <h2>Veja <em>por dentro</em></h2>
-    <p class="sub">Páginas reais do checklist. Toque para ver em tela cheia.</p>
-    <div class="trilho" id="trilho"></div>
-    <p class="dica-arraste">Arraste para o lado →</p>
+    <p class="sub">Páginas reais do checklist.</p>
+    <div class="esteira"><div class="esteira-faixa"><figure><img src="img/checklist-03.webp" alt="Cronograma mês a mês" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma mês a mês</figcaption></figure><figure><img src="img/checklist-08.webp" alt="Cerimônia e festa" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cerimônia e festa</figcaption></figure><figure><img src="img/checklist-13.webp" alt="Enxoval por cômodos" width="640" height="905" loading="lazy" draggable="false"><figcaption>Enxoval por cômodos</figcaption></figure><figure><img src="img/checklist-18.webp" alt="Lista de convidados" width="640" height="905" loading="lazy" draggable="false"><figcaption>Lista de convidados</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-03.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma mês a mês</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-08.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cerimônia e festa</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-13.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Enxoval por cômodos</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-18.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Lista de convidados</figcaption></figure></div></div>
     <div class="itens">
       <div class="item"><i>🗓️</i>Cronograma mês a mês</div>
-      <div class="item"><i>🎨</i>Inspirações de paletas de cores</div>
       <div class="item"><i>📜</i>Checklist do casamento civil</div>
       <div class="item"><i>💒</i>Checklist da cerimônia e da festa</div>
       <div class="item"><i>🍳</i>Checklist do chá de panela</div>
@@ -386,8 +379,6 @@ footer p+p{margin-top:6px}
 
 <footer><div class="wrap"><p>CheckLove · Checklist Completo do Casamento · Material digital em PDF</p><p>Este site não faz parte do Facebook nem do Google e não é endossado por eles.</p></div></footer>
 
-<!-- lightbox -->
-<div class="lb" id="lb"><button class="x" aria-label="Fechar">✕</button><button class="ant" aria-label="Anterior">‹</button><img alt="Página do material"><button class="prox" aria-label="Próxima">›</button></div>
 
 <!-- pop-up -->
 <div class="pop" id="pop" role="dialog" aria-modal="true">
@@ -411,29 +402,6 @@ footer p+p{margin-top:6px}
 <script>
 (function(){
   var O = window.OFERTA;
-  /* páginas do trilho e do lightbox */
-  var PAGINAS = [['checklist-01','Capa'],['checklist-03','Cronograma mês a mês'],['checklist-04','Cronograma mês a mês'],['checklist-07','Paletas de cores'],['checklist-09','Casamento civil'],['checklist-10','Cerimônia e festa'],['checklist-12','Chá de lingerie'],['checklist-14','Enxoval: como começar'],['checklist-15','Enxoval por cômodos'],['checklist-18','Orçamentos de fornecedores'],['checklist-20','Lista de convidados'],['checklist-26','Gastos totais']];
-  var trilho = document.getElementById('trilho');
-  PAGINAS.forEach(function(p, i){
-    var b = document.createElement('button'); b.type = 'button';
-    b.innerHTML = '<img loading="lazy" src="img/' + p[0] + '.webp" alt="' + p[1] + '" width="640" height="905"><span>' + p[1] + '</span>';
-    b.addEventListener('click', function(){ abrir(PAGINAS.map(function(x){ return x[0]; }), i); });
-    trilho.appendChild(b);
-  });
-  var lb = document.getElementById('lb'), lbImg = lb.querySelector('img'), lista = [], pos = 0;
-  function mostrar(){ lbImg.src = 'img/' + lista[pos] + '.webp'; }
-  function abrir(l, i){ lista = l; pos = i; mostrar(); lb.classList.add('on'); }
-  lb.querySelector('.x').onclick = function(){ lb.classList.remove('on'); };
-  lb.querySelector('.ant').onclick = function(e){ e.stopPropagation(); pos = (pos - 1 + lista.length) % lista.length; mostrar(); };
-  lb.querySelector('.prox').onclick = function(e){ e.stopPropagation(); pos = (pos + 1) % lista.length; mostrar(); };
-  lb.addEventListener('click', function(e){ if (e.target === lb) lb.classList.remove('on'); });
-  document.querySelectorAll('[data-lb]').forEach(function(img){
-    img.addEventListener('click', function(){
-      var grupo = [].map.call(img.parentNode.querySelectorAll('[data-lb]'), function(x){ return x.getAttribute('data-lb'); });
-      abrir(grupo, grupo.indexOf(img.getAttribute('data-lb')));
-    });
-  });
-
   /* checkout com UTMs */
   var pop = document.getElementById('pop'), aviso = document.getElementById('aviso');
   function ir(url, valor){
@@ -452,7 +420,7 @@ footer p+p{margin-top:6px}
     });
   });
   pop.addEventListener('click', function(e){ if (e.target === pop || e.target.hasAttribute('data-fechar')) pop.classList.remove('on'); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { pop.classList.remove('on'); lb.classList.remove('on'); } });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') pop.classList.remove('on'); });
 })();
 </script>
 </body>
