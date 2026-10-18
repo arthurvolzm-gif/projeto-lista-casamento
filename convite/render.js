@@ -160,7 +160,7 @@
     const foto = env.classList.contains('envf');
     if (foto) { const m = /url\('([^']+)'\)/.exec(env.style.getPropertyValue('--ab')); if (m) new Image().src = m[1]; }
     const etapas = foto
-      ? [['aba', 380], ['sobe', 1500], ['tela', 2500], ['fim', 3150]]
+      ? [['aba', 900], ['sobe', 3300], ['tela', 4900], ['fim', 5900]]
       : [['aba', 350], ['sobe', 1150], ['tela', 2050], ['fim', 2750]];
     const abrir = () => {
       if (env.classList.contains('abrindo')) return;
