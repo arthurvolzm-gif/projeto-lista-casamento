@@ -110,3 +110,31 @@ textarea{resize:vertical}
   .topo{flex-wrap:wrap}
   #bt-sair{order:-1}
 }
+
+/* seções */
+.secoes{display:grid;gap:6px}
+.sec-linha{display:flex;align-items:center;gap:6px;border:1px solid var(--linha);border-radius:10px;padding:6px 8px 6px 12px;font-size:13.5px}
+.sec-linha span{flex:1}
+.sec-linha button{border:1px solid var(--linha);background:#fff;border-radius:8px;min-width:32px;height:30px;cursor:pointer;color:var(--roxo-esc);font-size:13px}
+.sec-linha button:disabled{opacity:.3;cursor:default}
+.sec-linha .tira{color:#b33;padding:0 10px}
+.sec-linha.fora{background:#faf9fc;color:var(--suave)}
+.sec-linha .poe{padding:0 10px;border-color:#dccbfb}
+.sec-bts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.bt-tira,.bt-poe{border:1px dashed #e3b9b9;background:#fff;color:#b33;border-radius:10px;padding:7px 12px;font:600 12.5px 'Poppins',sans-serif;cursor:pointer}
+.bt-poe{border-color:#cdb8f5;color:var(--roxo-esc);background:var(--roxo-sua)}
+.bloco.desligado summary{color:#a9a6b3}
+.bloco.pisca{animation:pisca 1.4s ease}
+@keyframes pisca{30%{box-shadow:0 0 0 4px #d9c3fb}}
+/* seleção na prévia */
+.tela .cv [data-sec]{cursor:pointer;position:relative}
+.tela .cv [data-sec]:hover{outline:1.5px dashed rgba(154,86,246,.55);outline-offset:-4px}
+.tela .cv [data-sec].sel{outline:2px solid #9a56f6;outline-offset:-4px}
+.sec-barra{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:4px;background:#1c1c28;color:#fff;border-radius:999px;padding:4px 6px 4px 12px;box-shadow:0 8px 20px rgba(0,0,0,.25);font:600 11.5px 'Poppins',sans-serif;white-space:nowrap}
+.sec-barra button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:999px;height:28px;min-width:28px;padding:0 9px;font:600 11.5px 'Poppins',sans-serif;cursor:pointer}
+.sec-barra button:disabled{opacity:.3}
+.sec-barra [data-tira]{background:#c0392b}
+.cv-add{padding:10px 20px 0;text-align:center}
+.add-bt{border:1.5px dashed #b99cf0;background:rgba(255,255,255,.8);color:#6b34c9;border-radius:12px;padding:10px 16px;font:600 13px 'Poppins',sans-serif;cursor:pointer}
+.add-lista{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
+.add-lista button{border:1px solid #dccbfb;background:#fff;color:#6b34c9;border-radius:999px;padding:6px 12px;font:500 12px 'Poppins',sans-serif;cursor:pointer}

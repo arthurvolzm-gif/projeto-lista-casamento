@@ -51,6 +51,18 @@
 
   function linkMapa(d) { return d.linkMapa || (d.localEndereco ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((d.localNome ? d.localNome + ', ' : '') + d.localEndereco) : ''); }
 
+  /* seções do convite: ordem padrão e nomes */
+  const SECOES = [
+    ['topo', 'Capa'], ['foto1', 'Foto do casal 1'], ['versiculo', 'Versículo ou frase'], ['pais', 'Pais dos noivos'],
+    ['data', 'Data'], ['local', 'Local'], ['botoes', 'Botões'], ['foto2', 'Foto do casal 2'], ['traje', 'Dress code'],
+    ['foto3', 'Foto do casal 3'], ['final', 'Mensagem final'], ['fotofinal', 'Foto do final']
+  ];
+  /* convites antigos (sem lista de seções) usam as opções "mostrar" */
+  function secoes(d) {
+    if (Array.isArray(d.secoes)) return d.secoes.filter(id => SECOES.some(s => s[0] === id));
+    return SECOES.map(s => s[0]).filter(id => !((id === 'versiculo' && d.mostrarVersiculo === false) || (id === 'pais' && d.mostrarPais === false) || (id === 'traje' && d.mostrarTraje === false)));
+  }
+
   /* HTML do convite */
   function html(d, opt = {}) {
     const t = tema(d.tema), [i1, i2] = iniciais(d), di = dataInfo(d), nomes = `${esc(d.noiva)} <i>&amp;</i> ${esc(d.noivo)}`;
@@ -63,31 +75,25 @@
       d.botaoPresenca ? `<button class="cv-bt" type="button" data-rsvp><span>${ICONES.presenca}</span>Confirmar presença</button>` : '',
       d.botaoPresentes && d.linkPresentes ? `<a class="cv-bt" href="${esc(d.linkPresentes)}" target="_blank" rel="noopener"><span>${ICONES.presentes}</span>Lista de presentes</a>` : ''
     ].filter(Boolean);
-    const fotos = (d.fotos || []).filter(Boolean);
-    return `<div class="cv" style="--fundo:${t.fundo};--texto:${t.texto};--dest:${t.destaque};--suave:${t.suave};--aqa:${t.decor.a};--aqb:${t.decor.b};--script:'${t.script}';--serif:'${t.serif}';--sans:'${t.sans}'">
-      <section class="cv-topo rv">
-        <div class="cv-mono">${esc(i1)}<span>&amp;</span>${esc(i2)}</div>
-        ${d.frase ? `<p class="cv-frase">${esc(d.frase)}</p>` : ''}
-        ${capa}
-        <h1 class="cv-nomes">${nomes}</h1>
-        ${d.convite ? `<p class="cv-txt">${br(d.convite)}</p>` : ''}
-      </section>
-      ${foto(fotos[0], 'funde', 'Foto do casal', opt.preview)}
-      ${d.mostrarVersiculo && d.versiculo ? `<section class="cv-versiculo rv"><p>"${esc(d.versiculo)}"</p>${d.versiculoRef ? `<small>${esc(d.versiculoRef)}</small>` : ''}</section>` : ''}
-      ${d.mostrarPais && (d.paisNoiva || d.paisNoivo) ? `<section class="cv-pais rv"><p class="cv-rot">Com a bênção de Deus e de seus pais</p><div class="cv-pais-g"><div>${br(d.paisNoiva)}</div><div>${br(d.paisNoivo)}</div></div><h2 class="cv-nomes peq">${nomes}</h2><p class="cv-rot">convidam para o seu casamento</p></section>` : ''}
-      ${di ? `<section class="cv-data rv"><p class="cv-rot">A realizar-se no dia</p><div class="cv-dia">${di.dia}</div><div class="cv-mes">de ${di.mes}</div><div class="cv-hora">${di.semana}${di.hora ? ' às ' + di.hora : ''}</div>${d.mostrarContagem ? `<div class="cv-cont" data-quando="${di.quando.getTime()}"></div>` : ''}</section>` : ''}
-      ${d.localNome || d.localEndereco ? `<section class="cv-local rv"><h3>${esc(d.localNome)}</h3><p>${br(d.localEndereco)}</p></section>` : ''}
-      ${botoes.length ? `<section class="cv-botoes rv"><p class="cv-rot">Toque nos botões abaixo</p><div class="cv-bts n${botoes.length}">${botoes.join('')}</div>${d.botaoPresenca && d.prazoPresenca ? `<p class="cv-prazo">Confirme sua presença até ${esc(d.prazoPresenca.split('-').reverse().join('/'))}</p>` : ''}</section>` : ''}
-      ${fotos[1] || (opt.preview && !fotos.length) ? foto(fotos[1], 'funde', 'Foto do casal', opt.preview) : ''}
-      ${d.mostrarTraje && d.traje ? `<section class="cv-traje rv"><p class="cv-rot">Dress code</p><h3>${esc(d.traje)}</h3>${d.trajeTexto ? `<p>${br(d.trajeTexto)}</p>` : ''}${(d.trajeCores || []).filter(Boolean).length ? `<div class="cv-cores">${d.trajeCores.filter(Boolean).map(c => `<span style="background:${esc(c)}"></span>`).join('')}</div>` : ''}</section>` : ''}
-      <section class="cv-final rv">
-        ${d.mensagemFinal ? `<p class="cv-txt">${br(d.mensagemFinal)}</p>` : ''}
-        <p class="cv-rot">Com carinho</p>
-        <h2 class="cv-nomes">${nomes}</h2>
-      </section>
-      ${foto(d.fotoFinal || fotos[2], 'funde topo', 'Foto do casal', false)}
-      <footer class="cv-rod">Convite digital feito com CheckLove</footer>
-    </div>`;
+    const fotos = d.fotos || [], P = opt.preview;
+    const sec = (id, cls, corpo) => `<section class="${cls} rv" data-sec="${id}">${corpo}</section>`;
+    const fotoSec = (id, url, cls) => { const h = foto(url, cls, 'Foto do casal', P); return h ? h.replace('<div class="cv-foto', `<div data-sec="${id}" class="cv-foto`) : ''; };
+    const R = {
+      topo: () => sec('topo', 'cv-topo', `<div class="cv-mono">${esc(i1)}<span>&amp;</span>${esc(i2)}</div>${d.frase ? `<p class="cv-frase">${esc(d.frase)}</p>` : ''}${capa}<h1 class="cv-nomes">${nomes}</h1>${d.convite ? `<p class="cv-txt">${br(d.convite)}</p>` : ''}`),
+      foto1: () => fotoSec('foto1', fotos[0], 'funde'),
+      foto2: () => fotoSec('foto2', fotos[1], 'funde'),
+      foto3: () => fotoSec('foto3', fotos[2], 'funde'),
+      fotofinal: () => fotoSec('fotofinal', d.fotoFinal, 'funde topo'),
+      versiculo: () => d.versiculo || P ? sec('versiculo', 'cv-versiculo', `<p>"${esc(d.versiculo)}"</p>${d.versiculoRef ? `<small>${esc(d.versiculoRef)}</small>` : ''}`) : '',
+      pais: () => d.paisNoiva || d.paisNoivo || P ? sec('pais', 'cv-pais', `<p class="cv-rot">Com a bênção de Deus e de seus pais</p><div class="cv-pais-g"><div>${br(d.paisNoiva)}</div><div>${br(d.paisNoivo)}</div></div><h2 class="cv-nomes peq">${nomes}</h2><p class="cv-rot">convidam para o seu casamento</p>`) : '',
+      data: () => di ? sec('data', 'cv-data', `<p class="cv-rot">A realizar-se no dia</p><div class="cv-dia">${di.dia}</div><div class="cv-mes">de ${di.mes}</div><div class="cv-hora">${di.semana}${di.hora ? ' às ' + di.hora : ''}</div>${d.mostrarContagem ? `<div class="cv-cont" data-quando="${di.quando.getTime()}"></div>` : ''}`) : '',
+      local: () => d.localNome || d.localEndereco ? sec('local', 'cv-local', `<h3>${esc(d.localNome)}</h3><p>${br(d.localEndereco)}</p>`) : '',
+      botoes: () => botoes.length ? sec('botoes', 'cv-botoes', `<p class="cv-rot">Toque nos botões abaixo</p><div class="cv-bts n${botoes.length}">${botoes.join('')}</div>${d.botaoPresenca && d.prazoPresenca ? `<p class="cv-prazo">Confirme sua presença até ${esc(d.prazoPresenca.split('-').reverse().join('/'))}</p>` : ''}`) : '',
+      traje: () => d.traje ? sec('traje', 'cv-traje', `<p class="cv-rot">Dress code</p><h3>${esc(d.traje)}</h3>${d.trajeTexto ? `<p>${br(d.trajeTexto)}</p>` : ''}${(d.trajeCores || []).filter(Boolean).length ? `<div class="cv-cores">${d.trajeCores.filter(Boolean).map(c => `<span style="background:${esc(c)}"></span>`).join('')}</div>` : ''}`) : '',
+      final: () => sec('final', 'cv-final', `${d.mensagemFinal ? `<p class="cv-txt">${br(d.mensagemFinal)}</p>` : ''}<p class="cv-rot">Com carinho</p><h2 class="cv-nomes">${nomes}</h2>`)
+    };
+    const corpo = secoes(d).map(id => R[id] ? R[id]() : '').join('\n');
+    return `<div class="cv" style="--fundo:${t.fundo};--texto:${t.texto};--dest:${t.destaque};--suave:${t.suave};--aqa:${t.decor.a};--aqb:${t.decor.b};--script:'${t.script}';--serif:'${t.serif}';--sans:'${t.sans}'">${corpo}${P ? '<div class="cv-add" data-add></div>' : ''}<footer class="cv-rod">Convite digital feito com CheckLove</footer></div>`;
   }
 
   /* contagem regressiva */
@@ -106,15 +112,19 @@
     els.forEach(e => io.observe(e));
   }
 
-  /* envelope de abertura (como no vídeo): toca no lacre, a aba abre, a carta sobe e o convite aparece */
+  /* envelope de abertura em 3D (como no vídeo): toca no lacre, a aba gira, a carta sai e a "câmera" entra na carta */
   function envelope(d, opt = {}) {
     const t = tema(d.tema), [i1, i2] = iniciais(d), e = t.env;
-    return `<div class="env env-${e.padrao}" style="--papel:${e.papel};--aba:${e.aba};--borda:${e.borda};--lacre:${e.lacre};--lacreEsc:${e.lacreEsc};--cartao:${t.fundo};--texto:${t.texto};--script:'${t.script}';--serif:'${t.serif}'">
-      <div class="env-corpo">
-        <div class="env-carta"><div class="env-carta-in"><span class="env-carta-mono">${esc(i1)}<i>&amp;</i>${esc(i2)}</span><span class="env-carta-nomes">${esc(d.noiva)} &amp; ${esc(d.noivo)}</span></div></div>
-        <div class="env-lado esq"></div><div class="env-lado dir"></div><div class="env-baixo"></div>
-        <div class="env-aba"><div class="env-aba-in"></div></div>
-        <button class="env-lacre" type="button" aria-label="Abrir o convite"><span>${esc(i1)}<i>&amp;</i>${esc(i2)}</span></button>
+    return `<div class="env env-${e.padrao}" style="--papel:${e.papel};--aba:${e.aba};--borda:${e.borda};--lacre:${e.lacre};--lacreEsc:${e.lacreEsc};--cartao:${t.fundo};--texto:${t.texto};--fundoEnv:${t.decor.b};--script:'${t.script}';--serif:'${t.serif}'">
+      <div class="env-cena">
+        <div class="env-obj">
+          <div class="env-sombra"></div>
+          <div class="env-fundo"></div>
+          <div class="env-carta"><div class="env-carta-in"><span class="env-carta-mono">${esc(i1)}<i>&amp;</i>${esc(i2)}</span><span class="env-carta-nomes">${esc(d.noiva)} &amp; ${esc(d.noivo)}</span></div></div>
+          <div class="env-bolso"><i class="esq"></i><i class="dir"></i><i class="baixo"></i></div>
+          <div class="env-aba"><div class="env-aba-frente"></div><div class="env-aba-verso"></div></div>
+          <button class="env-lacre" type="button" aria-label="Abrir o convite"><span>${esc(i1)}<i>&amp;</i>${esc(i2)}</span></button>
+        </div>
       </div>
       <p class="env-dica">${opt.dica || 'Toque no lacre para abrir'}</p>
     </div>`;
@@ -127,15 +137,14 @@
       if (env.classList.contains('abrindo')) return;
       env.classList.add('abrindo');
       if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
-      setTimeout(() => env.classList.add('aba'), 350);
-      setTimeout(() => env.classList.add('sobe'), 1150);
-      setTimeout(() => env.classList.add('tela'), 2050);
-      setTimeout(() => { env.classList.add('fim'); aoAbrir && aoAbrir(); }, 2750);
-      setTimeout(() => env.remove(), 3500);
+      setTimeout(() => env.classList.add('aba'), 300);
+      setTimeout(() => env.classList.add('sobe'), 1250);
+      setTimeout(() => env.classList.add('tela'), 2350);
+      setTimeout(() => { env.classList.add('fim'); aoAbrir && aoAbrir(); }, 3250);
+      setTimeout(() => env.remove(), 4000);
     };
-    env.querySelector('.env-lacre').addEventListener('click', abrir);
-    env.querySelector('.env-corpo').addEventListener('click', abrir);
+    env.addEventListener('click', abrir);
   }
 
-  window.Convite = { html, envelope, ligarEnvelope, revelar, contagem, tema, dataInfo, esc, ICONES };
+  window.Convite = { SECOES, secoes, html, envelope, ligarEnvelope, revelar, contagem, tema, dataInfo, esc, ICONES };
 })();

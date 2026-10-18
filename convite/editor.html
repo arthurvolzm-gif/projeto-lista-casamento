@@ -55,6 +55,11 @@
   <main class="area">
     <div class="painel" id="painel">
 
+      <details class="bloco" id="bloco-secoes"><summary>📋 Seções do convite</summary>
+        <p class="dica">Toque numa parte do convite, na prévia, para editar, remover ou mudar de lugar. Aqui você vê todas de uma vez.</p>
+        <div class="secoes" id="secoes"></div>
+      </details>
+
       <details class="bloco" open><summary>🎨 Tema</summary>
         <div class="temas" id="temas"></div>
       </details>
@@ -63,32 +68,35 @@
         <div class="dois"><div><label>Nome da noiva</label><input data-k="noiva" maxlength="40"></div><div><label>Nome do noivo</label><input data-k="noivo" maxlength="40"></div></div>
       </details>
 
-      <details class="bloco"><summary>💌 Capa</summary>
+      <details class="bloco" data-secs="topo"><summary>💌 Capa</summary>
+        <div class="sec-bts" data-secs="topo"></div>
         <label>Frase do topo</label><input data-k="frase" maxlength="60" placeholder="O início do nosso para sempre">
         <label>Foto da capa (fica dentro da coroa de folhas)</label>
         <div class="foto-campo" data-foto="fotoCapa"></div>
         <label>Texto do convite</label><textarea data-k="convite" maxlength="300" rows="3"></textarea>
       </details>
 
-      <details class="bloco"><summary>📖 Versículo ou frase</summary>
-        <label class="chave"><input type="checkbox" data-k="mostrarVersiculo"> Mostrar no convite</label>
+      <details class="bloco" data-secs="versiculo"><summary>📖 Versículo ou frase</summary>
+        <div class="sec-bts" data-secs="versiculo"></div>
         <label>Texto</label><textarea data-k="versiculo" maxlength="240" rows="2"></textarea>
         <label>Referência</label><input data-k="versiculoRef" maxlength="40" placeholder="Marcos 10:9">
       </details>
 
-      <details class="bloco"><summary>👨‍👩‍👧 Pais dos noivos</summary>
-        <label class="chave"><input type="checkbox" data-k="mostrarPais"> Mostrar no convite</label>
+      <details class="bloco" data-secs="pais"><summary>👨‍👩‍👧 Pais dos noivos</summary>
+        <div class="sec-bts" data-secs="pais"></div>
         <div class="dois"><div><label>Pais da noiva</label><textarea data-k="paisNoiva" rows="2" maxlength="120"></textarea></div><div><label>Pais do noivo</label><textarea data-k="paisNoivo" rows="2" maxlength="120"></textarea></div></div>
         <p class="dica">Um nome por linha.</p>
       </details>
 
-      <details class="bloco"><summary>📷 Fotos do casal</summary>
+      <details class="bloco" data-secs="foto1,foto2,foto3,fotofinal"><summary>📷 Fotos do casal</summary>
+        <div class="sec-bts" data-secs="foto1,foto2,foto3,fotofinal"></div>
         <p class="dica">Aparecem ao longo do convite, se desfazendo no fundo.</p>
         <div class="fotos3"><div class="foto-campo" data-foto="fotos.0"></div><div class="foto-campo" data-foto="fotos.1"></div><div class="foto-campo" data-foto="fotos.2"></div></div>
         <label>Foto do final (opcional)</label><div class="foto-campo" data-foto="fotoFinal"></div>
       </details>
 
-      <details class="bloco"><summary>📅 Data e local</summary>
+      <details class="bloco" data-secs="data,local"><summary>📅 Data e local</summary>
+        <div class="sec-bts" data-secs="data,local"></div>
         <div class="dois"><div><label>Data</label><input type="date" data-k="data"></div><div><label>Horário</label><input type="time" data-k="hora"></div></div>
         <label class="chave"><input type="checkbox" data-k="mostrarContagem"> Mostrar contagem regressiva</label>
         <label>Nome do local</label><input data-k="localNome" maxlength="80">
@@ -96,7 +104,8 @@
         <label>Link do mapa (opcional)</label><input data-k="linkMapa" type="url" placeholder="Se deixar vazio, usamos o Google Maps com o endereço">
       </details>
 
-      <details class="bloco"><summary>🔘 Botões</summary>
+      <details class="bloco" data-secs="botoes"><summary>🔘 Botões</summary>
+        <div class="sec-bts" data-secs="botoes"></div>
         <label class="chave"><input type="checkbox" data-k="botaoLocal"> Localização</label>
         <label class="chave"><input type="checkbox" data-k="botaoPresenca"> Confirmar presença</label>
         <label>Confirmar até (opcional)</label><input type="date" data-k="prazoPresenca">
@@ -106,15 +115,16 @@
         <input data-k="linkSite" type="url" placeholder="Link do seu site">
       </details>
 
-      <details class="bloco"><summary>👗 Traje</summary>
-        <label class="chave"><input type="checkbox" data-k="mostrarTraje"> Mostrar no convite</label>
+      <details class="bloco" data-secs="traje"><summary>👗 Traje</summary>
+        <div class="sec-bts" data-secs="traje"></div>
         <label>Traje</label><input data-k="traje" list="trajes" maxlength="40">
         <datalist id="trajes"><option>Traje fino</option><option>Traje social</option><option>Esporte fino</option><option>Passeio completo</option><option>Black tie</option><option>Traje casual</option></datalist>
         <label>Observação</label><textarea data-k="trajeTexto" rows="2" maxlength="200"></textarea>
         <label>Cores sugeridas</label><div class="cores" id="cores"></div>
       </details>
 
-      <details class="bloco"><summary>💛 Mensagem final</summary>
+      <details class="bloco" data-secs="final"><summary>💛 Mensagem final</summary>
+        <div class="sec-bts" data-secs="final"></div>
         <label>Mensagem</label><textarea data-k="mensagemFinal" rows="2" maxlength="240"></textarea>
       </details>
 

@@ -54,7 +54,7 @@
   }
   function preencher() {
     $$('[data-k]').forEach(el => { const v = pegar(el.dataset.k); if (el.type === 'checkbox') el.checked = !!v; else el.value = v == null ? '' : v; });
-    temas(); $$('.foto-campo').forEach(fotoCampo); cores(); musicaCampo();
+    temas(); $$('.foto-campo').forEach(fotoCampo); cores(); musicaCampo(); listaSecoes(); botoesSecoes();
   }
   $$('[data-k]').forEach(el => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
     por(el.dataset.k, el.type === 'checkbox' ? el.checked : el.value); mudou();
@@ -108,6 +108,74 @@
     };
   }
 
+  /* ---------- seções (remover, adicionar, mudar de lugar) ---------- */
+  const C = window.Convite, NOME = Object.fromEntries(C.SECOES.map(x => x));
+  const ativa = id => conv.dados.secoes.includes(id);
+  function adicionar(id) {
+    if (ativa(id)) return;
+    const ordem = C.SECOES.map(x => x[0]), l = conv.dados.secoes;
+    let pos = 0; /* entra logo depois da seção ativa que vem antes dela na ordem padrão */
+    for (let i = ordem.indexOf(id) - 1; i >= 0; i--) { const j = l.indexOf(ordem[i]); if (j >= 0) { pos = j + 1; break; } }
+    l.splice(pos, 0, id); secoesMudaram(id);
+  }
+  function remover(id) { conv.dados.secoes = conv.dados.secoes.filter(x => x !== id); selecionada = null; secoesMudaram(); }
+  function mover(id, dir) {
+    const l = conv.dados.secoes, i = l.indexOf(id), j = i + dir;
+    if (i < 0 || j < 0 || j >= l.length) return;
+    [l[i], l[j]] = [l[j], l[i]]; secoesMudaram(id);
+  }
+  function secoesMudaram(foco) { listaSecoes(); botoesSecoes(); if (foco) selecionada = foco; previa(); mudou(); }
+  function listaSecoes() {
+    const l = conv.dados.secoes, fora = C.SECOES.map(x => x[0]).filter(id => !l.includes(id));
+    $('#secoes').innerHTML = l.map((id, i) => `<div class="sec-linha"><span>${NOME[id]}</span><button type="button" data-m="-1" data-id="${id}" ${i ? '' : 'disabled'} title="Subir">↑</button><button type="button" data-m="1" data-id="${id}" ${i < l.length - 1 ? '' : 'disabled'} title="Descer">↓</button><button type="button" class="tira" data-r="${id}">Remover</button></div>`).join('') +
+      (fora.length ? '<p class="dica" style="margin-top:12px">Fora do convite:</p>' + fora.map(id => `<div class="sec-linha fora"><span>${NOME[id]}</span><button type="button" class="poe" data-a="${id}">＋ Adicionar</button></div>`).join('') : '');
+    $$('#secoes [data-m]').forEach(b => b.onclick = () => mover(b.dataset.id, Number(b.dataset.m)));
+    $$('#secoes [data-r]').forEach(b => b.onclick = () => remover(b.dataset.r));
+    $$('#secoes [data-a]').forEach(b => b.onclick = () => adicionar(b.dataset.a));
+  }
+  function botoesSecoes() {
+    $$('.sec-bts').forEach(box => {
+      const ids = box.dataset.secs.split(',');
+      box.innerHTML = ids.map(id => ativa(id)
+        ? `<button type="button" class="bt-tira" data-r="${id}">🗑 Remover ${ids.length > 1 ? '"' + NOME[id] + '" ' : ''}do convite</button>`
+        : `<button type="button" class="bt-poe" data-a="${id}">＋ Adicionar ${ids.length > 1 ? '"' + NOME[id] + '" ' : ''}ao convite</button>`).join('');
+      box.querySelectorAll('[data-r]').forEach(b => b.onclick = () => remover(b.dataset.r));
+      box.querySelectorAll('[data-a]').forEach(b => b.onclick = () => adicionar(b.dataset.a));
+      box.closest('.bloco').classList.toggle('desligado', !ids.some(ativa));
+    });
+  }
+  function editar(id) {
+    const bloco = $$('.bloco[data-secs]').find(b => b.dataset.secs.split(',').includes(id)); if (!bloco) return;
+    bloco.open = true; $('#previa').classList.remove('on');
+    setTimeout(() => bloco.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+    bloco.classList.add('pisca'); setTimeout(() => bloco.classList.remove('pisca'), 1400);
+  }
+
+  /* barra de ações ao tocar numa seção da prévia */
+  let selecionada = null;
+  function marcarSelecao(sc) {
+    sc.querySelectorAll('.sel').forEach(e => e.classList.remove('sel'));
+    sc.querySelectorAll('.sec-barra').forEach(e => e.remove());
+    if (!selecionada) return;
+    const el = sc.querySelector(`[data-sec="${selecionada}"]`); if (!el) return;
+    el.classList.add('sel');
+    const l = conv.dados.secoes, i = l.indexOf(selecionada);
+    el.insertAdjacentHTML('afterbegin', `<div class="sec-barra"><span>${NOME[selecionada]}</span><button type="button" data-ed>✏️ Editar</button><button type="button" data-sobe ${i ? '' : 'disabled'}>↑</button><button type="button" data-desce ${i < l.length - 1 ? '' : 'disabled'}>↓</button><button type="button" data-tira>🗑</button></div>`);
+    const bar = el.querySelector('.sec-barra');
+    bar.querySelector('[data-ed]').onclick = e => { e.stopPropagation(); editar(selecionada); };
+    bar.querySelector('[data-sobe]').onclick = e => { e.stopPropagation(); mover(selecionada, -1); };
+    bar.querySelector('[data-desce]').onclick = e => { e.stopPropagation(); mover(selecionada, 1); };
+    bar.querySelector('[data-tira]').onclick = e => { e.stopPropagation(); remover(selecionada); };
+  }
+  function adicionarNaPrevia(sc) {
+    const box = sc.querySelector('[data-add]'); if (!box) return;
+    const fora = C.SECOES.map(x => x[0]).filter(id => !ativa(id));
+    box.innerHTML = fora.length ? `<button type="button" class="add-bt">＋ Adicionar seção</button><div class="add-lista" hidden>${fora.map(id => `<button type="button" data-a="${id}">${NOME[id]}</button>`).join('')}</div>` : '';
+    if (!fora.length) return;
+    box.querySelector('.add-bt').onclick = e => { e.stopPropagation(); const lst = box.querySelector('.add-lista'); lst.hidden = !lst.hidden; };
+    box.querySelectorAll('[data-a]').forEach(b => b.onclick = e => { e.stopPropagation(); adicionar(b.dataset.a); setTimeout(() => { const n = sc.querySelector(`[data-sec="${b.dataset.a}"]`); if (n) n.scrollIntoView({ block: 'center' }); }, 50); });
+  }
+
   /* ---------- prévia ---------- */
   function previa() {
     const sc = $('#tela-scroll'), y = sc.scrollTop;
@@ -116,6 +184,11 @@
     window.Convite.contagem(sc);
     window.ConviteInteracao.rsvp(sc, conv.slug, conv.dados, { prevista: true });
     sc.querySelectorAll('a[href]').forEach(a => a.addEventListener('click', ev => { if (!a.href.startsWith('http')) ev.preventDefault(); }));
+    sc.querySelectorAll('[data-sec]').forEach(el => el.addEventListener('click', ev => {
+      if (ev.target.closest('a,button')) return;
+      selecionada = selecionada === el.dataset.sec ? null : el.dataset.sec; marcarSelecao(sc);
+    }));
+    marcarSelecao(sc); adicionarNaPrevia(sc);
     sc.scrollTop = y;
   }
   function abrirEnvelope(auto = true) {
@@ -187,7 +260,7 @@
     $('#login').hidden = true; $('#app').hidden = false; $('#aviso-demo').hidden = D.ativo; $('#bt-sair').hidden = !D.ativo;
     status('Carregando...');
     try {
-      conv = await D.meuConvite(); conv.dados = { ...window.CONVITE_PADRAO, ...conv.dados };
+      conv = await D.meuConvite(); conv.dados = { ...window.CONVITE_PADRAO, ...conv.dados }; conv.dados.secoes = C.secoes(conv.dados);
       preencher(); previa(); abrirEnvelope(); status(D.ativo ? 'Salvo na sua conta' : 'Salvo neste navegador');
     } catch (err) { status('Erro ao carregar: ' + err.message, 'erro'); }
   }
