@@ -91,9 +91,10 @@
 .cv-cena img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 45%;-webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent)}
 .cv-cena.on img,.cv.aberto .cv-cena img{animation:cenaZoom 14s cubic-bezier(.2,.6,.3,1) forwards}
 @keyframes cenaZoom{from{transform:scale(1)}to{transform:scale(1.22)}}
-.cv-cena.sem-img{height:auto;min-height:0!important;padding:56px 0 10px!important}
-.cv-cena.sem-img img{display:none}
-.cv-cena.sem-img .cv-cena-txt{position:static}
+.cv-cena.sem-img{display:none}
+.tela .cv-cena.sem-img{display:flex;align-items:center;justify-content:center;height:auto;min-height:0!important;padding:30px 20px!important;background:repeating-linear-gradient(45deg,rgba(0,0,0,.03) 0 12px,rgba(0,0,0,.06) 12px 24px)}
+.tela .cv-cena.sem-img img,.tela .cv-cena.sem-img .cv-cena-txt{display:none}
+.tela .cv-cena.sem-img::before{content:'Imagem de abertura: envie uma ilustração';font:600 11px Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--suave)}
 .cv-cena-txt{position:absolute;left:0;right:0;bottom:7%;text-align:center;z-index:2}
 .cv-cena-txt .cv-nomes{text-shadow:0 2px 14px var(--fundo),0 0 4px var(--fundo)}
 .cv-cena .cv-frase{text-shadow:0 1px 8px var(--fundo)}
