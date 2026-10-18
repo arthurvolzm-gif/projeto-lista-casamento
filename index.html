@@ -13,9 +13,9 @@
    ========================================================= */
 window.OFERTA = {
   PIXEL_ID: '',            // ID do Pixel do Meta (vazio = desligado)
-  CHECKOUT_BASICO: '',     // Plano Básico · R$ 14,90
-  CHECKOUT_PRO: '',        // Plano Pro · R$ 27,90
-  CHECKOUT_UPGRADE: ''     // Pop-up · Plano Pro por R$ 19,90
+  CHECKOUT_BASICO: 'https://app.zuptos.com.br/checkout/50c688ffb3869bba',     // Plano Básico · R$ 14,90
+  CHECKOUT_PRO: 'https://app.zuptos.com.br/checkout/458aef8196ec5da7',        // Plano Pro · R$ 27,90
+  CHECKOUT_UPGRADE: 'https://app.zuptos.com.br/checkout/a3faf364c198ad36'     // Pop-up · Plano Pro por R$ 19,90
 };
 </script>
 <script>
@@ -171,7 +171,7 @@ footer p+p{margin-top:6px}
 .pop li::before{content:'✓';position:absolute;left:4px;top:6px;color:var(--verde);font-weight:800}
 .pop .valor{margin-top:12px;font-size:14px;color:var(--suave)}
 .pop .valor b{display:block;font-size:38px;color:var(--tinta);font-weight:800;line-height:1.1}
-.pop .nao{display:block;margin-top:12px;font-size:13.5px;color:var(--mudo);text-decoration:underline;cursor:pointer;background:none;border:0;font-family:inherit;width:100%}
+.pop .nao{display:block;width:100%;margin-top:12px;padding:16px;border:0;border-radius:12px;background:#e6e6eb;color:#5f5f6e;font:700 15.5px 'Poppins',sans-serif;cursor:pointer;text-align:center}
 .aviso{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--escuro);color:#fff;font-size:13.5px;padding:10px 16px;border-radius:10px;z-index:70;display:none}
 
 @media (min-width:640px){
