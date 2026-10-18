@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Você recebeu um convite</title>
+<meta name="description" content="Toque para abrir o convite de casamento.">
+<meta property="og:title" content="Você recebeu um convite de casamento 💌">
+<meta property="og:description" content="Toque para abrir.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/convite/convite.css">
+<style>
+  html,body{margin:0;background:#f4f2ee;min-height:100%}
+  .palco{position:relative;max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;background:#fff;box-shadow:0 0 40px rgba(0,0,0,.08)}
+  .palco .env{position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:480px}
+  .aviso{font-family:'Montserrat',sans-serif;text-align:center;padding:80px 24px;color:#555}
+  .aviso b{display:block;font-family:'Cormorant Garamond',serif;font-size:28px;color:#333;margin-bottom:8px}
+  body.fechado{overflow:hidden}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/convite/config.js"></script>
+<script src="/convite/temas.js"></script>
+<script src="/convite/render.js"></script>
+<script src="/convite/dados.js"></script>
+<script src="/convite/interacao.js"></script>
+</head>
+<body class="fechado">
+<main class="palco" id="palco"><div class="aviso">Carregando o convite...</div></main>
+<script>
+(async function () {
+  const palco = document.getElementById('palco');
+  const partes = location.pathname.split('/').filter(Boolean);
+  const slug = decodeURIComponent((partes[0] === 'c' && partes[1]) || new URLSearchParams(location.search).get('c') || '');
+  let d = null;
+  try { d = await window.ConviteDados.publico(slug); } catch (e) { d = null; }
+  if (!d) { document.body.classList.remove('fechado'); palco.innerHTML = '<div class="aviso"><b>Convite não encontrado</b>Confira se o link está completo ou peça um novo link aos noivos.</div>'; return; }
+  d = { ...window.CONVITE_PADRAO, ...d };
+  document.title = `${d.noiva} & ${d.noivo} | Convite de casamento`;
+  palco.innerHTML = window.Convite.html(d) + window.Convite.envelope(d);
+  const som = window.ConviteInteracao.musica(d);
+  window.ConviteInteracao.rsvp(palco, slug, d);
+  window.Convite.contagem(palco);
+  window.Convite.ligarEnvelope(palco, () => {
+    document.body.classList.remove('fechado'); window.scrollTo(0, 0);
+    window.Convite.revelar(palco);
+  });
+  /* a música começa no toque do lacre (o navegador só deixa tocar depois de um toque) */
+  const lacre = palco.querySelector('.env-corpo'); if (lacre && som) lacre.addEventListener('click', () => som.tocar(), { once: true });
+})();
+</script>
+</body>
+</html>

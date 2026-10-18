@@ -1,1 +1,7 @@
-{"cleanUrls":true}
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/c/:slug", "destination": "/convite/ver" },
+    { "source": "/convite", "destination": "/convite/editor" }
+  ]
+}

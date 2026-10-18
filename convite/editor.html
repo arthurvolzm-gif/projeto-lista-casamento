@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CheckLove: Meu convite digital</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/convite/convite.css">
+<link rel="stylesheet" href="/convite/editor.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/convite/config.js"></script>
+<script src="/convite/temas.js"></script>
+<script src="/convite/render.js"></script>
+<script src="/convite/dados.js"></script>
+<script src="/convite/interacao.js"></script>
+</head>
+<body>
+
+<!-- login -->
+<section class="login" id="login" hidden>
+  <div class="login-box">
+    <span class="logo">CheckLove</span>
+    <h1>Seu convite digital</h1>
+    <p class="login-sub">Entre para criar e editar o seu convite. Tudo fica salvo na sua conta.</p>
+    <div class="abas"><button type="button" class="on" data-modo="entrar">Entrar</button><button type="button" data-modo="criar">Criar conta</button></div>
+    <form id="form-login">
+      <label for="l-email">E-mail</label><input id="l-email" type="email" autocomplete="email" required>
+      <div id="l-senha-box"><label for="l-senha">Senha</label><input id="l-senha" type="password" autocomplete="current-password" minlength="6" required></div>
+      <p class="login-msg" id="l-msg"></p>
+      <button class="bt-roxo" type="submit" id="l-bt">Entrar</button>
+    </form>
+    <button type="button" class="link" id="l-esqueci">Esqueci minha senha</button>
+  </div>
+</section>
+
+<!-- nova senha (link de recuperação) -->
+<section class="login" id="nova-senha" hidden>
+  <div class="login-box">
+    <span class="logo">CheckLove</span><h1>Crie uma nova senha</h1>
+    <form id="form-nova"><label for="n-senha">Nova senha</label><input id="n-senha" type="password" minlength="6" required autocomplete="new-password"><p class="login-msg" id="n-msg"></p><button class="bt-roxo" type="submit">Salvar senha</button></form>
+  </div>
+</section>
+
+<!-- editor -->
+<div class="app" id="app" hidden>
+  <header class="topo">
+    <span class="logo">CheckLove</span>
+    <span class="status" id="status">Salvo</span>
+    <div class="topo-acoes"><button type="button" class="bt-claro so-celular" id="bt-previa">Ver prévia</button><button type="button" class="bt-roxo" id="bt-compartilhar">Compartilhar</button><button type="button" class="bt-sair" id="bt-sair" title="Sair">Sair</button></div>
+  </header>
+  <div class="demo" id="aviso-demo" hidden>Modo demonstração: o convite fica salvo só neste navegador. Configure o Supabase para salvar na conta e compartilhar o link.</div>
+
+  <main class="area">
+    <div class="painel" id="painel">
+
+      <details class="bloco" open><summary>🎨 Tema</summary>
+        <div class="temas" id="temas"></div>
+      </details>
+
+      <details class="bloco" open><summary>💍 Noivos</summary>
+        <div class="dois"><div><label>Nome da noiva</label><input data-k="noiva" maxlength="40"></div><div><label>Nome do noivo</label><input data-k="noivo" maxlength="40"></div></div>
+      </details>
+
+      <details class="bloco"><summary>💌 Capa</summary>
+        <label>Frase do topo</label><input data-k="frase" maxlength="60" placeholder="O início do nosso para sempre">
+        <label>Foto da capa (fica dentro da coroa de folhas)</label>
+        <div class="foto-campo" data-foto="fotoCapa"></div>
+        <label>Texto do convite</label><textarea data-k="convite" maxlength="300" rows="3"></textarea>
+      </details>
+
+      <details class="bloco"><summary>📖 Versículo ou frase</summary>
+        <label class="chave"><input type="checkbox" data-k="mostrarVersiculo"> Mostrar no convite</label>
+        <label>Texto</label><textarea data-k="versiculo" maxlength="240" rows="2"></textarea>
+        <label>Referência</label><input data-k="versiculoRef" maxlength="40" placeholder="Marcos 10:9">
+      </details>
+
+      <details class="bloco"><summary>👨‍👩‍👧 Pais dos noivos</summary>
+        <label class="chave"><input type="checkbox" data-k="mostrarPais"> Mostrar no convite</label>
+        <div class="dois"><div><label>Pais da noiva</label><textarea data-k="paisNoiva" rows="2" maxlength="120"></textarea></div><div><label>Pais do noivo</label><textarea data-k="paisNoivo" rows="2" maxlength="120"></textarea></div></div>
+        <p class="dica">Um nome por linha.</p>
+      </details>
+
+      <details class="bloco"><summary>📷 Fotos do casal</summary>
+        <p class="dica">Aparecem ao longo do convite, se desfazendo no fundo.</p>
+        <div class="fotos3"><div class="foto-campo" data-foto="fotos.0"></div><div class="foto-campo" data-foto="fotos.1"></div><div class="foto-campo" data-foto="fotos.2"></div></div>
+        <label>Foto do final (opcional)</label><div class="foto-campo" data-foto="fotoFinal"></div>
+      </details>
+
+      <details class="bloco"><summary>📅 Data e local</summary>
+        <div class="dois"><div><label>Data</label><input type="date" data-k="data"></div><div><label>Horário</label><input type="time" data-k="hora"></div></div>
+        <label class="chave"><input type="checkbox" data-k="mostrarContagem"> Mostrar contagem regressiva</label>
+        <label>Nome do local</label><input data-k="localNome" maxlength="80">
+        <label>Endereço</label><textarea data-k="localEndereco" rows="2" maxlength="200"></textarea>
+        <label>Link do mapa (opcional)</label><input data-k="linkMapa" type="url" placeholder="Se deixar vazio, usamos o Google Maps com o endereço">
+      </details>
+
+      <details class="bloco"><summary>🔘 Botões</summary>
+        <label class="chave"><input type="checkbox" data-k="botaoLocal"> Localização</label>
+        <label class="chave"><input type="checkbox" data-k="botaoPresenca"> Confirmar presença</label>
+        <label>Confirmar até (opcional)</label><input type="date" data-k="prazoPresenca">
+        <label class="chave"><input type="checkbox" data-k="botaoPresentes"> Lista de presentes</label>
+        <input data-k="linkPresentes" type="url" placeholder="Link da sua lista de presentes">
+        <label class="chave"><input type="checkbox" data-k="botaoSite"> Site do casamento</label>
+        <input data-k="linkSite" type="url" placeholder="Link do seu site">
+      </details>
+
+      <details class="bloco"><summary>👗 Traje</summary>
+        <label class="chave"><input type="checkbox" data-k="mostrarTraje"> Mostrar no convite</label>
+        <label>Traje</label><input data-k="traje" list="trajes" maxlength="40">
+        <datalist id="trajes"><option>Traje fino</option><option>Traje social</option><option>Esporte fino</option><option>Passeio completo</option><option>Black tie</option><option>Traje casual</option></datalist>
+        <label>Observação</label><textarea data-k="trajeTexto" rows="2" maxlength="200"></textarea>
+        <label>Cores sugeridas</label><div class="cores" id="cores"></div>
+      </details>
+
+      <details class="bloco"><summary>💛 Mensagem final</summary>
+        <label>Mensagem</label><textarea data-k="mensagemFinal" rows="2" maxlength="240"></textarea>
+      </details>
+
+      <details class="bloco"><summary>🎵 Música</summary>
+        <p class="dica">Toca quando o convidado abre o envelope. Use um arquivo MP3 de até 8 MB, de uma música que você tem direito de usar.</p>
+        <div id="musica-campo"></div>
+      </details>
+
+      <details class="bloco" id="bloco-respostas"><summary>✅ Confirmações de presença</summary>
+        <div id="respostas"><p class="dica">Carregando...</p></div>
+      </details>
+    </div>
+
+    <div class="previa" id="previa">
+      <div class="previa-acoes"><button type="button" class="bt-claro" id="bt-envelope">▶ Ver a abertura do envelope</button><button type="button" class="bt-claro so-celular" id="bt-fechar-previa">Fechar</button></div>
+      <div class="celular"><div class="tela" id="tela"><div class="tela-scroll" id="tela-scroll"></div></div></div>
+    </div>
+  </main>
+</div>
+
+<!-- compartilhar -->
+<div class="modal" id="modal-comp" hidden>
+  <div class="modal-box">
+    <h2>Compartilhar o convite</h2>
+    <p class="dica">Este é o link que você envia para os convidados.</p>
+    <div class="link-campo"><span id="link-base"></span><input id="slug" maxlength="60"></div>
+    <p class="login-msg" id="slug-msg"></p>
+    <div class="comp-acoes"><button type="button" class="bt-roxo" id="bt-copiar">Copiar link</button><a class="bt-zap" id="bt-zap" target="_blank" rel="noopener">Enviar no WhatsApp</a><a class="bt-claro" id="bt-abrir" target="_blank" rel="noopener">Abrir convite</a></div>
+    <label class="chave"><input type="checkbox" id="publicado"> Convite publicado (desmarque para tirar do ar)</label>
+    <button type="button" class="link" data-fechar>Fechar</button>
+  </div>
+</div>
+
+<script src="/convite/editor.js"></script>
+</body>
+</html>
