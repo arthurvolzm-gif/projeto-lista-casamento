@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cards com QR Code para imprimir</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital@0;1&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="/convite/config.js"></script>
+<script src="/convite/temas.js"></script>
+<script src="/album/desafios.js"></script>
+<script src="/album/album-dados.js"></script>
+<style>
+  @page{size:A4;margin:0}
+  *{box-sizing:border-box}
+  body{margin:0;background:#e9e6f0;font-family:'Montserrat',sans-serif;color:var(--texto)}
+  .barra{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:12px;background:#fff;border-bottom:1px solid #eee;font-family:'Poppins',sans-serif}
+  .barra button,.barra select{font:600 14px 'Poppins',sans-serif;padding:10px 14px;border-radius:10px;border:1.5px solid #dccbfb;background:#fff;color:#6b34c9;cursor:pointer}
+  .barra .imp{background:#9a56f6;color:#fff;border-color:#9a56f6}
+  .barra p{width:100%;text-align:center;margin:0;font-size:12.5px;color:#666}
+  .folha{width:210mm;height:297mm;margin:12px auto;background:#fff;display:grid;grid-template-columns:105mm 105mm;grid-template-rows:148.5mm 148.5mm;box-shadow:0 6px 20px rgba(0,0,0,.12);position:relative;page-break-after:always;break-after:page}
+  .folha::before,.folha::after{content:'';position:absolute;background:#ccc}
+  .folha::before{left:105mm;top:0;bottom:0;width:.2mm}
+  .folha::after{top:148.5mm;left:0;right:0;height:.2mm}
+  .card{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12mm 10mm;background:var(--fundo)}
+  .card .qr{width:44mm;height:44mm;background:#fff;padding:2mm;border-radius:3mm}
+  .card .qr svg{width:100%;height:100%;display:block}
+  .rot{font-family:var(--serif),serif;text-transform:uppercase;letter-spacing:.22em;font-size:8.5pt;color:var(--suave)}
+  .tit{font-family:var(--script),cursive;font-size:30pt;line-height:1.05;margin:2mm 0 1mm}
+  .txt{font-family:var(--serif),serif;font-size:12.5pt;line-height:1.35;margin:2mm 0 4mm}
+  .pe{font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:var(--suave);margin-top:4mm}
+  .mis{margin-top:3mm;font-family:var(--serif),serif;font-size:11pt;font-style:italic;border-top:1px solid var(--dest);padding-top:2mm;max-width:70mm}
+  /* modelo 1: moldura dupla */
+  .m1::before{content:'';position:absolute;inset:6mm;border:1px solid var(--dest);border-radius:2mm;outline:1px solid var(--dest);outline-offset:-2.2mm}
+  /* modelo 2: aquarela */
+  .m2{background:radial-gradient(70% 45% at 0% 0%,var(--aqa),transparent 70%),radial-gradient(60% 40% at 100% 100%,var(--aqa),transparent 70%),var(--fundo)}
+  /* modelo 3: faixa colorida */
+  .m3{background:var(--fundo)}
+  .m3::before{content:'';position:absolute;left:0;right:0;top:0;height:38mm;background:var(--dest)}
+  .m3 .rot,.m3 .tit{position:relative;color:#fff}
+  .m3 .qr{position:relative;box-shadow:0 2mm 5mm rgba(0,0,0,.15)}
+  @media print{body{background:#fff}.barra{display:none}.folha{margin:0;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="barra">
+  <select id="modelo"><option value="m1">Modelo 1: moldura</option><option value="m2">Modelo 2: aquarela</option><option value="m3">Modelo 3: faixa</option></select>
+  <select id="tipo"><option value="simples">Só o QR Code</option><option value="missao">Com missões para os convidados</option></select>
+  <select id="folhas"><option>1</option><option selected>2</option><option>3</option><option>5</option><option>10</option></select>
+  <button class="imp" type="button" onclick="print()">🖨 Imprimir</button>
+  <p>Cada folha A4 tem 4 cards (10,5 x 14,8 cm). Imprima em papel 180 g ou mais, em tamanho real, e corte nas linhas.</p>
+</div>
+<div id="folhas-box"><p style="text-align:center;padding:40px">Carregando...</p></div>
+<script>
+(async function () {
+  const D = window.AlbumDados, esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const s = await D.sessao(); if (!s) { location.href = '/album/painel'; return; }
+  const al = await D.meuAlbum(), t = window.TEMAS.find(x => x.id === al.tema) || window.TEMAS[0];
+  document.documentElement.style.cssText = `--fundo:${t.fundo};--texto:${t.texto};--dest:${t.destaque};--suave:${t.suave};--aqa:${t.decor.a};--script:'${t.script}';--serif:'${t.serif}'`;
+  const q = qrcode(0, 'M'); q.addData(`${location.origin}/a/${al.slug}`); q.make();
+  const qr = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+  const card = (m, mis) => `<div class="card ${m}"><div class="rot">Álbum do casamento</div><div class="tit">${esc(al.titulo)}</div><div class="txt">Compartilhe com a gente as fotos e os vídeos que você fizer hoje</div><div class="qr">${qr}</div><div class="pe">Aponte a câmera do celular · não precisa de app</div>${mis ? `<div class="mis">Missão: ${esc(mis)}</div>` : ''}</div>`;
+  function montar() {
+    const m = document.getElementById('modelo').value, tipo = document.getElementById('tipo').value, n = Number(document.getElementById('folhas').value);
+    const lista = [...window.DESAFIOS].sort(() => Math.random() - .5); let k = 0, h = '';
+    for (let f = 0; f < n; f++) h += `<section class="folha">${[0, 1, 2, 3].map(() => card(m, tipo === 'missao' ? lista[k++ % lista.length] : '')).join('')}</section>`;
+    document.getElementById('folhas-box').innerHTML = h;
+  }
+  ['modelo', 'tipo', 'folhas'].forEach(id => document.getElementById(id).onchange = montar);
+  montar();
+})();
+</script>
+</body>
+</html>

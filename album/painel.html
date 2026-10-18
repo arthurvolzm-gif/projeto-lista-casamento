@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CheckLove: Álbum dos convidados</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/convite/editor.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="/convite/config.js"></script>
+<script src="/convite/temas.js"></script>
+<script src="/album/album-dados.js"></script>
+<style>
+  .pn{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start}
+  .card{background:#fff;border:1px solid var(--linha);border-radius:16px;padding:16px}
+  .card h2{font-size:17px;margin:0 0 4px}
+  .qr{display:flex;gap:14px;align-items:center;margin-top:12px}
+  .qr #qr{width:132px;height:132px;flex:none;background:#fff;border:1px solid var(--linha);border-radius:12px;padding:6px}
+  .qr #qr svg,.qr #qr img{width:100%;height:100%}
+  .acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .midias-topo{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .contagem{font-size:13.5px;color:var(--suave)}
+  .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:14px}
+  .m{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#eee}
+  .m img,.m video{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+  .m .info{position:absolute;left:0;right:0;bottom:0;padding:16px 6px 5px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .m .tag{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;border-radius:6px;padding:2px 6px}
+  .m .mb{position:absolute;top:6px;right:6px;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+  .m:hover .mb,.m:focus-within .mb{opacity:1}
+  .m .mb a,.m .mb button{border:0;border-radius:8px;background:rgba(255,255,255,.92);color:#222;font-size:12px;padding:5px 7px;cursor:pointer;text-decoration:none}
+  .vazio{text-align:center;color:var(--suave);padding:40px 10px;font-size:14px}
+  .ver{position:fixed;inset:0;z-index:80;background:rgba(10,8,20,.92);display:flex;align-items:center;justify-content:center;padding:14px}
+  .ver img,.ver video{max-width:100%;max-height:90vh;border-radius:8px}
+  .ver button{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer}
+  .expira{font-size:12.5px;color:var(--suave);margin-top:10px}
+  @media (max-width:860px){.pn{grid-template-columns:1fr}.m .mb{opacity:1}}
+</style>
+</head>
+<body>
+<section class="login" id="login" hidden>
+  <div class="login-box">
+    <span class="logo">CheckLove</span>
+    <h1>Álbum dos convidados</h1>
+    <p class="login-sub">Entre com a mesma conta do seu convite.</p>
+    <div class="abas"><button type="button" class="on" data-modo="entrar">Entrar</button><button type="button" data-modo="criar">Criar conta</button></div>
+    <form id="form-login">
+      <label for="l-email">E-mail</label><input id="l-email" type="email" autocomplete="email" required>
+      <label for="l-senha">Senha</label><input id="l-senha" type="password" autocomplete="current-password" minlength="6" required>
+      <p class="login-msg" id="l-msg"></p>
+      <button class="bt-roxo" type="submit" id="l-bt">Entrar</button>
+    </form>
+    <button type="button" class="link" id="l-esqueci">Esqueci minha senha</button>
+  </div>
+</section>
+
+<div id="app" hidden>
+  <header class="topo"><span class="logo">CheckLove</span><span class="status" id="status">Álbum dos convidados</span><div class="topo-acoes"><a class="bt-claro" href="/convite/editor">Meu convite</a><button type="button" class="bt-sair" id="bt-sair">Sair</button></div></header>
+  <main class="pn">
+    <div>
+      <section class="card">
+        <h2>📲 Link e QR Code</h2>
+        <p class="dica">Coloque o QR Code nas mesas. O convidado aponta a câmera e envia fotos e vídeos, sem baixar app.</p>
+        <div class="qr"><div id="qr"></div><div style="min-width:0"><div class="link-campo" style="margin-top:0"><span id="link-base"></span><input id="slug" maxlength="60"></div><p class="login-msg" id="slug-msg"></p></div></div>
+        <div class="acoes"><button type="button" class="bt-roxo" id="bt-copiar">Copiar link</button><a class="bt-zap" id="bt-zap" target="_blank" rel="noopener">WhatsApp</a><a class="bt-claro" id="bt-abrir" target="_blank" rel="noopener">Abrir</a></div>
+        <div class="acoes"><button type="button" class="bt-claro" id="bt-qr">⬇ Baixar QR Code</button><a class="bt-claro" href="/album/cards" target="_blank" rel="noopener">🖨 Cards para as mesas</a></div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <h2>✏️ Personalizar</h2>
+        <label>Título</label><input id="f-titulo" maxlength="60">
+        <label>Data do casamento</label><input id="f-data" type="date">
+        <label>Mensagem para os convidados</label><textarea id="f-msg" rows="2" maxlength="200"></textarea>
+        <label>Foto de capa</label><div id="f-capa"></div>
+        <label>Cores</label><select id="f-tema"></select>
+        <label class="chave"><input type="checkbox" id="f-veem"> Convidados podem ver as fotos enviadas</label>
+        <label class="chave"><input type="checkbox" id="f-ativo"> Receber fotos (desmarque para fechar o álbum)</label>
+        <p class="expira" id="expira"></p>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="midias-topo"><div><h2>📸 Fotos e vídeos</h2><span class="contagem" id="contagem"></span></div>
+        <div class="acoes" style="margin:0"><button type="button" class="bt-claro" id="bt-atualizar">Atualizar</button><button type="button" class="bt-roxo" id="bt-zip">⬇ Baixar tudo</button></div></div>
+      <div class="grade" id="grade"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  const D = window.AlbumDados, $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let al = null, midias = [], timer = null;
+
+  /* login (mesma conta do convite) */
+  let modo = 'entrar';
+  $$('.abas button').forEach(b => b.onclick = () => { modo = b.dataset.modo; $$('.abas button').forEach(x => x.classList.toggle('on', x === b)); $('#l-bt').textContent = modo === 'entrar' ? 'Entrar' : 'Criar conta'; });
+  $('#form-login').onsubmit = async e => {
+    e.preventDefault(); const msg = $('#l-msg'); msg.className = 'login-msg'; msg.textContent = 'Aguarde...';
+    try {
+      if (modo === 'entrar') { await D.entrar($('#l-email').value.trim(), $('#l-senha').value); iniciar(); }
+      else { const r = await D.criarConta($('#l-email').value.trim(), $('#l-senha').value); if (r.session) iniciar(); else { msg.className = 'login-msg ok'; msg.textContent = 'Conta criada! Confirme pelo e-mail e depois entre aqui.'; } }
+    } catch (err) { msg.textContent = /Invalid login/i.test(err.message) ? 'E-mail ou senha incorretos.' : err.message; }
+  };
+  $('#l-esqueci').onclick = async () => { const em = $('#l-email').value.trim(), msg = $('#l-msg'); if (!em) { msg.textContent = 'Escreva o seu e-mail acima.'; return; } try { await D.recuperar(em); msg.className = 'login-msg ok'; msg.textContent = 'Enviamos um link para o seu e-mail.'; } catch (err) { msg.textContent = err.message; } };
+  $('#bt-sair').onclick = async () => { await D.sair(); location.reload(); };
+
+  /* link e QR */
+  const link = () => `${location.origin}/a/${al.slug}`;
+  function desenharQR() {
+    const q = qrcode(0, 'M'); q.addData(link()); q.make();
+    $('#qr').innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+    $('#link-base').textContent = location.host + '/a/'; $('#bt-abrir').href = link();
+    $('#bt-zap').href = 'https://wa.me/?text=' + encodeURIComponent(`Envie as fotos e os vídeos que você fizer no nosso casamento 📸\n${link()}`);
+  }
+  $('#bt-copiar').onclick = async () => { try { await navigator.clipboard.writeText(link()); $('#bt-copiar').textContent = 'Copiado!'; } catch (e) { $('#slug').select(); } setTimeout(() => $('#bt-copiar').textContent = 'Copiar link', 2000); };
+  $('#bt-qr').onclick = () => {
+    const q = qrcode(0, 'M'); q.addData(link()); q.make();
+    const n = q.getModuleCount(), cel = 24, m = 4, c = document.createElement('canvas'); c.width = c.height = (n + m * 2) * cel;
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#111';
+    for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) g.fillRect((k + m) * cel, (r + m) * cel, cel, cel);
+    const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `qrcode-${al.slug}.png`; a.click();
+  };
+  $('#slug').oninput = () => {
+    const v = $('#slug').value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/-{2,}/g, '-').slice(0, 60);
+    if (v !== $('#slug').value) $('#slug').value = v;
+    $('#slug-msg').textContent = v.length < 4 ? 'O link precisa ter pelo menos 4 letras.' : 'Atenção: QR Codes já impressos param de funcionar se você trocar o link.';
+    if (v.length >= 4) { al.slug = v.replace(/^-|-$/g, ''); desenharQR(); salvarDepois(); }
+  };
+
+  /* personalizar */
+  function preencher() {
+    $('#f-titulo').value = al.titulo || ''; $('#f-data').value = al.data || ''; $('#f-msg').value = al.mensagem || '';
+    $('#f-tema').innerHTML = window.TEMAS.map(t => `<option value="${t.id}"${t.id === al.tema ? ' selected' : ''}>${t.nome}</option>`).join('');
+    $('#f-veem').checked = al.convidados_veem; $('#f-ativo').checked = al.ativo; $('#slug').value = al.slug;
+    $('#expira').textContent = 'As fotos ficam guardadas até ' + new Date(al.expira_em).toLocaleDateString('pt-BR') + '. Baixe tudo antes dessa data.';
+    capa();
+  }
+  function capa() {
+    const box = $('#f-capa');
+    box.innerHTML = al.capa ? `<div class="foto-cheia"><img src="${esc(al.capa)}" alt=""><button type="button">Remover</button></div>` : `<label class="foto-vazia">＋ Adicionar foto de capa<input type="file" accept="image/*"></label>`;
+    if (al.capa) box.querySelector('button').onclick = () => { al.capa = ''; capa(); salvarDepois(); };
+    else box.querySelector('input').onchange = async e => { const f = e.target.files[0]; if (!f) return; box.innerHTML = '<div class="foto-vazia">Enviando...</div>'; try { al.capa = await D.enviarCapa(f); } catch (err) { status('Erro na foto: ' + err.message); } capa(); salvarDepois(); };
+  }
+  [['#f-titulo', 'titulo'], ['#f-data', 'data'], ['#f-msg', 'mensagem'], ['#f-tema', 'tema']].forEach(([s, k]) => $(s).addEventListener('input', () => { al[k] = $(s).value; salvarDepois(); }));
+  $('#f-veem').onchange = () => { al.convidados_veem = $('#f-veem').checked; salvarDepois(); };
+  $('#f-ativo').onchange = () => { al.ativo = $('#f-ativo').checked; salvarDepois(); };
+  function status(t) { $('#status').textContent = t; }
+  function salvarDepois() { clearTimeout(timer); status('Salvando...'); timer = setTimeout(async () => { try { al = { ...al, ...(await D.salvar(al)) }; status('Salvo'); } catch (err) { status(/duplicate|unique/i.test(err.message) ? 'Esse link já está em uso' : 'Erro ao salvar: ' + err.message); } }, 900); }
+
+  /* fotos e vídeos */
+  async function carregar() {
+    try { midias = await D.midias(al.id); } catch (err) { $('#grade').innerHTML = `<p class="vazio">Erro ao carregar: ${esc(err.message)}</p>`; return; }
+    const f = midias.filter(m => m.tipo === 'foto').length;
+    $('#contagem').textContent = `${f} ${f === 1 ? 'foto' : 'fotos'} e ${midias.length - f} ${midias.length - f === 1 ? 'vídeo' : 'vídeos'}`;
+    $('#grade').innerHTML = midias.length ? midias.map((m, i) => `<div class="m" tabindex="0">${m.tipo === 'video' ? `<video src="${esc(m.url)}#t=0.5" preload="metadata" muted playsinline data-i="${i}"></video><span class="tag">▶ vídeo</span>` : `<img src="${esc(m.url)}" alt="" loading="lazy" data-i="${i}">`}
+      <div class="info">${esc(m.autor || 'Convidado')} · ${new Date(m.criado_em).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+      <div class="mb"><a href="${esc(m.url)}" download target="_blank" rel="noopener">⬇</a><button type="button" data-apaga="${i}">🗑</button></div></div>`).join('')
+      : '<p class="vazio">Ainda não chegou nenhuma foto. Compartilhe o link ou imprima os cards com o QR Code.</p>';
+    $$('#grade [data-i]').forEach(el => el.onclick = () => ver(midias[el.dataset.i]));
+    $$('#grade [data-apaga]').forEach(b => b.onclick = async () => { if (!confirm('Apagar este arquivo do álbum?')) return; try { await D.apagar(midias[b.dataset.apaga]); carregar(); } catch (err) { status('Erro ao apagar: ' + err.message); } });
+  }
+  function ver(m) {
+    const v = document.createElement('div'); v.className = 'ver';
+    v.innerHTML = (m.tipo === 'video' ? `<video src="${esc(m.url)}" controls autoplay playsinline></video>` : `<img src="${esc(m.url)}" alt="">`) + '<button type="button" aria-label="Fechar">✕</button>';
+    v.onclick = e => { if (e.target === v || e.target.tagName === 'BUTTON') v.remove(); }; document.body.appendChild(v);
+  }
+  $('#bt-atualizar').onclick = carregar;
+  $('#bt-zip').onclick = async () => {
+    if (!midias.length) return; const b = $('#bt-zip'), zip = new JSZip();
+    for (let i = 0; i < midias.length; i++) {
+      b.textContent = `Baixando ${i + 1} de ${midias.length}...`;
+      try { const r = await fetch(midias[i].url); zip.file(`${String(i + 1).padStart(4, '0')}-${(midias[i].autor || 'convidado').replace(/[^\w-]+/g, '_')}.${midias[i].caminho.split('.').pop()}`, await r.blob()); } catch (e) {}
+    }
+    b.textContent = 'Compactando...';
+    const blob = await zip.generateAsync({ type: 'blob' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = `album-${al.slug}.zip`; a.click(); b.textContent = '⬇ Baixar tudo';
+  };
+
+  async function iniciar() {
+    $('#login').hidden = true; $('#app').hidden = false; status('Carregando...');
+    try { al = await D.meuAlbum(); preencher(); desenharQR(); carregar(); status('Álbum dos convidados'); }
+    catch (err) { status('Erro: ' + err.message + (/albuns/.test(err.message) ? ' (rode o arquivo album/album.sql no Supabase)' : '')); }
+  }
+  (async () => { const s = await D.sessao(); if (s) iniciar(); else $('#login').hidden = false; })();
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,21 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/c/:slug", "destination": "/convite/ver" },
-    { "source": "/convite", "destination": "/convite/editor" }
+    {
+      "source": "/c/:slug",
+      "destination": "/convite/ver"
+    },
+    {
+      "source": "/convite",
+      "destination": "/convite/editor"
+    },
+    {
+      "source": "/a/:slug",
+      "destination": "/album/enviar"
+    },
+    {
+      "source": "/album",
+      "destination": "/album/painel"
+    }
   ]
 }

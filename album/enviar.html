@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Envie suas fotos para os noivos</title>
+<meta property="og:title" content="Envie suas fotos e vídeos do casamento 📸">
+<meta property="og:description" content="Toque para enviar. Não precisa baixar nenhum app.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/convite/config.js"></script>
+<script src="/convite/temas.js"></script>
+<script src="/album/desafios.js"></script>
+<script src="/album/album-dados.js"></script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#f4f2ee}
+  body{font-family:'Montserrat',sans-serif;color:var(--texto,#333)}
+  .pg{max-width:480px;margin:0 auto;min-height:100vh;background:var(--fundo,#fff);position:relative;overflow:hidden}
+  .capa{position:relative;height:46vh;min-height:260px;max-height:420px;background:var(--aqa,#eee) center/cover no-repeat}
+  .capa::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 40%,var(--fundo,#fff) 98%)}
+  .capa.sem{height:auto;min-height:0;padding:40px 0 0;background:radial-gradient(60% 60% at 50% 30%,var(--aqa),transparent)}
+  .topo{text-align:center;padding:0 24px;margin-top:-56px;position:relative;z-index:2}
+  .capa.sem+.topo{margin-top:0}
+  .rot{font-family:var(--serif),serif;text-transform:uppercase;letter-spacing:.26em;font-size:11.5px;color:var(--suave)}
+  h1{font-family:var(--script),cursive;font-weight:400;font-size:46px;margin:6px 0 0;line-height:1.1}
+  .data{font-family:var(--serif),serif;font-size:16px;color:var(--suave);margin-top:4px}
+  .msg{font-family:var(--serif),serif;font-size:18px;line-height:1.5;color:var(--suave);margin:14px auto 0;max-width:340px}
+  .caixa{margin:22px 18px 0;padding:18px;border-radius:20px;background:#fff;box-shadow:0 10px 30px -18px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,.05)}
+  label[for]{display:block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--suave);margin-bottom:6px}
+  input[type=text]{width:100%;font:15px 'Montserrat',sans-serif;padding:12px 14px;border:1px solid rgba(0,0,0,.14);border-radius:12px}
+  .bts{display:grid;gap:10px;margin-top:14px}
+  .bt{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;border-radius:14px;border:0;font:700 16px 'Montserrat',sans-serif;cursor:pointer;background:var(--dest);color:#fff;box-shadow:0 10px 20px -12px var(--dest)}
+  .bt.claro{background:#fff;color:var(--dest);border:1.5px solid var(--dest);box-shadow:none}
+  .bt input{display:none}
+  .dica{font-size:12.5px;color:var(--suave);text-align:center;margin:10px 0 0}
+  .fila{margin-top:12px;display:grid;gap:8px}
+  .item{display:flex;align-items:center;gap:10px;font-size:13px}
+  .item img,.item .vid{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#eee;flex:none;display:flex;align-items:center;justify-content:center}
+  .barra{flex:1;height:6px;border-radius:9px;background:rgba(0,0,0,.08);overflow:hidden}
+  .barra i{display:block;height:100%;width:0;background:var(--dest);transition:width .4s}
+  .ok{color:#178a4c;font-weight:600}.erro{color:#b33}
+  .feito{display:none;text-align:center;margin-top:12px;font-family:var(--serif),serif;font-size:20px}
+  .missao{margin:18px 18px 0;padding:18px;border-radius:20px;background:var(--aqa);text-align:center;border:1px dashed var(--dest)}
+  .missao b{display:block;font-family:var(--serif),serif;font-size:22px;margin:6px 0 10px;color:var(--texto)}
+  .missao button{border:0;background:#fff;color:var(--dest);border-radius:999px;padding:8px 16px;font:600 13px 'Montserrat',sans-serif;cursor:pointer}
+  .galeria{margin:26px 0 0;padding:0 12px}
+  .galeria h2{font-family:var(--serif),serif;font-weight:600;font-size:22px;text-align:center;margin:0 0 12px}
+  .grade{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+  .grade a{position:relative;aspect-ratio:1;overflow:hidden;border-radius:6px;background:#eee}
+  .grade img,.grade video{width:100%;height:100%;object-fit:cover;display:block}
+  .grade .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .rod{text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--suave);opacity:.7;padding:28px 0 34px}
+  .aviso{text-align:center;padding:90px 24px;color:#555}
+  .aviso b{display:block;font-family:'Cormorant Garamond',serif;font-size:28px;color:#333;margin-bottom:8px}
+</style>
+</head>
+<body>
+<main class="pg" id="pg"><div class="aviso">Carregando...</div></main>
+<script>
+(async function () {
+  const D = window.AlbumDados, pg = document.getElementById('pg');
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const partes = location.pathname.split('/').filter(Boolean);
+  const slug = decodeURIComponent((partes[0] === 'a' && partes[1]) || new URLSearchParams(location.search).get('a') || '');
+  let al = null; try { al = await D.publico(slug); } catch (e) {}
+  if (!al) { pg.innerHTML = '<div class="aviso"><b>Álbum não encontrado</b>Confira o link ou o QR Code.</div>'; return; }
+  const t = (window.TEMAS.find(x => x.id === al.tema) || window.TEMAS[0]);
+  document.documentElement.style.cssText = `--fundo:${t.fundo};--texto:${t.texto};--dest:${t.destaque};--suave:${t.suave};--aqa:${t.decor.a};--script:'${t.script}';--serif:'${t.serif}'`;
+  document.title = `${al.titulo} | Envie suas fotos`;
+  const dataTxt = al.data ? new Date(al.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+  let nome = ''; try { nome = localStorage.getItem('album_nome') || ''; } catch (e) {}
+
+  pg.innerHTML = `
+    <div class="capa${al.capa ? '' : ' sem'}" ${al.capa ? `style="background-image:url('${esc(al.capa)}')"` : ''}></div>
+    <div class="topo"><div class="rot">Álbum do casamento</div><h1>${esc(al.titulo)}</h1>${dataTxt ? `<div class="data">${dataTxt}</div>` : ''}${al.mensagem ? `<p class="msg">${esc(al.mensagem)}</p>` : ''}</div>
+    ${al.aberto ? `<section class="caixa">
+      <label for="nome">Seu nome (opcional)</label><input type="text" id="nome" maxlength="60" value="${esc(nome)}" placeholder="Para os noivos saberem quem enviou">
+      <div class="bts">
+        <label class="bt">📷 Tirar foto agora<input type="file" accept="image/*" capture="environment" data-arq></label>
+        <label class="bt claro">🖼️ Enviar fotos e vídeos da galeria<input type="file" accept="image/*,video/*" multiple data-arq></label>
+      </div>
+      <p class="dica">Não precisa baixar nenhum app. Vídeos de até 50 MB (cerca de 1 minuto).</p>
+      <div class="fila" id="fila"></div><div class="feito" id="feito">Obrigado! Os noivos vão amar 💛</div>
+    </section>
+    <section class="missao"><div class="rot">Missão da vez</div><b id="missao"></b><button type="button" id="outra">Outra missão</button></section>`
+    : '<div class="aviso"><b>Este álbum está fechado</b>Os noivos não estão mais recebendo fotos por aqui.</div>'}
+    ${al.convidados_veem ? '<section class="galeria" id="galeria" hidden><h2>Fotos da festa</h2><div class="grade" id="grade"></div></section>' : ''}
+    <footer class="rod">Álbum criado com CheckLove</footer>`;
+
+  /* missões */
+  const ms = document.getElementById('missao');
+  const sorteia = () => { if (ms) ms.textContent = window.DESAFIOS[Math.floor(Math.random() * window.DESAFIOS.length)]; };
+  sorteia(); const outra = document.getElementById('outra'); if (outra) outra.onclick = sorteia;
+
+  /* galeria */
+  async function galeria() {
+    if (!al.convidados_veem) return;
+    try {
+      const l = await D.galeria(slug), g = document.getElementById('galeria');
+      if (!l.length) return; g.hidden = false;
+      document.getElementById('grade').innerHTML = l.map(m => m.tipo === 'video'
+        ? `<a href="${esc(m.url)}" target="_blank" rel="noopener"><video src="${esc(m.url)}#t=0.5" preload="metadata" muted playsinline></video><span class="play">▶</span></a>`
+        : `<a href="${esc(m.url)}" target="_blank" rel="noopener"><img src="${esc(m.url)}" alt="Foto enviada por ${esc(m.autor || 'um convidado')}" loading="lazy"></a>`).join('');
+    } catch (e) {}
+  }
+  galeria();
+
+  /* envio */
+  document.querySelectorAll('[data-arq]').forEach(inp => inp.onchange = async () => {
+    const arqs = [...inp.files]; inp.value = ''; if (!arqs.length) return;
+    const autor = document.getElementById('nome').value.trim(); try { localStorage.setItem('album_nome', autor); } catch (e) {}
+    const fila = document.getElementById('fila'); document.getElementById('feito').style.display = 'none';
+    let ok = 0;
+    for (const f of arqs) {
+      const linha = document.createElement('div'); linha.className = 'item';
+      const video = f.type.startsWith('video');
+      linha.innerHTML = `${video ? '<span class="vid">🎬</span>' : `<img src="${URL.createObjectURL(f)}" alt="">`}<div class="barra"><i></i></div><span>Enviando</span>`;
+      fila.prepend(linha);
+      const barra = linha.querySelector('.barra i'), st = linha.querySelector('span:last-child');
+      try { await D.enviar(al, slug, f, autor, p => barra.style.width = (p * 100) + '%'); st.className = 'ok'; st.textContent = 'Enviado'; ok++; }
+      catch (e) { st.className = 'erro'; st.textContent = /50 MB/.test(e.message) ? 'Muito grande' : 'Falhou'; st.title = e.message; }
+    }
+    if (ok) { document.getElementById('feito').style.display = 'block'; galeria(); }
+  });
+})();
+</script>
+</body>
+</html>
