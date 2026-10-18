@@ -88,15 +88,18 @@ header a.mini{white-space:nowrap;font-size:13px;font-weight:600;color:var(--tint
 
 /* por dentro */
 .esteira{overflow:hidden;margin:24px -16px 0;padding:6px 0 18px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.esteira-faixa{display:flex;gap:14px;width:max-content;animation:rola 28s linear infinite}
+.esteira-faixa{display:flex;gap:14px;width:max-content;animation:rola 50s linear infinite}
 .esteira figure{flex:none;width:200px;pointer-events:none;user-select:none}
 .esteira img{width:100%;border-radius:8px;box-shadow:0 10px 24px -14px rgba(40,20,80,.5);border:1px solid var(--linha);-webkit-user-drag:none}
 .esteira figcaption{font-size:12.5px;color:var(--suave);margin-top:8px;font-weight:500;text-align:center}
 @keyframes rola{to{transform:translateX(calc(-50% - 7px))}}
 @media (prefers-reduced-motion:reduce){.esteira-faixa{animation-duration:80s}}
-.itens{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
-.item{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:13px 14px;font-size:14px;font-weight:500;color:var(--tinta);display:flex;gap:8px;align-items:flex-start;line-height:1.35}
-.item i{font-style:normal}
+.blocos{display:grid;gap:16px;margin-top:26px}
+.bloco{background:var(--card);border:1px solid #f0e6f7;border-radius:18px;padding:14px;box-shadow:0 10px 28px -20px rgba(70,30,140,.45)}
+.bloco img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px}
+.bloco .chip{display:inline-block;margin-top:14px;font-size:12px;font-weight:700;color:var(--roxo-esc);background:var(--roxo-sua);border-radius:999px;padding:4px 12px}
+.bloco h3{font-size:19px;font-weight:700;margin-top:10px}
+.bloco p{font-size:14.5px;color:var(--suave);margin-top:6px}
 
 /* bônus */
 .bonus-sec{background:#f6f0ff}
@@ -180,6 +183,7 @@ footer p+p{margin-top:6px}
   .passos{grid-template-columns:repeat(3,1fr)}
   .planos{grid-template-columns:1fr 1fr;align-items:start}
   .esteira figure{width:230px}
+  .blocos{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -226,25 +230,24 @@ footer p+p{margin-top:6px}
   </div>
 </section>
 
+<section id="recebe" style="padding-top:10px">
+  <div class="wrap">
+    <h2>Tudo o que você recebe para <em>organizar o casamento</em></h2>
+    <p class="sub">Quatro partes que cobrem o casamento inteiro, do planejamento ao último pagamento.</p>
+    <div class="blocos">
+      <div class="bloco"><img src="img/bloco-cronograma.webp" alt="Páginas do material: Cronograma de 12 meses" width="800" height="600" loading="lazy"><span class="chip">Mês a mês</span><h3>Cronograma de 12 meses</h3><p>O que fazer em cada mês, dos 12 meses antes até a véspera. É só seguir a ordem e ir marcando cada item.</p></div>
+      <div class="bloco"><img src="img/bloco-festas.webp" alt="Páginas do material: Checklists das festas pré-casamento" width="800" height="600" loading="lazy"><span class="chip">Chás e lua de mel</span><h3>Checklists das festas pré-casamento</h3><p>Chá de panela, chá de lingerie, casamento civil e lua de mel organizados item por item, sem esquecer nenhum detalhe.</p></div>
+      <div class="bloco"><img src="img/bloco-convidados.webp" alt="Páginas do material: Lista de convidados e padrinhos" width="800" height="600" loading="lazy"><span class="chip">Mais de 100 nomes</span><h3>Lista de convidados e padrinhos</h3><p>Espaço para mais de 100 convidados com confirmação de presença, além de padrinhos, madrinhas, damas e pajens.</p></div>
+      <div class="bloco"><img src="img/bloco-fornecedores.webp" alt="Páginas do material: Fornecedores e total do orçamento" width="800" height="600" loading="lazy"><span class="chip">Orçamento sob controle</span><h3>Fornecedores e total do orçamento</h3><p>Compare orçamentos, guarde o contato de cada fornecedor e acompanhe quanto já gastou e quanto ainda falta pagar.</p></div>
+    </div>
+  </div>
+</section>
+
 <section id="dentro" style="padding-top:10px">
   <div class="wrap">
     <h2>Veja <em>por dentro</em></h2>
     <p class="sub">Páginas reais do checklist.</p>
-    <div class="esteira"><div class="esteira-faixa"><figure><img src="img/checklist-04.webp" alt="Cronograma de 12 meses" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma de 12 meses</figcaption></figure><figure><img src="img/checklist-09.webp" alt="Cerimônia e festa" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cerimônia e festa</figcaption></figure><figure><img src="img/checklist-03.webp" alt="Planejamento geral" width="640" height="905" loading="lazy" draggable="false"><figcaption>Planejamento geral</figcaption></figure><figure><img src="img/checklist-20.webp" alt="Lista de convidados" width="640" height="905" loading="lazy" draggable="false"><figcaption>Lista de convidados</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-04.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma de 12 meses</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-09.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cerimônia e festa</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-03.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Planejamento geral</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-20.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Lista de convidados</figcaption></figure></div></div>
-    <div class="itens">
-      <div class="item"><i>🗓️</i>Cronograma de 12 meses</div>
-      <div class="item"><i>📜</i>Checklist do casamento civil</div>
-      <div class="item"><i>💒</i>Checklist da cerimônia e da festa</div>
-      <div class="item"><i>🍳</i>Checklist do chá de panela</div>
-      <div class="item"><i>💝</i>Checklist do chá de lingerie</div>
-      <div class="item"><i>✈️</i>Checklist da lua de mel</div>
-      <div class="item"><i>📋</i>Orçamentos de fornecedores</div>
-      <div class="item"><i>📞</i>Contatos dos fornecedores</div>
-      <div class="item"><i>👥</i>Lista de convidados</div>
-      <div class="item"><i>👧</i>Lista de damas e pajens</div>
-      <div class="item"><i>🤵</i>Lista de padrinhos e madrinhas</div>
-      <div class="item"><i>💰</i>Controle dos gastos totais</div>
-    </div>
+    <div class="esteira"><div class="esteira-faixa"><figure><img src="img/checklist-03.webp" alt="Planejamento geral" width="640" height="905" loading="lazy" draggable="false"><figcaption>Planejamento geral</figcaption></figure><figure><img src="img/checklist-04.webp" alt="Cronograma de 12 meses" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma de 12 meses</figcaption></figure><figure><img src="img/checklist-05.webp" alt="Cronograma mês a mês" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma mês a mês</figcaption></figure><figure><img src="img/checklist-09.webp" alt="Cerimônia e festa" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cerimônia e festa</figcaption></figure><figure><img src="img/checklist-10.webp" alt="Chá de panela" width="640" height="905" loading="lazy" draggable="false"><figcaption>Chá de panela</figcaption></figure><figure><img src="img/checklist-17.webp" alt="Orçamentos de fornecedores" width="640" height="905" loading="lazy" draggable="false"><figcaption>Orçamentos de fornecedores</figcaption></figure><figure><img src="img/checklist-20.webp" alt="Lista de convidados" width="640" height="905" loading="lazy" draggable="false"><figcaption>Lista de convidados</figcaption></figure><figure><img src="img/checklist-26.webp" alt="Gastos totais" width="640" height="905" loading="lazy" draggable="false"><figcaption>Gastos totais</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-03.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Planejamento geral</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-04.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma de 12 meses</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-05.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cronograma mês a mês</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-09.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Cerimônia e festa</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-10.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Chá de panela</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-17.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Orçamentos de fornecedores</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-20.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Lista de convidados</figcaption></figure><figure aria-hidden="true"><img src="img/checklist-26.webp" alt="" width="640" height="905" loading="lazy" draggable="false"><figcaption>Gastos totais</figcaption></figure></div></div>
   </div>
 </section>
 
