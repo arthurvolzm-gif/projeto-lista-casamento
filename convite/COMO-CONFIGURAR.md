@@ -32,3 +32,6 @@ Depois do próximo deploy, o editor passa a pedir login e o link do convite func
 
 ## Quem pode criar convite
 Hoje qualquer pessoa que criar conta consegue usar o editor. Para liberar só para compradoras, o próximo passo é ligar o webhook da plataforma de pagamento a uma lista de e-mails liberados (igual ao que foi feito no app do ENEM).
+
+## Imagens dos temas
+Cada tema tem 3 imagens em `convite/temas/<id>/`: `fechado.webp` (envelope com o lacre), `aberto.webp` (aba aberta com o cartão) e `lacre.webp` (lacre sem fundo). A posição do lacre em cada foto fica em `convite/temas.js` (campo `foto`).
