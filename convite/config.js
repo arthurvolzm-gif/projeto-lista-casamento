@@ -7,7 +7,7 @@
    tudo fica salvo só no navegador e o link de compartilhar não funciona para outras pessoas.
    ========================================================= */
 window.CONVITE_CONFIG = {
-  SUPABASE_URL: '',        // ex.: https://xxxxxxxx.supabase.co
-  SUPABASE_ANON_KEY: '',   // chave "anon public"
+  SUPABASE_URL: 'https://ktpoxcenwfykcvsadnsb.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0cG94Y2Vud2Z5a2N2c2FkbnNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNTQyOTIsImV4cCI6MjEwNzkzMDI5Mn0.RZ1rx5WhHD574cP7_M2eoS5QUoq1uaRG22uPuizfYaU',
   BUCKET: 'convites'       // bucket público das fotos e músicas
 };
