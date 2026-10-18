@@ -85,6 +85,30 @@
 .env.tela .env-carta-in{opacity:0}
 .env.fim{opacity:0;pointer-events:none}
 
+/* ---------- envelope com fotos (temas com imagens) ---------- */
+.envf{background:var(--cartao);perspective:none;container-type:size;display:block;padding:0}
+.envf-palco{position:absolute;left:50%;top:50%;width:max(100cqw,calc(100cqh * 941 / 1672));aspect-ratio:941/1672;transform:translate(-50%,-50%);container-type:inline-size}
+.envf-cam{position:absolute;inset:0;perspective:1600px;perspective-origin:50% 0;transform-origin:50% 46%;animation:envfRespira 7s ease-in-out infinite alternate;transition:transform 1.2s cubic-bezier(.55,0,.2,1),opacity .7s ease}
+@keyframes envfRespira{from{transform:scale(1)}to{transform:scale(1.035)}}
+.envf-foto{position:absolute;inset:0;background-size:100% 100%;background-repeat:no-repeat}
+.envf-aberto{background-image:var(--ab)}
+.envf-fechado{background-image:var(--fe);transition:opacity .45s ease}
+.envf-aba{background-image:var(--fe);transform-origin:50% 0;transform:rotateX(0);backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform 1.05s cubic-bezier(.45,.05,.3,1),filter 1.05s ease,opacity .45s ease .65s}
+.envf-lacre{position:absolute;aspect-ratio:1;border:0;padding:0;margin:0;background:none;cursor:pointer;border-radius:50%;overflow:hidden;z-index:4;transition:transform .6s cubic-bezier(.5,-.3,.5,1),opacity .55s ease;animation:envfPulsa 2.6s ease-in-out infinite}
+@keyframes envfPulsa{50%{transform:scale(1.035)}}
+.envf-lacre i{position:absolute;aspect-ratio:941/1672;background:var(--fe) 0 0/100% 100% no-repeat}
+.envf-lacre span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif),serif;font-weight:600;letter-spacing:.02em;color:rgba(40,25,10,.42);mix-blend-mode:multiply;text-shadow:0 1px 0 rgba(255,255,255,.55),0 -1px 0 rgba(0,0,0,.18)}
+.envf-lacre span b{font-family:var(--script),cursive;font-weight:400;font-size:.8em;margin:0 .06em}
+.envf .env-dica{color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+/* etapas */
+.envf.abrindo .envf-cam{animation:none}
+.envf.abrindo .envf-fechado{opacity:0}
+.envf.abrindo .envf-lacre{animation:none;transform:translateY(-55%) scale(1.45) rotate(-16deg);opacity:0;transition:transform .7s cubic-bezier(.3,.6,.4,1),opacity .6s ease .1s}
+.envf.aba .envf-aba{transform:rotateX(105deg);filter:brightness(.7);opacity:0}
+.envf.sobe .envf-cam{transform:scale(2.7)}
+.envf.tela .envf-cam{transform:scale(3.4);opacity:0}
+.envf.fim{opacity:0;pointer-events:none}
+
 /* ---------- imagem de abertura (ilustração em tela cheia com zoom lento, como no vídeo) ---------- */
 .cv-cena{position:relative;height:100vh;height:100dvh;max-height:900px;overflow:hidden;padding:0!important}
 .tela .cv-cena{height:100%;max-height:none;min-height:560px}

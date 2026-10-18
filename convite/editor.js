@@ -61,7 +61,7 @@
   }));
 
   function temas() {
-    $('#temas').innerHTML = window.TEMAS.map(t => `<button type="button" class="tema${conv.dados.tema === t.id ? ' on' : ''}" data-t="${t.id}"><div class="tema-mini" style="background:${t.env.papel}"><i style="background:${t.env.aba}"></i><b style="background:${t.env.lacre}"></b></div><span>${t.nome}</span></button>`).join('');
+    $('#temas').innerHTML = window.TEMAS.map(t => `<button type="button" class="tema${conv.dados.tema === t.id ? ' on' : ''}" data-t="${t.id}">${t.foto ? `<div class="tema-mini" style="background:${t.env.papel} url('${window.Convite.imgTema(t, 'fechado.webp')}') center 52%/cover"></div>` : `<div class="tema-mini" style="background:${t.env.papel}"><i style="background:${t.env.aba}"></i><b style="background:${t.env.lacre}"></b></div>`}<span>${t.nome}</span></button>`).join('');
     $$('.tema').forEach(b => b.onclick = () => {
       conv.dados.tema = b.dataset.t; const t = window.Convite.tema(b.dataset.t);
       conv.dados.trajeCores = [t.destaque, t.decor.a, t.env.papel]; cores();

@@ -118,7 +118,7 @@
   const imgTema = (t, nome) => `/convite/temas/${t.id}/${nome}`;
 
   /* envelope de abertura (como no vídeo): toca no lacre, a aba abre, a carta sobe e o convite aparece */
-  function envelope(d, opt = {}) {
+  function envelopeDesenho(d, opt = {}) {
     const t = tema(d.tema), [i1, i2] = iniciais(d), e = t.env;
     return `<div class="env env-${e.padrao}" style="--papel:${e.papel};--aba:${e.aba};--borda:${e.borda};--lacre:${e.lacre};--lacreEsc:${e.lacreEsc};--cartao:${t.fundo};--texto:${t.texto};--script:'${t.script}';--serif:'${t.serif}'">
       <div class="env-corpo">
@@ -132,20 +132,44 @@
   }
 
   /* liga o envelope: chama aoAbrir quando a animação termina */
+  /* envelope com as fotos do tema (fechado e aberto): o lacre recebe as iniciais,
+     a aba é recortada da própria foto e gira em 3D, e a câmera entra no cartão */
+  const FW = 941, FH = 1672;
+  function envelope(d, opt = {}) {
+    const t = tema(d.tema), f = t.foto;
+    if (!f) return envelopeDesenho(d, opt);
+    const [i1, i2] = iniciais(d), pc = (v, base) => (v / base * 100).toFixed(3) + '%';
+    const lado = 2 * f.r, fs = (f.r / FW * 100 * 0.5).toFixed(2);
+    return `<div class="env envf" style="--fe:url('${imgTema(t, 'fechado.webp')}');--ab:url('${imgTema(t, 'aberto.webp')}');--cartao:${t.fundo};--script:'${t.script}';--serif:'${t.serif}'">
+      <div class="envf-palco"><div class="envf-cam">
+        <div class="envf-foto envf-aberto"></div>
+        <div class="envf-foto envf-fechado"></div>
+        <div class="envf-foto envf-aba" style="clip-path:polygon(0 0,100% 0,100% ${pc(f.borda, FH)},${pc(f.x, FW)} ${pc(f.y - f.r * 1.05, FH)},0 ${pc(f.borda, FH)})"></div>
+        <button class="envf-lacre" type="button" aria-label="Abrir o convite" style="left:${pc(f.x - f.r, FW)};top:${pc(f.y - f.r, FH)};width:${pc(lado, FW)}">
+          <i style="width:${(FW / lado * 100).toFixed(3)}%;left:${(-(f.x - f.r) / lado * 100).toFixed(3)}%;top:${(-(f.y - f.r) / lado * 100).toFixed(3)}%"></i>
+          <span style="font-size:${fs}cqw">${esc(i1)}<b>&amp;</b>${esc(i2)}</span>
+        </button>
+      </div></div>
+      <p class="env-dica">${opt.dica || 'Toque no lacre para abrir'}</p>
+    </div>`;
+  }
+
+  /* liga o envelope: chama aoAbrir quando a animação termina */
   function ligarEnvelope(root, aoAbrir) {
     const env = root.querySelector('.env'); if (!env) return aoAbrir && aoAbrir();
+    const foto = env.classList.contains('envf');
+    if (foto) { const m = /url\('([^']+)'\)/.exec(env.style.getPropertyValue('--ab')); if (m) new Image().src = m[1]; }
+    const etapas = foto
+      ? [['aba', 380], ['sobe', 1500], ['tela', 2500], ['fim', 3150]]
+      : [['aba', 350], ['sobe', 1150], ['tela', 2050], ['fim', 2750]];
     const abrir = () => {
       if (env.classList.contains('abrindo')) return;
       env.classList.add('abrindo');
-      if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
-      setTimeout(() => env.classList.add('aba'), 350);
-      setTimeout(() => env.classList.add('sobe'), 1150);
-      setTimeout(() => env.classList.add('tela'), 2050);
-      setTimeout(() => { env.classList.add('fim'); aoAbrir && aoAbrir(); }, 2750);
-      setTimeout(() => env.remove(), 3500);
+      if (navigator.vibrate) try { navigator.vibrate(25); } catch (e) {}
+      etapas.forEach(([c, ms]) => setTimeout(() => { env.classList.add(c); if (c === 'fim' && aoAbrir) aoAbrir(); }, ms));
+      setTimeout(() => env.remove(), etapas[3][1] + 800);
     };
-    env.querySelector('.env-lacre').addEventListener('click', abrir);
-    env.querySelector('.env-corpo').addEventListener('click', abrir);
+    env.addEventListener('click', abrir);
   }
 
   window.Convite = { imgTema, SECOES, secoes, html, envelope, ligarEnvelope, revelar, contagem, tema, dataInfo, esc, ICONES };
