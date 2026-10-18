@@ -180,7 +180,7 @@
   function previa() {
     const sc = $('#tela-scroll'), y = sc.scrollTop;
     sc.innerHTML = window.Convite.html(conv.dados, { preview: true });
-    sc.querySelectorAll('.rv,.cv-foto').forEach(e => e.classList.add('on'));
+    sc.querySelectorAll('.rv,.cv-foto,.cv-cena').forEach(e => e.classList.add('on'));
     window.Convite.contagem(sc);
     window.ConviteInteracao.rsvp(sc, conv.slug, conv.dados, { prevista: true });
     sc.querySelectorAll('a[href]').forEach(a => a.addEventListener('click', ev => { if (!a.href.startsWith('http')) ev.preventDefault(); }));

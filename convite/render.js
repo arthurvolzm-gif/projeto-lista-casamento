@@ -53,7 +53,7 @@
 
   /* seções do convite: ordem padrão e nomes */
   const SECOES = [
-    ['topo', 'Capa'], ['foto1', 'Foto do casal 1'], ['versiculo', 'Versículo ou frase'], ['pais', 'Pais dos noivos'],
+    ['cena', 'Imagem de abertura'], ['topo', 'Capa'], ['foto1', 'Foto do casal 1'], ['versiculo', 'Versículo ou frase'], ['pais', 'Pais dos noivos'],
     ['data', 'Data'], ['local', 'Local'], ['botoes', 'Botões'], ['foto2', 'Foto do casal 2'], ['traje', 'Dress code'],
     ['foto3', 'Foto do casal 3'], ['final', 'Mensagem final'], ['fotofinal', 'Foto do final']
   ];
@@ -78,7 +78,9 @@
     const fotos = d.fotos || [], P = opt.preview;
     const sec = (id, cls, corpo) => `<section class="${cls} rv" data-sec="${id}">${corpo}</section>`;
     const fotoSec = (id, url, cls) => { const h = foto(url, cls, 'Foto do casal', P); return h ? h.replace('<div class="cv-foto', `<div data-sec="${id}" class="cv-foto`) : ''; };
+    const cenaUrl = d.cenaImagem || imgTema(t, 'capa.webp');
     const R = {
+      cena: () => `<section class="cv-cena" data-sec="cena"><img src="${esc(cenaUrl)}" alt="" onerror="var s=this.closest('.cv-cena');if(s)s.classList.add('sem-img')"><div class="cv-cena-txt">${d.frase ? `<p class="cv-frase">${esc(d.frase)}</p>` : ''}<h1 class="cv-nomes">${nomes}</h1><span class="cv-seta"></span></div></section>`,
       topo: () => sec('topo', 'cv-topo', `<div class="cv-mono">${esc(i1)}<span>&amp;</span>${esc(i2)}</div>${d.frase ? `<p class="cv-frase">${esc(d.frase)}</p>` : ''}${capa}<h1 class="cv-nomes">${nomes}</h1>${d.convite ? `<p class="cv-txt">${br(d.convite)}</p>` : ''}`),
       foto1: () => fotoSec('foto1', fotos[0], 'funde'),
       foto2: () => fotoSec('foto2', fotos[1], 'funde'),
@@ -106,26 +108,41 @@
 
   /* aparecer ao rolar */
   function revelar(root, scroller) {
-    const els = root.querySelectorAll('.rv, .cv-foto');
+    const els = root.querySelectorAll('.rv, .cv-foto, .cv-cena');
     if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('on')); return; }
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { root: scroller || null, threshold: 0.12 });
     els.forEach(e => io.observe(e));
   }
 
-  /* envelope de abertura em 3D (como no vídeo): toca no lacre, a aba gira, a carta sai e a "câmera" entra na carta */
+  /* imagens do tema (opcionais): /convite/temas/<id>/papel.webp, forro.webp, lacre.png, capa.webp */
+  const imgTema = (t, nome) => `/convite/temas/${t.id}/${nome}`;
+
+  /* lacre de cera em svg com relevo (luz especular), com as iniciais gravadas */
+  function lacreSvg(t, i1, i2) {
+    let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    const pts = []; for (let k = 0; k < 28; k++) { const a = k / 28 * Math.PI * 2, r = 46 + (rnd() - 0.5) * 7; pts.push([60 + Math.cos(a) * r, 60 + Math.sin(a) * r]); }
+    const d = pts.map((p, k) => { const n = pts[(k + 1) % pts.length], m = [(p[0] + n[0]) / 2, (p[1] + n[1]) / 2]; return (k ? '' : `M${m[0].toFixed(1)} ${m[1].toFixed(1)} `) + `Q${n[0].toFixed(1)} ${n[1].toFixed(1)} ` + `${((n[0] + pts[(k + 2) % pts.length][0]) / 2).toFixed(1)} ${((n[1] + pts[(k + 2) % pts.length][1]) / 2).toFixed(1)} `; }).join('') + 'Z';
+    const id = 'cera' + t.id;
+    return `<svg class="env-lacre-svg" viewBox="0 0 120 120" aria-hidden="true"><defs>
+      <radialGradient id="${id}g" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="${t.env.lacre}"/><stop offset=".7" stop-color="${t.env.lacre}"/><stop offset="1" stop-color="${t.env.lacreEsc}"/></radialGradient>
+      <filter id="${id}f" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="b"/>
+        <feSpecularLighting in="b" surfaceScale="5" specularConstant=".75" specularExponent="22" lighting-color="#fff" result="s"><fePointLight x="20" y="10" z="70"/></feSpecularLighting>
+        <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/><feComposite in="SourceGraphic" in2="s2" operator="arithmetic" k1="0" k2="1" k3=".9" k4="0"/></filter></defs>
+      <g filter="url(#${id}f)"><path d="${d}" fill="url(#${id}g)"/>
+        <circle cx="60" cy="60" r="33" fill="none" stroke="${t.env.lacreEsc}" stroke-opacity=".55" stroke-width="2.5"/>
+        <circle cx="60" cy="60" r="28.5" fill="${t.env.lacre}" fill-opacity=".35"/>
+        <text x="60" y="68" text-anchor="middle" font-family="${t.serif}" font-size="22" fill="${t.env.lacreEsc}" fill-opacity=".85">${esc(i1)}<tspan font-family="${t.script}" font-size="18" dx="1">&amp;</tspan><tspan dx="1">${esc(i2)}</tspan></text></g></svg>`;
+  }
+
+  /* envelope de abertura (como no vídeo 1): ocupa a tela, toca no lacre, a aba abre em 3D, a carta sobe e o convite aparece */
   function envelope(d, opt = {}) {
     const t = tema(d.tema), [i1, i2] = iniciais(d), e = t.env;
-    return `<div class="env env-${e.padrao}" style="--papel:${e.papel};--aba:${e.aba};--borda:${e.borda};--lacre:${e.lacre};--lacreEsc:${e.lacreEsc};--cartao:${t.fundo};--texto:${t.texto};--fundoEnv:${t.decor.b};--script:'${t.script}';--serif:'${t.serif}'">
-      <div class="env-cena">
-        <div class="env-obj">
-          <div class="env-sombra"></div>
-          <div class="env-fundo"></div>
-          <div class="env-carta"><div class="env-carta-in"><span class="env-carta-mono">${esc(i1)}<i>&amp;</i>${esc(i2)}</span><span class="env-carta-nomes">${esc(d.noiva)} &amp; ${esc(d.noivo)}</span></div></div>
-          <div class="env-bolso"><i class="esq"></i><i class="dir"></i><i class="baixo"></i></div>
-          <div class="env-aba"><div class="env-aba-frente"></div><div class="env-aba-verso"></div></div>
-          <button class="env-lacre" type="button" aria-label="Abrir o convite"><span>${esc(i1)}<i>&amp;</i>${esc(i2)}</span></button>
-        </div>
-      </div>
+    return `<div class="env env-${e.padrao}" style="--papel:${e.papel};--aba:${e.aba};--borda:${e.borda};--lacre:${e.lacre};--lacreEsc:${e.lacreEsc};--cartao:${t.fundo};--texto:${t.texto};--script:'${t.script}';--serif:'${t.serif}';--tx-papel:url('${imgTema(t, 'papel.webp')}');--tx-forro:url('${imgTema(t, 'forro.webp')}')">
+      <div class="env-dentro"></div>
+      <div class="env-carta"><div class="env-carta-in"><span class="env-carta-mono">${esc(i1)}<i>&amp;</i>${esc(i2)}</span><span class="env-carta-nomes">${esc(d.noiva)} &amp; ${esc(d.noivo)}</span></div></div>
+      <div class="env-bolso"><svg class="env-dobras" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 L50 55 L100 100" fill="none" stroke="rgba(0,0,0,.16)" stroke-width=".5"/><path d="M0 101 L50 56 L100 101" fill="none" stroke="rgba(255,255,255,.35)" stroke-width=".4"/><path d="M0 0 L50 46 L100 0" fill="none" stroke="rgba(0,0,0,.22)" stroke-width=".6"/></svg></div>
+      <div class="env-aba"><div class="env-aba-frente"></div><div class="env-aba-verso"></div></div>
+      <button class="env-lacre" type="button" aria-label="Abrir o convite">${lacreSvg(t, i1, i2)}<img src="${imgTema(t, 'lacre.png')}" alt="" onerror="this.remove()"><span class="env-lacre-ini">${esc(i1)}<i>&amp;</i>${esc(i2)}</span></button>
       <p class="env-dica">${opt.dica || 'Toque no lacre para abrir'}</p>
     </div>`;
   }
@@ -136,15 +153,15 @@
     const abrir = () => {
       if (env.classList.contains('abrindo')) return;
       env.classList.add('abrindo');
-      if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
-      setTimeout(() => env.classList.add('aba'), 300);
-      setTimeout(() => env.classList.add('sobe'), 1250);
-      setTimeout(() => env.classList.add('tela'), 2350);
-      setTimeout(() => { env.classList.add('fim'); aoAbrir && aoAbrir(); }, 3250);
-      setTimeout(() => env.remove(), 4000);
+      if (navigator.vibrate) try { navigator.vibrate(25); } catch (e) {}
+      setTimeout(() => env.classList.add('aba'), 450);
+      setTimeout(() => env.classList.add('sobe'), 1500);
+      setTimeout(() => env.classList.add('tela'), 2500);
+      setTimeout(() => { env.classList.add('fim'); aoAbrir && aoAbrir(); }, 3300);
+      setTimeout(() => env.remove(), 4100);
     };
     env.addEventListener('click', abrir);
   }
 
-  window.Convite = { SECOES, secoes, html, envelope, ligarEnvelope, revelar, contagem, tema, dataInfo, esc, ICONES };
+  window.Convite = { imgTema, SECOES, secoes, html, envelope, ligarEnvelope, revelar, contagem, tema, dataInfo, esc, ICONES };
 })();
