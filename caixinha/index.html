@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CheckLove: Crie a sua caixinha</title>
+<meta name="description" content="Escolha entre 32 modelos de caixinha, personalize a arte e baixe o arquivo pronto para a gráfica fazer as suas caixinhas.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@500;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--roxo:#9a56f6;--roxo-esc:#6b34c9;--roxo-sua:#f3ecfe;--roxo-borda:#d9c3fb;--tinta:#1c1c28;--texto:#2b2b2b;--suave:#5f5f6e;--fundo:#f8f9fb;--card:#fff;--linha:#ebe7f2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',system-ui,sans-serif;color:var(--texto);background:var(--fundo);line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+header{background:#fff;border-bottom:1px solid var(--linha);padding:14px 16px;text-align:center}
+header b{font-size:18px;color:var(--roxo-esc)}header span{display:block;font-size:13px;color:var(--suave)}
+.app{max-width:1080px;margin:0 auto;padding:16px;display:grid;gap:16px}
+@media(min-width:900px){.app{grid-template-columns:minmax(0,1fr) 400px;align-items:start}.previa{position:sticky;top:12px}}
+.card{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:16px;box-shadow:0 10px 28px -22px rgba(70,30,140,.5)}
+.card h2{font-size:15px;font-weight:700;color:var(--tinta);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card h2 i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--roxo-sua);color:var(--roxo-esc);font-size:12.5px;display:flex;align-items:center;justify-content:center}
+.modelos{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;max-height:300px;overflow:auto;padding:2px}
+.modelo{border:2px solid var(--linha);border-radius:12px;background:#fff;padding:6px;cursor:pointer;text-align:center}
+.modelo.ativo{border-color:var(--roxo);background:var(--roxo-sua)}
+.modelo svg{height:54px;width:100%}
+.modelo small{display:block;font-size:10.5px;line-height:1.2;margin-top:3px;color:var(--suave)}
+.modelo b{font-size:10px;color:var(--roxo-esc)}
+label.c{display:block;font-size:12.5px;font-weight:600;color:var(--suave);margin:10px 0 4px}
+select{width:100%;border:1.5px solid var(--linha);border-radius:10px;padding:10px 12px;background:#fff;font-size:15px}
+input[type=text]{width:100%;border:1.5px solid var(--linha);border-radius:10px;padding:10px 12px;background:#fff;font-size:15px}
+input[type=text]:focus{outline:none;border-color:var(--roxo)}
+.opc{display:flex;flex-wrap:wrap;gap:6px}
+.opc button{border:1.5px solid var(--linha);background:#fff;border-radius:999px;padding:7px 13px;font-size:13px;cursor:pointer}
+.opc button.ativo{border-color:var(--roxo);background:var(--roxo-sua);color:var(--roxo-esc);font-weight:600}
+.cores{display:flex;flex-wrap:wrap;gap:8px}
+.cor{width:38px;height:38px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--linha);cursor:pointer;position:relative}
+.cor.ativo{box-shadow:0 0 0 2.5px var(--roxo)}
+.cor i{position:absolute;inset:auto 0 0 0;height:50%;border-radius:0 0 40px 40px}
+.pers{display:flex;gap:10px;margin-top:10px;font-size:12.5px;color:var(--suave);align-items:center;flex-wrap:wrap}
+.pers input{width:38px;height:30px;border:none;background:none;padding:0;vertical-align:middle}
+.previa .frente{max-width:330px;margin:0 auto}
+.previa .molde{margin-top:12px;border:1px dashed var(--roxo-borda);border-radius:12px;padding:10px;background:#fff}
+.previa .molde svg+svg{margin-top:8px}
+.previa h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--suave);margin:12px 0 6px;text-align:center}
+.info{font-size:12.5px;color:var(--suave);text-align:center;margin-top:8px}
+.btn{display:block;width:100%;border:none;border-radius:999px;background:var(--roxo);color:#fff;font-weight:700;font-size:16px;padding:15px;cursor:pointer;box-shadow:0 12px 24px -12px rgba(106,52,201,.7);margin-top:12px}
+.btn.claro{background:#fff;color:var(--roxo-esc);border:2px solid var(--roxo-borda);box-shadow:none;font-size:14px;padding:11px}
+.nota{font-size:12px;color:var(--suave);text-align:center;margin-top:8px}
+.passos{margin:8px 0 0 18px;font-size:12.5px;color:var(--suave)}
+#folhas{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  header,.app{display:none!important}
+  #folhas{display:block}
+  .folha{width:210mm;height:297mm;padding:12mm;page-break-after:always;display:flex;flex-direction:column;overflow:hidden;position:relative}
+  .folha:last-child{page-break-after:auto}
+  .folha .cab{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4mm}
+  .folha .cab b{font-family:'Playfair Display',serif;font-size:17pt;color:#4a3b36}
+  .folha .cab small{display:block;font-size:8pt;color:#8a7d77;font-family:Montserrat,sans-serif}
+  .folha .corpo{flex:1;display:flex;align-items:center;justify-content:center;gap:6mm}
+  .folha .corpo.col{flex-direction:column}
+  .folha .ficha{font-family:Montserrat,sans-serif;font-size:10.5pt;color:#3f312c}
+  .folha .ficha h4{font:700 11pt Montserrat;letter-spacing:.12em;text-transform:uppercase;color:#8d6a5f;margin:6mm 0 2mm}
+  .folha .ficha table{border-collapse:collapse;width:100%}.folha .ficha td{border-bottom:1px solid #e3d8cc;padding:2mm 1mm}.folha .ficha td:first-child{width:42%;color:#8a7d77}
+  .folha .rod{text-align:center;font-size:7.5pt;color:#8a7d77;font-family:Montserrat,sans-serif;margin-top:3mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header><b>CheckLove · Caixinhas dos padrinhos</b><span>Crie a arte, veja ao vivo e mande o arquivo pronto para a gráfica</span></header>
+
+<main class="app">
+  <div class="colunas" style="display:grid;gap:16px">
+    <section class="card"><h2><i>1</i>Escolha o modelo da caixinha</h2><div class="modelos" id="modelos"></div><p class="info" id="infoModelo"></p></section>
+    <section class="card"><h2><i>2</i>O que vai escrito</h2>
+      <label class="c" for="titulo">Para quem é</label><input type="text" id="titulo" maxlength="24" placeholder="Madrinha, Padrinho, Daminha...">
+      <label class="c" for="nomes">Nome dos noivos</label><input type="text" id="nomes" maxlength="30" placeholder="Ana & João">
+      <label class="c" for="data">Data do casamento</label><input type="text" id="data" maxlength="16" placeholder="12.10.2026">
+      <label class="c" for="frase">Frase curta (opcional)</label><input type="text" id="frase" maxlength="34" placeholder="Aceita ser nossa madrinha?">
+      <label class="c" for="mono">Monograma (opcional, se vazio usa as iniciais)</label><input type="text" id="mono" maxlength="5" placeholder="A&J">
+    </section>
+    <section class="card"><h2><i>3</i>Estilo da arte</h2>
+      <div class="opc" id="estilos"></div>
+      <label class="c">Letra dos nomes</label><div class="opc" id="fontes"></div>
+    </section>
+    <section class="card"><h2><i>4</i>Cores e estampa</h2>
+      <div class="cores" id="cores"></div>
+      <div class="pers"><span>Ou escolha as suas:</span><label>fundo <input type="color" id="corBg" value="#f7e6e1"></label><label>detalhe <input type="color" id="corDet" value="#cf9a8f"></label><label>letras <input type="color" id="corTin" value="#7d4b43"></label></div>
+      <label class="c">Estampa do papel</label><div class="opc" id="estampas"></div>
+    </section>
+    <section class="card"><h2><i>5</i>Pedido para a gráfica</h2>
+      <label class="c" for="qtd">Quantas caixinhas?</label><input type="text" inputmode="numeric" id="qtd" maxlength="5" placeholder="10">
+      <label class="c" for="papel">Papel</label>
+      <select id="papel"><option>Couchê fosco 300 g</option><option>Cartão duplex 300 g</option><option>Kraft 280 g</option><option>Papel micro-ondulado (cartão-onda)</option><option>Cartonado rígido (caixa rígida)</option></select>
+      <label class="c" for="acab">Acabamento</label>
+      <select id="acab"><option>Sem acabamento</option><option>Laminação fosca</option><option>Laminação brilho</option><option>Verniz UV localizado nos nomes</option><option>Hot stamping dourado nos nomes</option></select>
+      <label class="c" for="obs">Observações para a gráfica (opcional)</label><input type="text" id="obs" maxlength="90" placeholder="Prazo, entrega, fita de cetim...">
+      <label class="c" for="wapp">WhatsApp da gráfica (opcional, só números com DDD)</label><input type="text" inputmode="tel" id="wapp" maxlength="15" placeholder="11999998888">
+    </section>
+  </div>
+
+  <aside class="previa">
+    <div class="card">
+      <h3 style="margin-top:0">Frente da caixinha</h3>
+      <div class="frente" id="frente"></div>
+      <h3>Planificação (faca) com a arte</h3>
+      <div class="molde" id="molde"></div>
+      <p class="info" id="medidas"></p>
+      <button class="btn" id="imprimir">Baixar arquivo para a gráfica (PDF)</button>
+      <button class="btn claro" id="whats">Enviar pedido pelo WhatsApp</button>
+      <button class="btn claro" id="copiar">Copiar o texto do pedido</button>
+      <a class="btn claro" style="text-align:center;text-decoration:none" id="mapa" target="_blank" rel="noopener" href="#">Procurar gráficas perto de mim</a>
+      <button class="btn claro" id="sortear">Surpreenda-me com outra combinação</button>
+      <p class="nota">No PDF vão: a ficha com as medidas, a arte com a <b>faca</b> (linha rosa de corte e azul de vinco) e a arte limpa, tudo em tamanho real com sangria de 3 mm. Na janela que abrir, escolha "Salvar como PDF", tamanho A4 e <b>escala 100%</b>.</p>
+      <ol class="passos"><li>Monte o desenho da sua caixinha aqui</li><li>Baixe o PDF e mande para a gráfica (ou use o botão do WhatsApp)</li><li>A gráfica imprime, corta, vinca e entrega as caixinhas prontas</li></ol>
+    </div>
+  </aside>
+</main>
+
+<div id="folhas"></div>
+
+<script src="redes.js"></script>
+<script src="catalogo.js"></script>
+<script src="lib.js"></script>
+<script>
+(function () {
+  const MOD = CATALOGO.MOD, PASSO = CATALOGO.PASSO;
+  const $ = s => document.querySelector(s);
+  const LS = 'checklove_caixinha';
+  const ESTADO = { modelo: 0, titulo: 'Madrinha', nomes: 'Ana & João', data: '', frase: '', mono: '', estilo: 'coroa', fonte: 'script', paleta: 'rosa', custom: null, estampa: 'pontos', qtd: '', papel: '', acab: '', obs: '', wapp: '' };
+  try { const g = JSON.parse(localStorage.getItem(LS) || 'null'); if (g) Object.assign(ESTADO, g); } catch (e) {}
+  const q = new URLSearchParams(location.search); if (q.get('modelo')) ESTADO.modelo = Math.max(0, Math.min(31, +q.get('modelo') - 1 || 0));
+  if (ESTADO.modelo > 31) ESTADO.modelo = 0;
+
+  const LARG = 186, ALT = 224;
+  const salvar = () => { try { localStorage.setItem(LS, JSON.stringify(ESTADO)); } catch (e) {} };
+  const opcoes = () => ({ paleta: ESTADO.custom || ESTADO.paleta, estampa: ESTADO.estampa, estiloArte: ESTADO.estilo, fonte: ESTADO.fonte, titulo: ESTADO.titulo, nomes: ESTADO.nomes, data: ESTADO.data, frase: ESTADO.frase, mono: ESTADO.mono });
+
+  /* controles estáticos */
+  function botoes(id, mapa, chave, rotulo) {
+    const el = $(id); el.innerHTML = '';
+    Object.keys(mapa).forEach(k => { const b = document.createElement('button'); b.textContent = rotulo(mapa[k]); b.dataset.k = k; b.onclick = () => { ESTADO[chave] = k; atualizar(); }; el.appendChild(b); });
+  }
+  botoes('#estilos', CX.ESTILOS, 'estilo', v => v);
+  botoes('#fontes', CX.FONTES, 'fonte', v => v.n);
+  botoes('#estampas', CX.ESTAMPAS, 'estampa', v => v);
+  const cores = $('#cores');
+  Object.keys(CX.PAL).forEach(k => { const p = CX.PAL[k], b = document.createElement('button'); b.className = 'cor'; b.title = p.n; b.dataset.k = k; b.style.background = p.bg; b.innerHTML = `<i style="background:${p.cor}"></i>`; b.onclick = () => { ESTADO.paleta = k; ESTADO.custom = null; atualizar(); }; cores.appendChild(b); });
+  ['corBg', 'corDet', 'corTin'].forEach(id => $('#' + id).oninput = () => { ESTADO.custom = { bg: $('#corBg').value, cor: $('#corDet').value, tinta: $('#corTin').value }; atualizar(); });
+  [['titulo', 'titulo'], ['nomes', 'nomes'], ['data', 'data'], ['frase', 'frase'], ['mono', 'mono']].forEach(([id, k]) => $('#' + id).oninput = e => { ESTADO[k] = e.target.value; atualizar(true); });
+
+  /* lista de modelos */
+  const lista = $('#modelos');
+  MOD.forEach((m, i) => {
+    const b = document.createElement('button'); b.className = 'modelo'; b.type = 'button';
+    const d = CX.desenhar(m.r()[0], { paleta: m.pal, estampa: 'liso', estiloArte: 'minimal', rotulos: false });
+    b.innerHTML = `${d.fluido().replace('width:100%;height:auto', 'width:100%;height:54px')}<small><b>${String(i + 1).padStart(2, '0')}</b> ${m.n}</small>`;
+    b.onclick = () => { ESTADO.modelo = i; atualizar(); };
+    lista.appendChild(b);
+  });
+
+  function marcar() {
+    document.querySelectorAll('#estilos button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO.estilo));
+    document.querySelectorAll('#fontes button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO.fonte));
+    document.querySelectorAll('#estampas button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO.estampa));
+    document.querySelectorAll('#cores .cor').forEach(b => b.classList.toggle('ativo', !ESTADO.custom && b.dataset.k === ESTADO.paleta));
+    [...lista.children].forEach((b, i) => b.classList.toggle('ativo', i === ESTADO.modelo));
+  }
+
+  let primeira = true;
+  function atualizar(soTexto) {
+    const m = MOD[ESTADO.modelo], o = opcoes();
+    $('#frente').innerHTML = CX.frente(o);
+    const redes = m.r(), ds = redes.map(r => CX.desenhar(r, o));
+    $('#molde').innerHTML = ds.map(d => d.fluido()).join('');
+    $('#infoModelo').innerHTML = `<b>${String(ESTADO.modelo + 1).padStart(2, '0')} · ${m.n}</b> · ${m.med} · nível ${m.niv.toLowerCase()} · ${m.t}<br>Ideal para: ${m.ideal}`;
+    $('#medidas').textContent = `Tamanho pronto: ${m.med}`;
+    if (!soTexto) marcar();
+    if (!primeira) salvar(); primeira = false;
+    if (!soTexto && !primeira) { const a = lista.children[ESTADO.modelo]; if (a && lista.scrollHeight > lista.clientHeight) { const t = a.offsetTop - 120; if (Math.abs(lista.scrollTop - t) > 150) lista.scrollTop = Math.max(0, t); } }
+  }
+
+  /* arquivo para a gráfica: ficha + arte com faca + arte limpa, em escala real */
+  const regua = '<div style="display:flex;align-items:center;gap:2mm;font:7pt Montserrat,sans-serif;color:#8a7d77"><svg width="50mm" height="3mm" viewBox="0 0 50 3"><line x1="0" y1="1.5" x2="50" y2="1.5" stroke="#555" stroke-width=".4"/><line x1=".2" y1="0" x2=".2" y2="3" stroke="#555" stroke-width=".4"/><line x1="25" y1=".6" x2="25" y2="2.4" stroke="#555" stroke-width=".3"/><line x1="49.8" y1="0" x2="49.8" y2="3" stroke="#555" stroke-width=".4"/></svg>= 5 cm</div>';
+  const pedido = () => ({ qtd: ($('#qtd').value || '').replace(/\D/g, '') || '10', papel: $('#papel').value, acab: $('#acab').value, obs: $('#obs').value.trim() });
+  function agrupar(ds) {
+    const pos = ds.map(d => ({ d, g: (d.w > LARG || d.h > ALT) && d.h <= LARG && d.w <= ALT }));
+    pos.forEach(p => { p.W = p.g ? p.d.h : p.d.w; p.H = p.g ? p.d.w : p.d.h; });
+    const empilha = pos.reduce((s, p) => s + p.H, 0) + 6 * (pos.length - 1) <= ALT && Math.max(...pos.map(p => p.W)) <= LARG;
+    const lado = pos.reduce((s, p) => s + p.W, 0) + 6 * (pos.length - 1) <= LARG && Math.max(...pos.map(p => p.H)) <= ALT;
+    return { grupos: empilha || lado ? [pos] : pos.map(p => [p]), empilha };
+  }
+  function textoPedido() {
+    const m = MOD[ESTADO.modelo], p = pedido(), num = String(ESTADO.modelo + 1).padStart(2, '0');
+    return `Olá! Quero um orçamento para ${p.qtd} caixinhas personalizadas de padrinhos de casamento.\n\nModelo: ${num} · ${m.n} (${m.f})\nTamanho pronto: ${m.med}\nPapel: ${p.papel}\nAcabamento: ${p.acab}\n${p.obs ? 'Observações: ' + p.obs + '\n' : ''}\nO arquivo está pronto, em PDF, escala 1:1, com faca (corte e vinco) e sangria de 3 mm. Posso enviar? Qual o valor e o prazo?`;
+  }
+  function folhas() {
+    const m = MOD[ESTADO.modelo], o = opcoes(), p = pedido(), num = String(ESTADO.modelo + 1).padStart(2, '0');
+    const base = m.r().map(r => CX.desenhar(r, o));
+    const faca = agrupar(m.r().map(r => CX.desenhar(r, Object.assign({}, o, { modo: 'faca' }))));
+    const arteL = agrupar(m.r().map(r => CX.desenhar(r, Object.assign({}, o, { modo: 'arte' }))));
+    const nomesPecas = base.map((d, i) => `<tr><td>${base.length > 1 ? 'Peça ' + (i + 1) : 'Peça única'}</td><td>${Math.round(d.w - 2)} x ${Math.round(d.h - 2)} mm (planificada)</td></tr>`).join('');
+    const ficha = `<div class="folha"><div class="ficha"><span style="font:500 8pt Montserrat;letter-spacing:.3em;color:#8d6a5f">CHECKLOVE · ARQUIVO PARA A GRÁFICA</span>
+      <h1 style="font:700 26pt 'Playfair Display',serif;color:#5e4038;margin:2mm 0 4mm">${m.n}</h1>
+      <div style="display:flex;gap:8mm;align-items:flex-start"><div style="width:62mm;flex:none">${CX.frente(o)}<div style="font-size:8pt;color:#8a7d77;text-align:center;margin-top:2mm">Frente da caixinha</div></div>
+      <div style="flex:1"><table><tr><td>Modelo</td><td>${num} · ${m.f}</td></tr><tr><td>Tamanho pronto</td><td>${m.med}</td></tr><tr><td>Quantidade</td><td>${p.qtd}</td></tr><tr><td>Papel</td><td>${p.papel}</td></tr><tr><td>Acabamento</td><td>${p.acab}</td></tr>${nomesPecas}${p.obs ? `<tr><td>Observações</td><td>${esc(p.obs)}</td></tr>` : ''}</table></div></div>
+      <h4>Como ler a faca</h4>
+      <table><tr><td><svg width="22mm" height="3mm" viewBox="0 0 22 3"><line x1="0" y1="1.5" x2="22" y2="1.5" stroke="#e6007e" stroke-width=".5"/></svg></td><td>Linha rosa: corte</td></tr><tr><td><svg width="22mm" height="3mm" viewBox="0 0 22 3"><line x1="0" y1="1.5" x2="22" y2="1.5" stroke="#00a0e3" stroke-width=".5" stroke-dasharray="2 1.5"/></svg></td><td>Linha azul tracejada: vinco (dobra)</td></tr><tr><td>Áreas com "cola"</td><td>Abas brancas ou da cor do papel para colar por dentro</td></tr></table>
+      <h4>Para a gráfica</h4>
+      <p style="line-height:1.55">As próximas páginas estão em <b>escala 1:1</b> (A4, imprimir em 100%). A arte tem <b>3 mm de sangria</b> além da linha de corte. A faca está numa página separada, sobre a arte, e a arte limpa vem na página seguinte. Se a gráfica pedir o arquivo em outro formato (CDR, AI, PDF vetorial), este PDF mantém as linhas vetoriais.</p>
+      <div style="margin-top:6mm;border:1px solid #e3d8cc;border-radius:3mm;padding:4mm;font-size:9.5pt;white-space:pre-wrap;background:#fffdf9">${esc(textoPedido())}</div></div></div>`;
+    const pag = (grp, titulo) => grp.grupos.map((g, gi) => `<div class="folha"><div class="cab"><div><small>${titulo}${grp.grupos.length > 1 ? ` · PARTE ${gi + 1} DE ${grp.grupos.length}` : ''}</small><b>${m.n} <span style="font-size:10pt;font-weight:400;font-style:italic">· ${m.med}</span></b></div>${regua}</div><div class="corpo ${grp.empilha && g.length > 1 ? 'col' : ''}">${g.map(q => q.d.svg(q.g)).join('')}</div><div class="rod">${titulo.includes('FACA') ? 'Rosa: corte · Azul tracejado: vinco · ' : ''}escala 1:1 · sangria 3 mm · CheckLove</div></div>`).join('');
+    $('#folhas').innerHTML = ficha + pag(faca, `MODELO ${num} · ARTE COM FACA`) + pag(arteL, `MODELO ${num} · ARTE LIMPA (SEM FACA)`);
+  }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  $('#imprimir').onclick = () => { folhas(); setTimeout(() => window.print(), 150); };
+  $('#copiar').onclick = async () => { const t = textoPedido(); try { await navigator.clipboard.writeText(t); $('#copiar').textContent = 'Texto copiado!'; } catch (e) { prompt('Copie o texto:', t); } setTimeout(() => $('#copiar').textContent = 'Copiar o texto do pedido', 2000); };
+  $('#whats').onclick = () => { const n = ($('#wapp').value || '').replace(/\D/g, ''); const dest = n ? (n.length <= 11 ? '55' + n : n) : ''; window.open('https://wa.me/' + dest + '?text=' + encodeURIComponent(textoPedido()), '_blank'); };
+  $('#mapa').href = 'https://www.google.com/maps/search/' + encodeURIComponent('gráfica caixas personalizadas');
+
+  $('#sortear').onclick = () => {
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    ESTADO.paleta = pick(Object.keys(CX.PAL)); ESTADO.custom = null;
+    ESTADO.estampa = pick(Object.keys(CX.ESTAMPAS)); ESTADO.estilo = pick(Object.keys(CX.ESTILOS)); ESTADO.fonte = pick(Object.keys(CX.FONTES));
+    atualizar();
+  };
+
+  ['titulo', 'nomes', 'data', 'frase', 'mono', 'qtd', 'obs', 'wapp'].forEach(k => $('#' + k).value = ESTADO[k] || '');
+  ['papel', 'acab'].forEach(k => { if (ESTADO[k]) $('#' + k).value = ESTADO[k]; $('#' + k).onchange = e => { ESTADO[k] = e.target.value; salvar(); }; });
+  ['qtd', 'obs', 'wapp'].forEach(k => $('#' + k).oninput = e => { ESTADO[k] = e.target.value; salvar(); });
+  if (ESTADO.custom) { $('#corBg').value = ESTADO.custom.bg; $('#corDet').value = ESTADO.custom.cor; $('#corTin').value = ESTADO.custom.tinta; }
+  atualizar();
+})();
+</script>
+</body>
+</html>
