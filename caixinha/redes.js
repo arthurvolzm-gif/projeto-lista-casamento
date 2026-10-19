@@ -280,4 +280,20 @@ G.bandeja = (A, B, H, cinta) => {
   return r;
 };
 
+
+/* ---------- caixa livro rígida: capa dura em uma só folha (verso + lombada + frente) com dobras de forro ---------- */
+G.livro = (A, B, H, m = 15) => {
+  const r = novo(), W = 2 * A + H;
+  r.pecas.push(P(ret(0, 0, A, B)), P(ret(A, 0, H, B)), P(ret(A + H, 0, A, B)));
+  r.dobras.push([[A, 0], [A, B]], [[A + H, 0], [A + H, B]]);
+  r.pecas.push(P(ret(-m, 0, m, B), 'cola'), P(ret(W, 0, m, B), 'cola'), P(ret(0, -m, W, m), 'cola'), P(ret(0, B, W, m), 'cola'));
+  r.rotulos.push({ x: A / 2, y: B / 2, t: 'verso' }, { x: A + H / 2, y: B / 2, t: 'lombada' }, { x: A + H + A / 2, y: B / 2 + 22, t: 'frente (capa)' }, { x: -m / 2, y: B / 2, t: 'forro' });
+  /* plaquinha da frente */
+  const pw = 70, ph = 30, px = 0, py = B + m + 14;
+  r.pecas.push(P(ret(px, py, pw, ph)));
+  r.rotulos.push({ x: px + pw / 2, y: py + ph + 5, t: 'plaquinha (colar sobre a fita)' });
+  r.faces.push({ x: px + pw / 2, y: py + ph / 2, w: 64, giro: 0, plaquinha: true });
+  return r;
+};
+
 if (typeof module !== 'undefined' && module.exports) module.exports = { G, P, ret, coracaoPts }; else window.REDES = { G, P, ret, coracaoPts };

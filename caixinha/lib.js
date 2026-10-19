@@ -96,6 +96,9 @@
     const w = f.w, x = f.x, y = f.y, c = pal.cor, t = pal.tinta, fonte = o.fonte || 'script';
     const tit = o.titulo || '', nomes = o.nomes || '', data = o.data || '', frase = o.frase || '';
     const mono = o.mono || iniciais(nomes);
+    if (f.plaquinha) {
+      return `<g transform="rotate(${f.giro || 0} ${x} ${y})">${texto(tit, x, y - 6.2, 2.7, 'sans', t, 0.6, true, w * 0.9)}${texto(nomes, x, y + 4.2, 9.5, fonte, t, 0, false, w * 0.92)}${texto(data, x, y + 10, 2.4, 'sans', c, 0.5, true, w * 0.9)}</g>`;
+    }
     let s = '';
     const e = o.estiloArte || 'coroa';
     if (o.estampa && o.estampa !== 'liso' && e !== 'selo' && e !== 'moldura') s += `<rect x="${(x - w * 0.47).toFixed(2)}" y="${(y - w * 0.47).toFixed(2)}" width="${(w * 0.94).toFixed(2)}" height="${(w * 1.02).toFixed(2)}" rx="${(w * 0.07).toFixed(2)}" fill="${pal.bg}" fill-opacity=".9"/>`;
