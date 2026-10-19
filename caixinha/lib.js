@@ -17,7 +17,15 @@
     vinho: { n: 'Marsala', bg: '#f1dfe0', cor: '#9c3f4e', tinta: '#5c1f2b' },
     branco: { n: 'Branco', bg: '#fbf9f5', cor: '#b8a99a', tinta: '#5e4a40' },
     kraft: { n: 'Kraft', bg: '#d9bf9b', cor: '#7a5a37', tinta: '#4a3320' },
-    marinho: { n: 'Marinho', bg: '#dfe4ee', cor: '#2f4570', tinta: '#1f2f4f' }
+    marinho: { n: 'Marinho', bg: '#dfe4ee', cor: '#2f4570', tinta: '#1f2f4f' },
+    vinhoesc: { n: 'Marsala escuro', bg: '#6e1f2a', cor: '#d4b266', tinta: '#f3e9d2' },
+    noite: { n: 'Azul-noite', bg: '#1d2d57', cor: '#d4b266', tinta: '#f3e9d2' },
+    preto: { n: 'Preto', bg: '#222222', cor: '#d4b266', tinta: '#f3e9d2' },
+    floresta: { n: 'Verde-floresta', bg: '#1f4a33', cor: '#d4b266', tinta: '#f3e9d2' },
+    grafite: { n: 'Grafite', bg: '#4a4a4d', cor: '#d9bd7a', tinta: '#f1e8d6' },
+    ferrugem: { n: 'Ferrugem', bg: '#b25a3d', cor: '#f2dcc0', tinta: '#fbeede' },
+    pessego: { n: 'Pêssego', bg: '#fbd9c3', cor: '#e9a98a', tinta: '#8a5a40' },
+    aco: { n: 'Azul-aço', bg: '#8da1b8', cor: '#e8cf8f', tinta: '#f6efe0' }
   };
   const ESTAMPAS = { liso: 'Lisa', pontos: 'Bolinhas', listras: 'Listras', losangos: 'Losangos', folhas: 'Folhas', floral: 'Florzinhas', aquarela: 'Aquarela' };
   const ESTILOS = { coroa: 'Coroa de folhas', floral: 'Floral', moldura: 'Moldura', selo: 'Selo e fita', minimal: 'Minimalista' };

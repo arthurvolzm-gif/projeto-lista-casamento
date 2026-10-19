@@ -52,10 +52,13 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
 .inicio button{border:2px solid var(--roxo-borda);background:#fff;border-radius:16px;padding:14px 10px;cursor:pointer;text-align:center;font-weight:700;font-size:14px;color:var(--roxo-esc)}
 .inicio button small{display:block;font-weight:400;font-size:11.5px;color:var(--suave);margin-top:2px}
 .inicio button:hover{background:var(--roxo-sua)}
-.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;max-height:340px;overflow:auto;padding:2px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:10px;max-height:340px;overflow:auto;padding:2px}
 .gal button{border:2px solid var(--linha);background:#fff;border-radius:12px;padding:6px;cursor:pointer;text-align:center}
 .gal button.ativo{border-color:var(--roxo);background:var(--roxo-sua)}
 .gal button svg{width:100%;height:auto}
+.gal button>div{border-radius:8px;overflow:hidden;margin:0 auto}
+#frente>div{border-radius:14px;margin:0 auto;box-shadow:0 12px 28px -14px rgba(40,20,80,.5)}
+#miniSvg>div{border-radius:8px}
 .gal small{display:block;font-size:10.5px;color:var(--suave);margin-top:3px;line-height:1.2}
 #mini{display:none;position:fixed;right:12px;bottom:12px;width:96px;z-index:20;border:2px solid var(--roxo);border-radius:12px;background:#fff;padding:4px;box-shadow:0 10px 26px -8px rgba(40,20,80,.5);cursor:pointer}
 #mini small{display:block;text-align:center;font-size:10px;color:var(--roxo-esc);font-weight:600}
@@ -87,7 +90,7 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
   <div class="colunas" style="display:grid;gap:16px">
     <section class="card"><h2>Como você quer começar?</h2>
       <div class="inicio"><button type="button" id="irProntos">Usar um modelo pronto<small>Escolha um visual e só troque os nomes</small></button><button type="button" id="doZero">Criar do zero<small>Tela em branco: você monta tudo</small></button></div></section>
-    <section class="card" id="cardProntos"><h2>Modelos prontos <small style="font-weight:400;color:var(--suave)">(com os seus nomes)</small></h2><div class="gal" id="prontos"></div></section>
+    <section class="card" id="cardProntos"><h2>Modelos prontos <small style="font-weight:400;color:var(--suave)">(com os seus nomes na foto)</small></h2><div class="gal" id="prontos"></div></section>
     <section class="card"><h2><i>1</i>Escolha o formato da caixinha</h2><div class="modelos" id="modelos"></div><p class="info" id="infoModelo"></p><p class="info">Todos os formatos já aparecem com a sua arte.</p></section>
     <section class="card"><h2><i>2</i>O que vai escrito</h2>
       <label class="c" for="titulo">Para quem é</label><input type="text" id="titulo" maxlength="24" placeholder="Madrinha, Padrinho, Daminha...">
@@ -118,7 +121,7 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
 
   <aside class="previa">
     <div class="card">
-      <h3 style="margin-top:0">Frente da caixinha</h3>
+      <h3 style="margin-top:0">Sua caixinha</h3>
       <div class="frente" id="frente"></div>
       <h3>Planificação (faca) com a arte</h3>
       <div class="molde" id="molde"></div>
@@ -140,12 +143,13 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
 <script src="/caixinha/redes.js"></script>
 <script src="/caixinha/catalogo.js"></script>
 <script src="/caixinha/lib.js"></script>
+<script src="/caixinha/fotos.js"></script>
 <script>
 (function () {
   const MOD = CATALOGO.MOD, PASSO = CATALOGO.PASSO;
   const $ = s => document.querySelector(s);
   const LS = 'checklove_caixinha';
-  const ESTADO = { modelo: 0, titulo: 'Madrinha', nomes: 'Ana & João', data: '', frase: '', mono: '', estilo: 'coroa', fonte: 'script', paleta: 'rosa', custom: null, estampa: 'pontos', qtd: '', papel: '', acab: '', obs: '', wapp: '' };
+  const ESTADO = { modelo: 0, titulo: 'Madrinha', nomes: 'Ana & João', data: '', frase: '', mono: '', estilo: 'coroa', fonte: 'script', paleta: 'rosa', custom: null, estampa: 'pontos', foto: 1, qtd: '', papel: '', acab: '', obs: '', wapp: '' };
   try { const g = JSON.parse(localStorage.getItem(LS) || 'null'); if (g) Object.assign(ESTADO, g); } catch (e) {}
   const q = new URLSearchParams(location.search); if (q.get('modelo')) ESTADO.modelo = Math.max(0, Math.min(31, +q.get('modelo') - 1 || 0));
   if (ESTADO.modelo > 31) ESTADO.modelo = 0;
@@ -177,23 +181,13 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
     lista.appendChild(b);
   });
 
-  const PRONTOS = [
-    ['Rosé floral', 'coroa', 'rosa', 'floral', 'script'], ['Sálvia clássico', 'moldura', 'salvia', 'liso', 'serif'], ['Kraft rústico', 'selo', 'kraft', 'liso', 'script'],
-    ['Azul poeira', 'floral', 'azul', 'aquarela', 'script'], ['Marsala elegante', 'coroa', 'vinho', 'liso', 'serif'], ['Champanhe', 'minimal', 'ouro', 'losangos', 'sans'],
-    ['Lilás romântico', 'floral', 'lilas', 'aquarela', 'script'], ['Terracota boho', 'moldura', 'terra', 'folhas', 'serif'], ['Branco minimalista', 'minimal', 'branco', 'liso', 'sans'],
-    ['Oliva natural', 'coroa', 'oliva', 'folhas', 'script'], ['Marinho clássico', 'selo', 'marinho', 'pontos', 'serif'], ['Mocha listrado', 'moldura', 'moca', 'listras', 'script'],
-    ['Rosé aquarela', 'floral', 'rosa', 'aquarela', 'script'], ['Sálvia floral', 'floral', 'salvia', 'floral', 'serif'], ['Kraft com coroa', 'coroa', 'kraft', 'liso', 'serif'], ['Marsala com selo', 'selo', 'vinho', 'liso', 'script'],
-    ['Branco com folhas', 'coroa', 'branco', 'folhas', 'script'], ['Azul moldura', 'moldura', 'azul', 'liso', 'serif'], ['Champanhe selo', 'selo', 'ouro', 'liso', 'script'], ['Lilás minimal', 'minimal', 'lilas', 'liso', 'sans'],
-    ['Terracota selo', 'selo', 'terra', 'liso', 'serif'], ['Oliva floral', 'floral', 'oliva', 'floral', 'script'], ['Marinho moldura', 'moldura', 'marinho', 'liso', 'sans'], ['Rosé minimal', 'minimal', 'rosa', 'pontos', 'serif']
-  ];
+  const NOMES_FOTOS = ['Rosé com coroa', 'Sálvia com moldura', 'Kraft rústico', 'Azul floral', 'Marsala e dourado', 'Champanhe com faixas', 'Lilás romântico', 'Terracota boho', 'Branco clássico', 'Marinho e dourado', 'Oliva natural', 'Kraft com faixa', 'Mocha listrado', 'Florzinhas', 'Losangos', 'Preto e dourado', 'Peônias', 'Marinho minimal', 'Verde e dourado', 'Pêssego bolinhas', 'Grafite geométrico', 'Sálvia com flores', 'Rosa-antigo com folhas', 'Azul aquarela', 'Creme com arco', 'Terracota com arco', 'Verde com estrelas', 'Lavanda', 'Pêssego com folhas', 'Azul-aço dourado'];
+  const FONTE_CSS = { script: "'Great Vibes', cursive", serif: "'Playfair Display', serif", sans: "'Montserrat', sans-serif" };
+  const fotoHTML = (n, lado) => FotosCaixinha.html(n, { titulo: ESTADO.titulo, nomes: ESTADO.nomes, data: ESTADO.data, mono: ESTADO.mono }, lado, FONTE_CSS[ESTADO.fonte]);
+  function aplicarFoto(n) { const f = FOTOS[n - 1]; Object.assign(ESTADO, { foto: n, estilo: f.estilo, paleta: f.paleta, custom: null, estampa: f.estampa, fonte: f.fonte }); }
   function prontos() {
-    const g = $('#prontos'); g.innerHTML = '';
-    PRONTOS.forEach(([n, est, pal, estp, fonte], i) => {
-      const b = document.createElement('button'); b.type = 'button';
-      b.innerHTML = CX.frente(Object.assign(opcoes(), { estiloArte: est, paleta: pal, estampa: estp, fonte })) + `<small>${n}</small>`;
-      b.onclick = () => { Object.assign(ESTADO, { estilo: est, paleta: pal, custom: null, estampa: estp, fonte }); atualizar(); window.scrollTo({ top: $('.previa').offsetTop - 10, behavior: 'smooth' }); };
-      g.appendChild(b);
-    });
+    const g = $('#prontos'); if (!g.children.length) { for (let n = 1; n <= 30; n++) { const b = document.createElement('button'); b.type = 'button'; b.dataset.n = n; b.onclick = () => { aplicarFoto(n); atualizar(); window.scrollTo({ top: $('.previa').offsetTop - 10, behavior: 'smooth' }); }; g.appendChild(b); } }
+    [...g.children].forEach(b => { const n = +b.dataset.n; b.classList.toggle('ativo', ESTADO.foto === n); b.innerHTML = fotoHTML(n, 116) + `<small>${NOMES_FOTOS[n - 1]}</small>`; });
   }
   function miniaturas() {
     const o = Object.assign(opcoes(), { rotulos: false });
@@ -204,7 +198,7 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
   }
   let tmr; const depois = () => { clearTimeout(tmr); tmr = setTimeout(() => { prontos(); miniaturas(); }, 250); };
   $('#irProntos').onclick = () => $('#cardProntos').scrollIntoView({ behavior: 'smooth' });
-  $('#doZero').onclick = () => { Object.assign(ESTADO, { estilo: 'minimal', paleta: 'branco', custom: null, estampa: 'liso', fonte: 'sans', titulo: '', nomes: '', data: '', frase: '', mono: '' }); ['titulo', 'nomes', 'data', 'frase', 'mono'].forEach(k => $('#' + k).value = ''); atualizar(); $('#titulo').focus(); };
+  $('#doZero').onclick = () => { Object.assign(ESTADO, { foto: 0, estilo: 'minimal', paleta: 'branco', custom: null, estampa: 'liso', fonte: 'sans', titulo: '', nomes: '', data: '', frase: '', mono: '' }); ['titulo', 'nomes', 'data', 'frase', 'mono'].forEach(k => $('#' + k).value = ''); atualizar(); $('#titulo').focus(); };
   const mini = $('#mini'); mini.onclick = () => $('.previa').scrollIntoView({ behavior: 'smooth' });
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { mini.style.display = es[0].isIntersecting || innerWidth >= 900 ? 'none' : 'block'; }, { threshold: 0.15 }).observe($('.previa'));
 
@@ -219,7 +213,7 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
   let primeira = true;
   function atualizar(soTexto) {
     const m = MOD[ESTADO.modelo], o = opcoes();
-    $('#frente').innerHTML = CX.frente(o); $('#miniSvg').innerHTML = CX.frente(o);
+    $('#frente').innerHTML = ESTADO.foto ? fotoHTML(ESTADO.foto, 330) : CX.frente(o); $('#miniSvg').innerHTML = ESTADO.foto ? fotoHTML(ESTADO.foto, 88) : CX.frente(o);
     const redes = m.r(), ds = redes.map(r => CX.desenhar(r, o));
     $('#molde').innerHTML = ds.map(d => d.fluido()).join('');
     $('#infoModelo').innerHTML = `<b>${String(ESTADO.modelo + 1).padStart(2, '0')} · ${m.n}</b> · ${m.med} · nível ${m.niv.toLowerCase()} · ${m.t}<br>Ideal para: ${m.ideal}`;
@@ -251,7 +245,7 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
     const nomesPecas = base.map((d, i) => `<tr><td>${base.length > 1 ? 'Peça ' + (i + 1) : 'Peça única'}</td><td>${Math.round(d.w - 2)} x ${Math.round(d.h - 2)} mm (planificada)</td></tr>`).join('');
     const ficha = `<div class="folha"><div class="ficha"><span style="font:500 8pt Montserrat;letter-spacing:.3em;color:#8d6a5f">CHECKLOVE · ARQUIVO PARA A GRÁFICA</span>
       <h1 style="font:700 26pt 'Playfair Display',serif;color:#5e4038;margin:2mm 0 4mm">${m.n}</h1>
-      <div style="display:flex;gap:8mm;align-items:flex-start"><div style="width:62mm;flex:none">${CX.frente(o)}<div style="font-size:8pt;color:#8a7d77;text-align:center;margin-top:2mm">Frente da caixinha</div></div>
+      <div style="display:flex;gap:8mm;align-items:flex-start"><div style="width:62mm;flex:none">${ESTADO.foto ? fotoHTML(ESTADO.foto, 234) : CX.frente(o)}<div style="font-size:8pt;color:#8a7d77;text-align:center;margin-top:2mm">Visual escolhido (referência para a gráfica)</div></div>
       <div style="flex:1"><table><tr><td>Modelo</td><td>${num} · ${m.f}</td></tr><tr><td>Tamanho pronto</td><td>${m.med}</td></tr><tr><td>Quantidade</td><td>${p.qtd}</td></tr><tr><td>Papel</td><td>${p.papel}</td></tr><tr><td>Acabamento</td><td>${p.acab}</td></tr>${nomesPecas}${p.obs ? `<tr><td>Observações</td><td>${esc(p.obs)}</td></tr>` : ''}</table></div></div>
       <h4>Como ler a faca</h4>
       <table><tr><td><svg width="22mm" height="3mm" viewBox="0 0 22 3"><line x1="0" y1="1.5" x2="22" y2="1.5" stroke="#e6007e" stroke-width=".5"/></svg></td><td>Linha rosa: corte</td></tr><tr><td><svg width="22mm" height="3mm" viewBox="0 0 22 3"><line x1="0" y1="1.5" x2="22" y2="1.5" stroke="#00a0e3" stroke-width=".5" stroke-dasharray="2 1.5"/></svg></td><td>Linha azul tracejada: vinco (dobra)</td></tr><tr><td>Áreas com "cola"</td><td>Abas brancas ou da cor do papel para colar por dentro</td></tr></table>
