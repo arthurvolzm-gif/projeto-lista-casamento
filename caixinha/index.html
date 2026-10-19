@@ -48,6 +48,18 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
 .nota{font-size:12px;color:var(--suave);text-align:center;margin-top:8px}
 .passos{margin:8px 0 0 18px;font-size:12.5px;color:var(--suave)}
 #folhas{display:none}
+.inicio{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inicio button{border:2px solid var(--roxo-borda);background:#fff;border-radius:16px;padding:14px 10px;cursor:pointer;text-align:center;font-weight:700;font-size:14px;color:var(--roxo-esc)}
+.inicio button small{display:block;font-weight:400;font-size:11.5px;color:var(--suave);margin-top:2px}
+.inicio button:hover{background:var(--roxo-sua)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;max-height:340px;overflow:auto;padding:2px}
+.gal button{border:2px solid var(--linha);background:#fff;border-radius:12px;padding:6px;cursor:pointer;text-align:center}
+.gal button.ativo{border-color:var(--roxo);background:var(--roxo-sua)}
+.gal button svg{width:100%;height:auto}
+.gal small{display:block;font-size:10.5px;color:var(--suave);margin-top:3px;line-height:1.2}
+#mini{display:none;position:fixed;right:12px;bottom:12px;width:96px;z-index:20;border:2px solid var(--roxo);border-radius:12px;background:#fff;padding:4px;box-shadow:0 10px 26px -8px rgba(40,20,80,.5);cursor:pointer}
+#mini small{display:block;text-align:center;font-size:10px;color:var(--roxo-esc);font-weight:600}
+@media(min-width:900px){#mini{display:none!important}}
 @media print{
   @page{size:A4;margin:0}
   body{background:#fff}
@@ -73,7 +85,10 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
 
 <main class="app">
   <div class="colunas" style="display:grid;gap:16px">
-    <section class="card"><h2><i>1</i>Escolha o modelo da caixinha</h2><div class="modelos" id="modelos"></div><p class="info" id="infoModelo"></p></section>
+    <section class="card"><h2>Como você quer começar?</h2>
+      <div class="inicio"><button type="button" id="irProntos">Usar um modelo pronto<small>Escolha um visual e só troque os nomes</small></button><button type="button" id="doZero">Criar do zero<small>Tela em branco: você monta tudo</small></button></div></section>
+    <section class="card" id="cardProntos"><h2>Modelos prontos <small style="font-weight:400;color:var(--suave)">(com os seus nomes)</small></h2><div class="gal" id="prontos"></div></section>
+    <section class="card"><h2><i>1</i>Escolha o formato da caixinha</h2><div class="modelos" id="modelos"></div><p class="info" id="infoModelo"></p><p class="info">Todos os formatos já aparecem com a sua arte.</p></section>
     <section class="card"><h2><i>2</i>O que vai escrito</h2>
       <label class="c" for="titulo">Para quem é</label><input type="text" id="titulo" maxlength="24" placeholder="Madrinha, Padrinho, Daminha...">
       <label class="c" for="nomes">Nome dos noivos</label><input type="text" id="nomes" maxlength="30" placeholder="Ana & João">
@@ -119,6 +134,7 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
   </aside>
 </main>
 
+<div id="mini" title="Ver a prévia"><div id="miniSvg"></div><small>sua caixinha</small></div>
 <div id="folhas"></div>
 
 <script src="redes.js"></script>
@@ -161,6 +177,37 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
     lista.appendChild(b);
   });
 
+  const PRONTOS = [
+    ['Rosé floral', 'coroa', 'rosa', 'floral', 'script'], ['Sálvia clássico', 'moldura', 'salvia', 'liso', 'serif'], ['Kraft rústico', 'selo', 'kraft', 'liso', 'script'],
+    ['Azul poeira', 'floral', 'azul', 'aquarela', 'script'], ['Marsala elegante', 'coroa', 'vinho', 'liso', 'serif'], ['Champanhe', 'minimal', 'ouro', 'losangos', 'sans'],
+    ['Lilás romântico', 'floral', 'lilas', 'aquarela', 'script'], ['Terracota boho', 'moldura', 'terra', 'folhas', 'serif'], ['Branco minimalista', 'minimal', 'branco', 'liso', 'sans'],
+    ['Oliva natural', 'coroa', 'oliva', 'folhas', 'script'], ['Marinho clássico', 'selo', 'marinho', 'pontos', 'serif'], ['Mocha listrado', 'moldura', 'moca', 'listras', 'script'],
+    ['Rosé aquarela', 'floral', 'rosa', 'aquarela', 'script'], ['Sálvia floral', 'floral', 'salvia', 'floral', 'serif'], ['Kraft com coroa', 'coroa', 'kraft', 'liso', 'serif'], ['Marsala com selo', 'selo', 'vinho', 'liso', 'script'],
+    ['Branco com folhas', 'coroa', 'branco', 'folhas', 'script'], ['Azul moldura', 'moldura', 'azul', 'liso', 'serif'], ['Champanhe selo', 'selo', 'ouro', 'liso', 'script'], ['Lilás minimal', 'minimal', 'lilas', 'liso', 'sans'],
+    ['Terracota selo', 'selo', 'terra', 'liso', 'serif'], ['Oliva floral', 'floral', 'oliva', 'floral', 'script'], ['Marinho moldura', 'moldura', 'marinho', 'liso', 'sans'], ['Rosé minimal', 'minimal', 'rosa', 'pontos', 'serif']
+  ];
+  function prontos() {
+    const g = $('#prontos'); g.innerHTML = '';
+    PRONTOS.forEach(([n, est, pal, estp, fonte], i) => {
+      const b = document.createElement('button'); b.type = 'button';
+      b.innerHTML = CX.frente(Object.assign(opcoes(), { estiloArte: est, paleta: pal, estampa: estp, fonte })) + `<small>${n}</small>`;
+      b.onclick = () => { Object.assign(ESTADO, { estilo: est, paleta: pal, custom: null, estampa: estp, fonte }); atualizar(); window.scrollTo({ top: $('.previa').offsetTop - 10, behavior: 'smooth' }); };
+      g.appendChild(b);
+    });
+  }
+  function miniaturas() {
+    const o = Object.assign(opcoes(), { rotulos: false });
+    [...lista.children].forEach((b, i) => {
+      const rs = MOD[i].r(), melhor = rs.reduce((x, y) => (y.faces.reduce((t, f) => t + f.w, 0) > x.faces.reduce((t, f) => t + f.w, 0) ? y : x), rs[0]);
+      const sv = b.querySelector('svg'); if (sv) sv.outerHTML = CX.desenhar(melhor, o).fluido().replace('width:100%;height:auto', 'width:100%;height:54px');
+    });
+  }
+  let tmr; const depois = () => { clearTimeout(tmr); tmr = setTimeout(() => { prontos(); miniaturas(); }, 250); };
+  $('#irProntos').onclick = () => $('#cardProntos').scrollIntoView({ behavior: 'smooth' });
+  $('#doZero').onclick = () => { Object.assign(ESTADO, { estilo: 'minimal', paleta: 'branco', custom: null, estampa: 'liso', fonte: 'sans', titulo: '', nomes: '', data: '', frase: '', mono: '' }); ['titulo', 'nomes', 'data', 'frase', 'mono'].forEach(k => $('#' + k).value = ''); atualizar(); $('#titulo').focus(); };
+  const mini = $('#mini'); mini.onclick = () => $('.previa').scrollIntoView({ behavior: 'smooth' });
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { mini.style.display = es[0].isIntersecting || innerWidth >= 900 ? 'none' : 'block'; }, { threshold: 0.15 }).observe($('.previa'));
+
   function marcar() {
     document.querySelectorAll('#estilos button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO.estilo));
     document.querySelectorAll('#fontes button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO.fonte));
@@ -172,12 +219,12 @@ input[type=text]:focus{outline:none;border-color:var(--roxo)}
   let primeira = true;
   function atualizar(soTexto) {
     const m = MOD[ESTADO.modelo], o = opcoes();
-    $('#frente').innerHTML = CX.frente(o);
+    $('#frente').innerHTML = CX.frente(o); $('#miniSvg').innerHTML = CX.frente(o);
     const redes = m.r(), ds = redes.map(r => CX.desenhar(r, o));
     $('#molde').innerHTML = ds.map(d => d.fluido()).join('');
     $('#infoModelo').innerHTML = `<b>${String(ESTADO.modelo + 1).padStart(2, '0')} · ${m.n}</b> · ${m.med} · nível ${m.niv.toLowerCase()} · ${m.t}<br>Ideal para: ${m.ideal}`;
     $('#medidas').textContent = `Tamanho pronto: ${m.med}`;
-    if (!soTexto) marcar();
+    if (!soTexto) marcar(); depois();
     if (!primeira) salvar(); primeira = false;
     if (!soTexto && !primeira) { const a = lista.children[ESTADO.modelo]; if (a && lista.scrollHeight > lista.clientHeight) { const t = a.offsetTop - 120; if (Math.abs(lista.scrollTop - t) > 150) lista.scrollTop = Math.max(0, t); } }
   }

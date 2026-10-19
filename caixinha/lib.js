@@ -198,5 +198,5 @@
     return `<svg viewBox="0 0 100 100" style="display:block;width:100%;height:auto"><defs><filter id="${id}s" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="1.6" stdDeviation="1.8" flood-opacity=".25"/></filter></defs>${defs(id, pal, o.estampa || 'pontos')}<rect x="5" y="5" width="90" height="90" rx="1.5" fill="url(#${id})" stroke="${LINHA}" stroke-width=".3" filter="url(#${id}s)"/><rect x="8.5" y="8.5" width="83" height="83" fill="none" stroke="${pal.cor}" stroke-width=".35" stroke-dasharray="1 .8"/>${arte(f, o, pal)}</svg>`;
   }
 
-  return { PAL, ESTAMPAS, ESTILOS, FONTES, desenhar, frente, resolvePal, iniciais };
+  return { PAL, ESTAMPAS, ESTILOS, FONTES, desenhar, frente, resolvePal, iniciais, folha, flor, galho, coroa, defs, texto };
 });
