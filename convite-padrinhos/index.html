@@ -82,74 +82,68 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--roxo)}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
+<style>
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;max-height:460px;overflow:auto;padding:2px}
+.gal button{border:2px solid var(--linha);background:#fff;border-radius:12px;padding:5px;cursor:pointer;text-align:center}
+.gal button.ativo{border-color:var(--roxo);background:var(--roxo-sua)}
+.gal small{display:block;font-size:10.5px;color:var(--suave);margin-top:3px;line-height:1.2}
+.foto-cv{position:relative;overflow:hidden;border-radius:8px;container-type:inline-size;margin:0 auto}
+.foto-cv img{display:block;width:100%;height:auto}
+.foto-cv .ov{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.ov .l1{font-family:'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;font-size:2.7cqw;white-space:nowrap}
+.ov .l2{font-family:'Great Vibes',cursive;font-size:9.6cqw;line-height:1.02;margin-top:1.2cqw}
+.ov .msg{font-family:'Playfair Display',serif;font-style:italic;font-size:2.7cqw;line-height:1.5;margin-top:2.4cqw}
+.ov .ass{font-family:'Montserrat',sans-serif;letter-spacing:.2em;text-transform:uppercase;font-size:2.2cqw;margin-top:2.6cqw}
+.ov .nm{font-family:'Great Vibes',cursive;font-size:7.2cqw;line-height:1.05;margin-top:.6cqw}
+.ov .dt{font-family:'Montserrat',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-size:2.1cqw;margin-top:1.4cqw}
+.claro .ov{text-shadow:0 1px 2px rgba(0,0,0,.5)}
+#mini{display:none;position:fixed;right:12px;bottom:12px;z-index:20;border:2px solid var(--roxo);border-radius:12px;background:#fff;padding:4px;width:100px;box-shadow:0 10px 26px -8px rgba(40,20,80,.5);cursor:pointer}
+#mini small{display:block;text-align:center;font-size:10px;color:var(--roxo-esc);font-weight:600}
+@media(min-width:900px){#mini{display:none!important}}
+</style>
 </head>
 <body>
-<header><b>CheckLove · Convite dos padrinhos</b><span>Crie o convite, veja ao vivo e mande o arquivo pronto para a gráfica</span></header>
-
+<header><b>CheckLove · Convite dos padrinhos</b><span>Escolha o visual, edite o texto e mande o arquivo pronto para a gráfica</span></header>
 <main class="app">
   <div style="display:grid;gap:16px">
-    <section class="card"><h2>Como você quer começar?</h2>
-      <div class="inicio"><button type="button" id="irProntos">Usar um modelo pronto<small>Escolha um visual e só troque os nomes</small></button><button type="button" id="doZero">Criar do zero<small>Tela em branco: você monta tudo</small></button></div></section>
-    <section class="card" id="cardProntos"><h2>Modelos prontos <small style="font-weight:400;color:var(--suave)">(com o seu texto)</small></h2><div class="gal" id="prontos"></div></section>
-    <section class="card"><h2><i>1</i>Para quem é o convite</h2>
-      <div class="opc" id="tipos"></div>
-      <label class="c">Tamanho</label><div class="opc" id="formatos"></div>
-    </section>
-    <section class="card"><h2><i>2</i>O que vai escrito</h2>
+    <section class="card"><h2><i>1</i>Para quem é o convite</h2><div class="opc" id="tipos"></div></section>
+    <section class="card"><h2><i>2</i>Escolha o visual <small style="font-weight:400;color:var(--suave)">(com o seu texto na foto)</small></h2><div class="gal" id="prontos"></div></section>
+    <section class="card"><h2><i>3</i>O que vai escrito <small style="font-weight:400;color:var(--suave)">(edite tudo)</small></h2>
       <label class="c" for="l1">Linha de cima</label><input type="text" id="l1" maxlength="30">
       <label class="c" for="l2">Pergunta principal</label><input type="text" id="l2" maxlength="40">
       <label class="c" for="msg">Mensagem</label><textarea id="msg" maxlength="260"></textarea>
       <label class="c" for="ass">Despedida</label><input type="text" id="ass" maxlength="24">
-      <label class="c" for="nomes">Nome dos noivos</label><input type="text" id="nomes" maxlength="30" placeholder="Ana & João">
+      <label class="c" for="nomes">Nome dos noivos</label><input type="text" id="nomes" maxlength="30" placeholder="Ana &amp; João">
       <label class="c" for="data">Data e local (opcional)</label><input type="text" id="data" maxlength="48" placeholder="12 de outubro de 2026">
-      <label class="c" for="mono">Monograma (se vazio usa as iniciais)</label><input type="text" id="mono" maxlength="5" placeholder="A&J">
     </section>
-    <section class="card"><h2><i>3</i>Estilo</h2>
-      <div class="opc" id="estilos"></div>
-      <label class="c">Letra dos títulos</label><div class="opc" id="fontes"></div>
-    </section>
-    <section class="card"><h2><i>4</i>Cores e fundo</h2>
-      <div class="cores" id="cores"></div>
-      <div class="pers"><span>Ou escolha as suas:</span><label>fundo <input type="color" id="corBg" value="#f7e6e1"></label><label>detalhe <input type="color" id="corDet" value="#cf9a8f"></label><label>letras <input type="color" id="corTin" value="#7d4b43"></label></div>
-      <label class="c">Fundo do papel</label><div class="opc" id="estampas"></div>
-    </section>
-    <section class="card"><h2><i>5</i>Pedido para a gráfica</h2>
+    <section class="card"><h2><i>4</i>Pedido para a gráfica</h2>
+      <label class="c" for="tam">Tamanho</label><select id="tam"><option value="105x148">A6 · 10,5 x 14,8 cm</option><option value="148x210">A5 · 14,8 x 21 cm</option></select>
       <label class="c" for="qtd">Quantos convites?</label><input type="text" inputmode="numeric" id="qtd" maxlength="5" placeholder="15">
-      <label class="c" for="papel">Papel</label>
-      <select id="papel"><option>Couchê fosco 250 g</option><option>Couchê fosco 300 g</option><option>Papel perolado 250 g</option><option>Papel texturizado (linho) 240 g</option><option>Kraft 240 g</option></select>
-      <label class="c" for="acab">Acabamento</label>
-      <select id="acab"><option>Sem acabamento</option><option>Laminação fosca</option><option>Verniz UV localizado nos nomes</option><option>Hot stamping dourado nos nomes</option></select>
-      <label class="c" for="env">Envelope</label>
-      <select id="env"><option>Sem envelope</option><option>Com envelope branco</option><option>Com envelope kraft</option></select>
+      <label class="c" for="papel">Papel</label><select id="papel"><option>Couchê fosco 250 g</option><option>Couchê fosco 300 g</option><option>Papel perolado 250 g</option><option>Papel texturizado (linho) 240 g</option><option>Kraft 240 g</option></select>
+      <label class="c" for="acab">Acabamento</label><select id="acab"><option>Sem acabamento</option><option>Laminação fosca</option><option>Verniz UV localizado nos nomes</option><option>Hot stamping dourado nos nomes</option></select>
+      <label class="c" for="env">Envelope</label><select id="env"><option>Sem envelope</option><option>Com envelope branco</option><option>Com envelope kraft</option></select>
       <label class="c" for="obs">Observações (opcional)</label><input type="text" id="obs" maxlength="90" placeholder="Prazo, entrega...">
       <label class="c" for="wapp">WhatsApp da gráfica (opcional, só números com DDD)</label><input type="text" inputmode="tel" id="wapp" maxlength="15" placeholder="11999998888">
     </section>
   </div>
-
-  <aside class="previa">
-    <div class="card">
-      <h3>Seu convite</h3>
-      <div class="vitrine" id="vitrine"></div>
-      <p class="aviso" id="aviso">O texto ficou grande para este tamanho. Encurte a mensagem ou escolha o tamanho A5.</p>
-      <p class="info" id="medidas"></p>
-      <button class="btn" id="imprimir">Baixar arquivo para a gráfica (PDF)</button>
-      <button class="btn claro" id="whats">Enviar pedido pelo WhatsApp</button>
-      <button class="btn claro" id="copiar">Copiar o texto do pedido</button>
-      <a class="btn claro" style="text-align:center;text-decoration:none" id="mapa" target="_blank" rel="noopener" href="#">Procurar gráficas perto de mim</a>
-      <button class="btn claro" id="sortear">Surpreenda-me com outra combinação</button>
-      <p class="nota">O PDF leva a ficha com as medidas e o convite em tamanho real, com <b>3 mm de sangria</b> e marcas de corte. Na janela que abrir, escolha "Salvar como PDF", A4 e <b>escala 100%</b>.</p>
-      <ol class="passos"><li>Escolha o tipo e escreva a mensagem</li><li>Baixe o PDF e mande para a gráfica (ou use o botão do WhatsApp)</li><li>A gráfica imprime, corta e entrega os convites prontos</li></ol>
-    </div>
-  </aside>
+  <aside class="previa"><div class="card">
+    <h3>Seu convite</h3>
+    <div id="vitrine"></div>
+    <p class="aviso" id="aviso">O texto ficou grande para este visual. Encurte a mensagem.</p>
+    <button class="btn" id="imprimir">Baixar arquivo para a gráfica (PDF)</button>
+    <button class="btn claro" id="whats">Enviar pedido pelo WhatsApp</button>
+    <button class="btn claro" id="copiar">Copiar o texto do pedido</button>
+    <a class="btn claro" style="text-align:center;text-decoration:none" id="mapa" target="_blank" rel="noopener" href="#">Procurar gráficas perto de mim</a>
+    <p class="nota">O PDF leva a ficha com a foto do visual escolhido, o convite em tamanho real com <b>3 mm de sangria</b> e marcas de corte. Escolha "Salvar como PDF", A4 e <b>escala 100%</b>.</p>
+  </div></aside>
 </main>
-<div id="mini" title="Ver a prévia"><div class="mc" id="miniCv"></div><small>seu convite</small></div>
+<div id="mini" title="Ver a prévia"><div id="miniCv"></div><small>seu convite</small></div>
 <div id="folhas"></div>
-
-<script src="/caixinha/lib.js"></script>
 <script>
 (function () {
-  const $ = s => document.querySelector(s);
-  const LS = 'checklove_convite_padrinhos';
+  const $ = s => document.querySelector(s), LS = 'checklove_convite_padrinhos2';
+  const FOTOS = [{"n":1,"b":[0.2051,0.8154,0.2459,0.8299],"ink":"#3f4d38","bg":"#a9b394","bd":"#d8dec9"},{"n":2,"b":[0.2179,0.7692,0.2254,0.7889],"ink":"#4a2a1e","bg":"#c4795a","bd":"#e8b79f"},{"n":3,"b":[0.2179,0.7692,0.2459,0.8197],"ink":"#3f3f45","bg":"#f1f1f1","bd":"#9a9aa0"},{"n":4,"b":[0.2308,0.7692,0.2357,0.8197],"ink":"#6b5524","bg":"#f4e8d3","bd":"#c9a56a"},{"n":5,"b":[0.2308,0.7692,0.1947,0.8094],"ink":"#3a2a1c","bg":"#c9a06b","bd":"#4a3320"},{"n":6,"b":[0.2179,0.7821,0.2459,0.7582],"ink":"#5e4a24","bg":"#f1ebdd","bd":"#b8923e"},{"n":7,"b":[0.2179,0.7821,0.2561,0.7275],"ink":"#4d3a2c","bg":"#dcc0a0","bd":"#7d5a50"},{"n":8,"b":[0.2051,0.8077,0.2152,0.7582],"ink":"#1f2f4f","bg":"#f4f4f6","bd":"#1f2f4f"},{"n":9,"b":[0.2179,0.7949,0.2254,0.6967],"ink":"#7d3f46","bg":"#f3cdd0","bd":"#d4a0a5"},{"n":10,"b":[0.2179,0.7692,0.3381,0.8197],"ink":"#5e4038","bg":"#efe5d3","bd":"#8c1f2b"},{"n":11,"b":[0.2564,0.7308,0.4816,0.8094],"ink":"#3d4a28","bg":"#c8cf9f","bd":"#556b3a"},{"n":12,"b":[0.2564,0.7436,0.4816,0.8094],"ink":"#4d3a73","bg":"#e4cfe9","bd":"#9b7bb8"},{"n":13,"b":[0.2564,0.7436,0.4816,0.8094],"ink":"#6b5524","bg":"#f4f2ee","bd":"#c9a24a"},{"n":14,"b":[0.2564,0.7436,0.4816,0.8094],"ink":"#f0d9a0","bg":"#7a1220","bd":"#d4a24a"},{"n":15,"b":[0.2436,0.7308,0.3689,0.6455],"ink":"#6e3a40","bg":"#f6e9e2","bd":"#e8b4bc"},{"n":16,"b":[0.1538,0.641,0.4611,0.6865],"ink":"#35516b","bg":"#dce8f5","bd":"#7f9bd0"},{"n":17,"b":[0.2179,0.7821,0.2664,0.7377],"ink":"#3f4d38","bg":"#f3f1ec","bd":"#7f9a6c"},{"n":18,"b":[0.2179,0.7949,0.2664,0.7377],"ink":"#7a3a28","bg":"#f7cdb8","bd":"#c4684c"},{"n":19,"b":[0.2564,0.7436,0.3484,0.6762],"ink":"#6e3a40","bg":"#f4f4f4","bd":"#e8a0aa"},{"n":20,"b":[0.2051,0.7692,0.2049,0.8197],"ink":"#f0d9a0","bg":"#6e1020","bd":"#d4a24a"},{"n":21,"b":[0.2051,0.7821,0.2049,0.8094],"ink":"#f0d9a0","bg":"#161616","bd":"#d4a24a"},{"n":22,"b":[0.2051,0.7821,0.2049,0.8094],"ink":"#f0d9a0","bg":"#10341f","bd":"#d4a24a"},{"n":23,"b":[0.2051,0.7821,0.2049,0.8094],"ink":"#f3f3f6","bg":"#1f2f4f","bd":"#e8e8ee"},{"n":24,"b":[0.1795,0.8333,0.1844,0.8197],"ink":"#3f3f45","bg":"#f6f6f6","bd":"#bfbfbf"},{"n":25,"b":[0.2051,0.7821,0.2049,0.7992],"ink":"#7d4b43","bg":"#f6d6cc","bd":"#d4a09a"},{"n":26,"b":[0.2564,0.7487,0.2152,0.7787],"ink":"#4a2a1e","bg":"#6b4a38","bd":"#d4b48a"},{"n":27,"b":[0.2692,0.7359,0.2213,0.75],"ink":"#3f4d38","bg":"#8fa77a","bd":"#e6d3a0"},{"n":28,"b":[0.2436,0.7564,0.2049,0.7787],"ink":"#6b4a24","bg":"#f2d7b0","bd":"#c9a56a"}];
+  const NOMES = ["Sálvia clássico", "Terracota com folhas", "Branco com ramo", "Creme dourado", "Kraft rústico", "Faixa dourada", "Faixas ornamentadas", "Marinho e branco", "Rosé aquarela", "Selo de cera", "Coroa oliva", "Coroa lilás", "Coroa dourada", "Coroa marsala", "Rosa floral", "Azul floral", "Eucalipto", "Terracota floral", "Peônias", "Marsala com moldura", "Preto e dourado", "Verde-floresta", "Marinho e prata", "Branco minimal", "Rosé com ramo", "Marrom com painel", "Verde aquarela com painel", "Pêssego com painel"];
   const TIPOS = {
     madrinha: ['Madrinha', 'Aceita ser', 'nossa madrinha?', 'Você esteve presente em tantos momentos da nossa história que não conseguimos imaginar o nosso grande dia sem você ao nosso lado.'],
     padrinho: ['Padrinho', 'Aceita ser', 'nosso padrinho?', 'Você esteve presente em tantos momentos da nossa história que não conseguimos imaginar o nosso grande dia sem você ao nosso lado.'],
@@ -157,176 +151,82 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--roxo)}
     daminha: ['Daminha', 'Aceita ser', 'nossa daminha?', 'Queremos que você entre antes da noiva, espalhando flores e alegria pelo caminho.'],
     pajem: ['Pajem', 'Aceita ser', 'nosso pajem?', 'Queremos que você leve as nossas alianças até o altar. É uma missão muito importante!']
   };
-  const FORMATOS = { a6: ['A6 · 10,5 x 14,8 cm', 105, 148], a5: ['A5 · 14,8 x 21 cm', 148, 210], quad: ['Quadrado · 14 x 14 cm', 140, 140] };
-  const ESTILOS = { coroa: 'Coroa e monograma', floral: 'Floral nos cantos', moldura: 'Moldura', faixa: 'Faixas', escuro: 'Escuro e dourado' };
-  const FUNDOS = { liso: 'Liso', aquarela: 'Aquarela', folhas: 'Folhas', floral: 'Florzinhas' };
-  const ESTADO = { tipo: 'madrinha', formato: 'a6', l1: TIPOS.madrinha[1], l2: TIPOS.madrinha[2], msg: TIPOS.madrinha[3], ass: 'Com amor', nomes: 'Ana & João', data: '', mono: '', estilo: 'coroa', fonte: 'script', paleta: 'rosa', custom: null, fundo: 'liso', qtd: '', papel: '', acab: '', env: '', obs: '', wapp: '' };
+  const ESTADO = { tipo: 'madrinha', foto: 1, l1: TIPOS.madrinha[1], l2: TIPOS.madrinha[2], msg: TIPOS.madrinha[3], ass: 'Com amor', nomes: 'Ana & João', data: '', tam: '105x148', qtd: '', papel: '', acab: '', env: '', obs: '', wapp: '' };
   try { const g = JSON.parse(localStorage.getItem(LS) || 'null'); if (g) Object.assign(ESTADO, g); } catch (e) {}
+  if (!(ESTADO.foto >= 1 && ESTADO.foto <= FOTOS.length)) ESTADO.foto = 1;
   const salvar = () => { try { localStorage.setItem(LS, JSON.stringify(ESTADO)); } catch (e) {} };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const claro = f => /^#(e|f)/i.test(f.ink);
 
-  /* ---------- o convite ---------- */
-  function pal(st) {
-    const p = CX.resolvePal(st.custom || st.paleta);
-    if (st.estilo === 'escuro') return { bg: p.tinta, cor: p.cor === p.tinta ? '#c9a24a' : '#d8b86a', tinta: '#f3e9da', escuro: true, orig: p };
-    return Object.assign({ escuro: false, orig: p }, p);
+  function fotoHTML(n, w) {
+    const f = FOTOS[n - 1], nn = String(n).padStart(2, '0'), h = w * 1.25;
+    const [x0, x1, y0, y1] = f.b;
+    const ov = `<div class="ov" style="left:${(x0 * 100).toFixed(2)}%;width:${((x1 - x0) * 100).toFixed(2)}%;top:${(y0 * 100 / 1.25 * 1.25).toFixed(2)}%;height:${((y1 - y0) * 100).toFixed(2)}%;color:${f.ink}">`
+      + (ESTADO.l1 ? `<div class="l1">${esc(ESTADO.l1)}</div>` : '') + (ESTADO.l2 ? `<div class="l2">${esc(ESTADO.l2)}</div>` : '')
+      + (ESTADO.msg ? `<div class="msg">${esc(ESTADO.msg)}</div>` : '') + (ESTADO.ass ? `<div class="ass">${esc(ESTADO.ass)}</div>` : '')
+      + (ESTADO.nomes ? `<div class="nm">${esc(ESTADO.nomes)}</div>` : '') + (ESTADO.data ? `<div class="dt">${esc(ESTADO.data)}</div>` : '') + '</div>';
+    return `<div class="foto-cv ${claro(f) ? 'claro' : ''}" style="width:${w}px"><img src="/caixinha/img/conv-${nn}.webp" alt="" width="1000" height="1250">${ov}</div>`;
   }
-  /* decoração em viewBox 0 0 100 hh (largura 100) */
-  function decoracao(hh, P, st) {
-    const id = 'bg' + Math.floor(Math.random() * 1e6), c = P.cor, e = st.estilo, W = 100;
-    let s = '', defs = '';
-    const fundo = st.fundo !== 'liso' && !P.escuro;
-    if (fundo) defs = CX.defs(id, { bg: P.bg, cor: P.cor, tinta: P.tinta }, st.fundo);
-    /* fundo com sangria de 3 mm (-5 a 105 aprox. na escala do cartão) */
-    const m = 6;
-    s += `<rect x="${-m}" y="${-m}" width="${W + 2 * m}" height="${hh + 2 * m}" fill="${fundo ? `url(#${id})` : P.bg}"/>`;
-    if (e === 'coroa') {
-      s += CX.coroa(50, hh * 0.2, 14, c);
-      s += `<circle cx="50" cy="${hh * 0.2}" r="10.5" fill="none" stroke="${c}" stroke-width=".25"/>`;
-      s += CX.texto(st.mono || CX.iniciais(st.nomes), 50, hh * 0.2 + 4, 11, st.fonte === 'sans' ? 'serif' : st.fonte, P.tinta, 0, false, 18);
-      s += `<rect x="4" y="4" width="92" height="${hh - 8}" fill="none" stroke="${c}" stroke-width=".25"/>`;
-    } else if (e === 'floral') {
-      for (const [sx, sy] of [[0, 0], [1, 1]]) {
-        const x = sx ? 100 - 4 : 4, y = sy ? hh - 4 : 4, dir = sx ? 180 : 0;
-        s += CX.galho(x, y, 36, dir + (sx ? -22 : 22), c, 6) + CX.galho(x, y, 30, dir + (sx ? -70 : 70), c, 5);
-        s += CX.flor(x, y, 7, c, P.tinta) + CX.flor(x + (sx ? -9 : 9), y + (sy ? -4 : 4), 5, c, '#fff') + CX.flor(x + (sx ? -3 : 3), y + (sy ? -10 : 10), 4.4, c, '#fff');
-      }
-    } else if (e === 'moldura') {
-      s += `<rect x="5" y="5" width="90" height="${hh - 10}" fill="none" stroke="${c}" stroke-width=".7"/><rect x="7.2" y="7.2" width="85.6" height="${hh - 14.4}" fill="none" stroke="${c}" stroke-width=".25"/>`;
-      for (const [x, y] of [[5, 5], [95, 5], [5, hh - 5], [95, hh - 5]]) s += `<circle cx="${x}" cy="${y}" r="1.4" fill="${c}"/>`;
-      s += CX.galho(38, 15, 24, 0, c, 4);
-    } else if (e === 'faixa') {
-      s += `<rect x="${-m}" y="${-m}" width="${W + 2 * m}" height="${14 + m}" fill="${c}" fill-opacity=".88"/><rect x="${-m}" y="${hh - 8}" width="${W + 2 * m}" height="${8 + m}" fill="${c}" fill-opacity=".88"/>`;
-      s += `<line x1="8" y1="17.5" x2="92" y2="17.5" stroke="${c}" stroke-width=".25"/>`;
-      s += CX.galho(40, 7, 20, 0, P.bg, 4);
-    } else {
-      s += `<rect x="4.5" y="4.5" width="91" height="${hh - 9}" fill="none" stroke="${c}" stroke-width=".4"/>`;
-      s += CX.galho(37, 14, 26, 0, c, 5);
-    }
-    const b = 300 / FORMATOS[st.formato][1];
-    return `<svg class="dec" viewBox="${-b} ${-b} ${W + 2 * b} ${hh + 2 * b}" preserveAspectRatio="none" style="overflow:visible"><g>${defs}${s}</g></svg>`;
-  }
-  const TOPO = { coroa: 0.36, floral: 0.16, moldura: 0.17, faixa: 0.25, escuro: 0.14 };
-  function cartaoHTML(st = ESTADO) {
-    const [, W, H] = FORMATOS[st.formato], hh = 100 * H / W, P = pal(st), e = st.estilo;
-    const topo = Math.round(TOPO[e] * 100), base = e === 'faixa' ? 11 : 7;
-    const ft = 'f-' + st.fonte, tinta = P.tinta, cor = P.cor;
-    const fundoPainel = st.fundo !== 'liso' && !P.escuro;
-    return `<div class="cv" style="width:${W}mm;height:${H}mm;--bg:${P.bg};--tinta-c:${tinta};--cor-c:${cor}">${decoracao(hh, P, st)}
-      <div class="tx" style="top:${topo}%;bottom:${base}%">
-        <div class="l1">${esc(st.l1)}</div>
-        <div class="l2 ${ft}">${esc(st.l2)}</div>
-        <div class="msg">${esc(st.msg)}</div>
-        ${st.ass ? `<div class="ass">${esc(st.ass)}</div>` : ''}
-        ${st.nomes ? `<div class="nm ${ft}">${esc(st.nomes)}</div>` : ''}
-        ${st.data ? `<div class="dt">${esc(st.data)}</div>` : ''}
-      </div></div>`;
-  }
-
-  /* ---------- controles ---------- */
-  function botoes(id, mapa, chave, rot, aoMudar) {
-    const el = $(id); el.innerHTML = '';
-    Object.keys(mapa).forEach(k => { const b = document.createElement('button'); b.textContent = rot(mapa[k]); b.dataset.k = k; b.onclick = () => { ESTADO[chave] = k; if (aoMudar) aoMudar(k); atualizar(); }; el.appendChild(b); });
-  }
-  botoes('#tipos', TIPOS, 'tipo', v => v[0], k => { const t = TIPOS[k]; ESTADO.l1 = t[1]; ESTADO.l2 = t[2]; ESTADO.msg = t[3]; ['l1', 'l2', 'msg'].forEach(i => $('#' + i).value = ESTADO[i]); });
-  botoes('#formatos', FORMATOS, 'formato', v => v[0]);
-  botoes('#estilos', ESTILOS, 'estilo', v => v);
-  botoes('#fontes', CX.FONTES, 'fonte', v => v.n);
-  botoes('#estampas', FUNDOS, 'fundo', v => v);
-  const cores = $('#cores');
-  Object.keys(CX.PAL).forEach(k => { const p = CX.PAL[k], b = document.createElement('button'); b.className = 'cor'; b.title = p.n; b.dataset.k = k; b.style.background = p.bg; b.innerHTML = `<i style="background:${p.cor}"></i>`; b.onclick = () => { ESTADO.paleta = k; ESTADO.custom = null; atualizar(); }; cores.appendChild(b); });
-  ['corBg', 'corDet', 'corTin'].forEach(id => $('#' + id).oninput = () => { ESTADO.custom = { bg: $('#corBg').value, cor: $('#corDet').value, tinta: $('#corTin').value }; atualizar(); });
-  ['l1', 'l2', 'msg', 'ass', 'nomes', 'data', 'mono'].forEach(k => $('#' + k).oninput = e => { ESTADO[k] = e.target.value; atualizar(true); });
-  ['qtd', 'obs', 'wapp'].forEach(k => $('#' + k).oninput = e => { ESTADO[k] = e.target.value; salvar(); });
-  ['papel', 'acab', 'env'].forEach(k => $('#' + k).onchange = e => { ESTADO[k] = e.target.value; salvar(); });
-
-  function marcar() {
-    const mk = (id, chave) => document.querySelectorAll(id + ' button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO[chave]));
-    mk('#tipos', 'tipo'); mk('#formatos', 'formato'); mk('#estilos', 'estilo'); mk('#fontes', 'fonte'); mk('#estampas', 'fundo');
-    document.querySelectorAll('#cores .cor').forEach(b => b.classList.toggle('ativo', !ESTADO.custom && b.dataset.k === ESTADO.paleta));
-  }
-  function atualizar(soTexto) {
-    const [rot, W, H] = FORMATOS[ESTADO.formato];
-    const v = $('#vitrine'); v.innerHTML = cartaoHTML();
-    const cv = v.firstElementChild;
-    /* prévia em escala: o cartão tem tamanho real em mm, a vitrine reduz */
-    const alvo = Math.min(300, v.clientWidth - 32 || 300), k = alvo / (W * 3.7795);
-    cv.style.transformOrigin = 'top left'; cv.style.transform = `scale(${k})`;
-    v.style.height = (H * 3.7795 * k + 32) + 'px'; v.style.display = 'block'; v.style.padding = '16px'; cv.style.margin = '0 auto';
-    v.style.position = 'relative'; cv.style.width = W + 'mm'; cv.style.position = 'absolute'; cv.style.left = `calc(50% - ${W * 3.7795 * k / 2}px)`; cv.style.top = '16px';
-    const tx = cv.querySelector('.tx');
-    $('#aviso').style.display = tx.scrollHeight > tx.clientHeight + 2 ? 'block' : 'none';
-    $('#medidas').textContent = `Tamanho pronto: ${rot.split('· ')[1]}`;
-    if (!soTexto) marcar();
-    salvar(); depois();
-  }
-
-  /* ---------- modelos prontos, do zero e mini prévia ---------- */
-  const PRONTOS = [
-    ['Rosé com coroa', { estilo: 'coroa', paleta: 'rosa', fundo: 'liso', fonte: 'script' }], ['Sálvia com moldura', { estilo: 'moldura', paleta: 'salvia', fundo: 'liso', fonte: 'serif' }],
-    ['Azul floral', { estilo: 'floral', paleta: 'azul', fundo: 'aquarela', fonte: 'script' }], ['Marsala e dourado', { estilo: 'escuro', paleta: 'vinho', fundo: 'liso', fonte: 'serif' }],
-    ['Champanhe faixas', { estilo: 'faixa', paleta: 'ouro', fundo: 'liso', fonte: 'sans' }], ['Lilás romântico', { estilo: 'floral', paleta: 'lilas', fundo: 'aquarela', fonte: 'script' }],
-    ['Terracota boho', { estilo: 'moldura', paleta: 'terra', fundo: 'folhas', fonte: 'serif' }], ['Branco clássico', { estilo: 'moldura', paleta: 'branco', fundo: 'liso', fonte: 'serif' }],
-    ['Oliva natural', { estilo: 'coroa', paleta: 'oliva', fundo: 'folhas', fonte: 'script' }], ['Marinho e dourado', { estilo: 'escuro', paleta: 'marinho', fundo: 'liso', fonte: 'script' }],
-    ['Mocha faixas', { estilo: 'faixa', paleta: 'moca', fundo: 'liso', fonte: 'serif' }], ['Rosé floral', { estilo: 'floral', paleta: 'rosa', fundo: 'floral', fonte: 'script' }],
-    ['Sálvia floral', { estilo: 'floral', paleta: 'salvia', fundo: 'liso', fonte: 'serif' }], ['Rosé faixas', { estilo: 'faixa', paleta: 'rosa', fundo: 'liso', fonte: 'script' }], ['Kraft moldura', { estilo: 'moldura', paleta: 'kraft', fundo: 'liso', fonte: 'serif' }], ['Vinho com coroa', { estilo: 'coroa', paleta: 'vinho', fundo: 'liso', fonte: 'script' }],
-    ['Azul escuro', { estilo: 'escuro', paleta: 'azul', fundo: 'liso', fonte: 'serif' }], ['Oliva moldura', { estilo: 'moldura', paleta: 'oliva', fundo: 'folhas', fonte: 'script' }], ['Lilás coroa', { estilo: 'coroa', paleta: 'lilas', fundo: 'aquarela', fonte: 'serif' }], ['Terracota floral', { estilo: 'floral', paleta: 'terra', fundo: 'liso', fonte: 'script' }],
-    ['Branco floral', { estilo: 'floral', paleta: 'branco', fundo: 'liso', fonte: 'serif' }], ['Champanhe moldura', { estilo: 'moldura', paleta: 'ouro', fundo: 'liso', fonte: 'script' }], ['Marinho faixas', { estilo: 'faixa', paleta: 'marinho', fundo: 'liso', fonte: 'sans' }], ['Mocha escuro', { estilo: 'escuro', paleta: 'moca', fundo: 'liso', fonte: 'script' }]
-  ];
-  function miniatura(st, largura) {
-    const [, W, H] = FORMATOS[st.formato], k = largura / (W * 3.7795);
-    return `<div class="mini-cv" style="width:${largura}px;height:${Math.round(H * 3.7795 * k)}px"><div style="position:absolute;left:0;top:0;transform:scale(${k});transform-origin:top left;width:${W}mm">${cartaoHTML(st)}</div></div>`;
-  }
-  function prontos() {
-    const g = $('#prontos'); g.innerHTML = '';
-    PRONTOS.forEach(([n, ov]) => {
-      const st = Object.assign({}, ESTADO, ov, { custom: null }), b = document.createElement('button'); b.type = 'button';
-      b.innerHTML = miniatura(st, 100) + `<small>${n}</small>`;
-      b.onclick = () => { Object.assign(ESTADO, ov, { custom: null }); atualizar(); window.scrollTo({ top: document.querySelector('.previa').offsetTop - 10, behavior: 'smooth' }); };
-      g.appendChild(b);
+  /* encolhe o texto até caber na caixa */
+  function ajustar(raiz) {
+    raiz.querySelectorAll('.ov').forEach(o => {
+      o.style.fontSize = ''; let k = 1;
+      const filhos = o.children;
+      const base = [...filhos].map(c => parseFloat(getComputedStyle(c).fontSize));
+      let n = 0; while (o.scrollHeight > o.clientHeight + 1 && k > 0.35 && n++ < 40) { k -= 0.04; [...filhos].forEach((c, i) => c.style.fontSize = (base[i] * k) + 'px'); }
     });
   }
-  let tmr; const depois = () => { clearTimeout(tmr); tmr = setTimeout(() => { prontos(); $('#miniCv').outerHTML = '<div class="mc" id="miniCv">' + miniatura(ESTADO, 84) + '</div>'; }, 250); };
-  $('#irProntos').onclick = () => $('#cardProntos').scrollIntoView({ behavior: 'smooth' });
-  $('#doZero').onclick = () => { Object.assign(ESTADO, { estilo: 'moldura', paleta: 'branco', custom: null, fundo: 'liso', fonte: 'sans', l1: '', l2: '', msg: '', ass: '', nomes: '', data: '', mono: '' }); ['l1', 'l2', 'msg', 'ass', 'nomes', 'data', 'mono'].forEach(k => $('#' + k).value = ''); atualizar(); $('#l2').focus(); };
-  const mini = $('#mini'); mini.onclick = () => document.querySelector('.previa').scrollIntoView({ behavior: 'smooth' });
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { mini.style.display = es[0].isIntersecting || innerWidth >= 900 ? 'none' : 'block'; }, { threshold: 0.15 }).observe(document.querySelector('.previa'));
+  const botoes = (id, mapa, rot, fn) => { const el = $(id); el.innerHTML = ''; Object.keys(mapa).forEach(k => { const b = document.createElement('button'); b.textContent = rot(mapa[k]); b.dataset.k = k; b.onclick = () => fn(k); el.appendChild(b); }); };
+  botoes('#tipos', TIPOS, v => v[0], k => { const t = TIPOS[k]; Object.assign(ESTADO, { tipo: k, l1: t[1], l2: t[2], msg: t[3] }); ['l1', 'l2', 'msg'].forEach(i => $('#' + i).value = ESTADO[i]); atualizar(); });
+  const gal = $('#prontos');
+  for (let n = 1; n <= FOTOS.length; n++) { const b = document.createElement('button'); b.type = 'button'; b.dataset.n = n; b.onclick = () => { ESTADO.foto = n; atualizar(); window.scrollTo({ top: $('.previa').offsetTop - 10, behavior: 'smooth' }); }; gal.appendChild(b); }
+  let tmr; const galeria = () => { [...gal.children].forEach(b => { const n = +b.dataset.n; b.innerHTML = fotoHTML(n, 100) + `<small>${NOMES[n - 1]}</small>`; ajustar(b); }); };
+  function atualizar(soTexto) {
+    const v = $('#vitrine'); v.innerHTML = fotoHTML(ESTADO.foto, Math.min(340, v.clientWidth || 340)); ajustar(v);
+    const ov = v.querySelector('.ov'); $('#aviso').style.display = ov.scrollHeight > ov.clientHeight + 1 ? 'block' : 'none';
+    $('#miniCv').innerHTML = fotoHTML(ESTADO.foto, 90);
+    document.querySelectorAll('#tipos button').forEach(b => b.classList.toggle('ativo', b.dataset.k === ESTADO.tipo));
+    [...gal.children].forEach(b => b.classList.toggle('ativo', +b.dataset.n === ESTADO.foto));
+    salvar(); clearTimeout(tmr); tmr = setTimeout(galeria, soTexto ? 350 : 60);
+  }
+  ['l1', 'l2', 'msg', 'ass', 'nomes', 'data'].forEach(k => $('#' + k).oninput = e => { ESTADO[k] = e.target.value; atualizar(true); });
+  ['qtd', 'obs', 'wapp'].forEach(k => $('#' + k).oninput = e => { ESTADO[k] = e.target.value; salvar(); });
+  ['tam', 'papel', 'acab', 'env'].forEach(k => $('#' + k).onchange = e => { ESTADO[k] = e.target.value; salvar(); });
+  const mini = $('#mini'); mini.onclick = () => $('.previa').scrollIntoView({ behavior: 'smooth' });
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { mini.style.display = es[0].isIntersecting || innerWidth >= 900 ? 'none' : 'block'; }, { threshold: 0.15 }).observe($('.previa'));
 
-  /* ---------- pedido e PDF ---------- */
-  const pedido = () => ({ qtd: ($('#qtd').value || '').replace(/\D/g, '') || '15', papel: $('#papel').value, acab: $('#acab').value, env: $('#env').value, obs: $('#obs').value.trim() });
-  function textoPedido() {
-    const p = pedido(), [rot] = FORMATOS[ESTADO.formato];
-    return `Olá! Quero um orçamento para ${p.qtd} convites de padrinhos de casamento.\n\nTamanho: ${rot}\nPapel: ${p.papel}\nAcabamento: ${p.acab}\nEnvelope: ${p.env}\n${p.obs ? 'Observações: ' + p.obs + '\n' : ''}\nO arquivo está pronto, em PDF, escala 1:1, com sangria de 3 mm e marcas de corte. Posso enviar? Qual o valor e o prazo?`;
+  /* pedido e PDF */
+  const pedido = () => ({ qtd: ($('#qtd').value || '').replace(/\D/g, '') || '15', papel: $('#papel').value, acab: $('#acab').value, env: $('#env').value, obs: $('#obs').value.trim(), tam: $('#tam').value });
+  const rotTam = t => t === '148x210' ? 'A5 · 14,8 x 21 cm' : 'A6 · 10,5 x 14,8 cm';
+  function textoPedido() { const p = pedido(); return `Olá! Quero um orçamento para ${p.qtd} convites de padrinhos de casamento.\n\nTamanho: ${rotTam(p.tam)}\nPapel: ${p.papel}\nAcabamento: ${p.acab}\nEnvelope: ${p.env}\n${p.obs ? 'Observações: ' + p.obs + '\n' : ''}\nO arquivo está pronto, em PDF, escala 1:1, com sangria de 3 mm e marcas de corte. Posso enviar? Qual o valor e o prazo?`; }
+  function cartaoPDF(W, H) {
+    const f = FOTOS[ESTADO.foto - 1], u = W / 100;  /* 1 unidade = W/100 mm */
+    const bx = 12, by = 12;
+    return `<div style="position:relative;width:${W}mm;height:${H}mm;background:${f.bg};color:${f.ink};container-type:inline-size;box-shadow:0 0 0 3mm ${f.bg}">
+      <div style="position:absolute;inset:5mm;border:.3mm solid ${f.bd}"></div><div style="position:absolute;inset:6.6mm;border:.15mm solid ${f.bd}"></div>
+      <div class="ov" style="left:12%;width:76%;top:14%;height:72%;position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden">
+      ${ESTADO.l1 ? `<div class="l1">${esc(ESTADO.l1)}</div>` : ''}${ESTADO.l2 ? `<div class="l2" style="font-size:12cqw">${esc(ESTADO.l2)}</div>` : ''}${ESTADO.msg ? `<div class="msg" style="font-size:3.4cqw">${esc(ESTADO.msg)}</div>` : ''}${ESTADO.ass ? `<div class="ass">${esc(ESTADO.ass)}</div>` : ''}${ESTADO.nomes ? `<div class="nm" style="font-size:9cqw">${esc(ESTADO.nomes)}</div>` : ''}${ESTADO.data ? `<div class="dt">${esc(ESTADO.data)}</div>` : ''}</div></div>`;
   }
   function folhas() {
-    const [rot, W, H] = FORMATOS[ESTADO.formato], p = pedido();
-    const px = (210 - W) / 2, py = (297 - H) / 2;
-    const marca = (x, y, w, h) => `<div class="marca" style="left:${x}mm;top:${y}mm;width:${w}mm;height:${h}mm"></div>`;
-    let marcas = '';
-    for (const [cx, cy, dx, dy] of [[px, py, -1, -1], [px + W, py, 1, -1], [px, py + H, -1, 1], [px + W, py + H, 1, 1]]) {
-      marcas += marca(dx < 0 ? cx - 9 : cx + 3, cy - 0.1, 6, 0.2) + marca(cx - 0.1, dy < 0 ? cy - 9 : cy + 3, 0.2, 6);
-    }
+    const p = pedido(), [W, H] = p.tam.split('x').map(Number), px = (210 - W) / 2, py = (297 - H) / 2;
+    const m = (x, y, w, h) => `<div class="marca" style="left:${x}mm;top:${y}mm;width:${w}mm;height:${h}mm"></div>`;
+    let marcas = ''; for (const [cx, cy, dx, dy] of [[px, py, -1, -1], [px + W, py, 1, -1], [px, py + H, -1, 1], [px + W, py + H, 1, 1]]) marcas += m(dx < 0 ? cx - 9 : cx + 3, cy - .1, 6, .2) + m(cx - .1, dy < 0 ? cy - 9 : cy + 3, .2, 6);
     const ficha = `<div class="folha"><div class="ficha"><span style="font:500 8pt Montserrat;letter-spacing:.3em;color:#8d6a5f">CHECKLOVE · ARQUIVO PARA A GRÁFICA</span>
       <h1 style="font:700 26pt 'Playfair Display',serif;color:#5e4038;margin:2mm 0 5mm">Convite dos padrinhos</h1>
-      <table><tr><td>Convite</td><td>${TIPOS[ESTADO.tipo][0]}</td></tr><tr><td>Tamanho pronto</td><td>${rot}</td></tr><tr><td>Quantidade</td><td>${p.qtd}</td></tr><tr><td>Papel</td><td>${p.papel}</td></tr><tr><td>Acabamento</td><td>${p.acab}</td></tr><tr><td>Envelope</td><td>${p.env}</td></tr>${p.obs ? `<tr><td>Observações</td><td>${esc(p.obs)}</td></tr>` : ''}</table>
-      <h4>Para a gráfica</h4><p style="line-height:1.55">A próxima página tem o convite em <b>escala 1:1</b> (imprimir em 100%), com <b>3 mm de sangria</b> além da linha de corte e marcas de corte nos quatro cantos. O texto é vetorial. Se a gráfica pedir o arquivo em outro formato, este PDF pode ser aberto no editor dela.</p>
+      <div style="display:flex;gap:8mm;align-items:flex-start"><div style="width:62mm;flex:none">${fotoHTML(ESTADO.foto, 234)}<div style="font-size:8pt;color:#8a7d77;text-align:center;margin-top:2mm">Visual escolhido (referência)</div></div>
+      <div style="flex:1"><table><tr><td>Convite</td><td>${TIPOS[ESTADO.tipo][0]}</td></tr><tr><td>Tamanho pronto</td><td>${rotTam(p.tam)}</td></tr><tr><td>Quantidade</td><td>${p.qtd}</td></tr><tr><td>Papel</td><td>${p.papel}</td></tr><tr><td>Acabamento</td><td>${p.acab}</td></tr><tr><td>Envelope</td><td>${p.env}</td></tr>${p.obs ? `<tr><td>Observações</td><td>${esc(p.obs)}</td></tr>` : ''}</table></div></div>
+      <h4>Para a gráfica</h4><p style="line-height:1.55">A próxima página tem o convite em <b>escala 1:1</b> (100%), com <b>3 mm de sangria</b> e marcas de corte. O texto é vetorial. A foto ao lado é só referência do visual (cores, ornamentos e papel): reproduza o acabamento descrito acima.</p>
       <div style="margin-top:6mm;border:1px solid #e3d8cc;border-radius:3mm;padding:4mm;font-size:9.5pt;white-space:pre-wrap;background:#fffdf9">${esc(textoPedido())}</div></div></div>`;
-    const arte = `<div class="folha"><div class="alvo" style="left:${px}mm;top:${py}mm">${cartaoHTML()}</div>${marcas}<div class="leg">Convite dos padrinhos · escala 1:1 · sangria 3 mm · marcas de corte · CheckLove</div></div>`;
+    const arte = `<div class="folha"><div class="alvo" style="left:${px}mm;top:${py}mm">${cartaoPDF(W, H)}</div>${marcas}<div class="leg">Convite dos padrinhos · escala 1:1 · sangria 3 mm · marcas de corte · CheckLove</div></div>`;
     $('#folhas').innerHTML = ficha + arte;
+    $('#folhas .alvo .ov').querySelectorAll('div').length;
   }
-  $('#imprimir').onclick = () => { folhas(); setTimeout(() => window.print(), 250); };
+  $('#imprimir').onclick = () => { folhas(); document.querySelectorAll('#folhas .foto-cv').forEach(ajustar); setTimeout(() => window.print(), 300); };
   $('#copiar').onclick = async () => { const t = textoPedido(); try { await navigator.clipboard.writeText(t); $('#copiar').textContent = 'Texto copiado!'; } catch (e) { prompt('Copie o texto:', t); } setTimeout(() => $('#copiar').textContent = 'Copiar o texto do pedido', 2000); };
-  $('#whats').onclick = () => { const n = ($('#wapp').value || '').replace(/\D/g, ''); const dest = n ? (n.length <= 11 ? '55' + n : n) : ''; window.open('https://wa.me/' + dest + '?text=' + encodeURIComponent(textoPedido()), '_blank'); };
+  $('#whats').onclick = () => { const n = ($('#wapp').value || '').replace(/\D/g, ''); window.open('https://wa.me/' + (n ? (n.length <= 11 ? '55' + n : n) : '') + '?text=' + encodeURIComponent(textoPedido()), '_blank'); };
   $('#mapa').href = 'https://www.google.com/maps/search/' + encodeURIComponent('gráfica convites personalizados');
-  $('#sortear').onclick = () => {
-    const pick = a => a[Math.floor(Math.random() * a.length)];
-    ESTADO.paleta = pick(Object.keys(CX.PAL)); ESTADO.custom = null; ESTADO.estilo = pick(Object.keys(ESTILOS)); ESTADO.fonte = pick(Object.keys(CX.FONTES)); ESTADO.fundo = pick(Object.keys(FUNDOS));
-    atualizar();
-  };
-
-  ['l1', 'l2', 'msg', 'ass', 'nomes', 'data', 'mono', 'qtd', 'obs', 'wapp'].forEach(k => $('#' + k).value = ESTADO[k] || '');
-  ['papel', 'acab', 'env'].forEach(k => { if (ESTADO[k]) $('#' + k).value = ESTADO[k]; });
-  if (ESTADO.custom) { $('#corBg').value = ESTADO.custom.bg; $('#corDet').value = ESTADO.custom.cor; $('#corTin').value = ESTADO.custom.tinta; }
+  ['l1', 'l2', 'msg', 'ass', 'nomes', 'data', 'qtd', 'obs', 'wapp'].forEach(k => $('#' + k).value = ESTADO[k] || '');
+  ['tam', 'papel', 'acab', 'env'].forEach(k => { if (ESTADO[k]) $('#' + k).value = ESTADO[k]; });
   window.addEventListener('resize', () => atualizar(true));
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => atualizar());
   atualizar();
