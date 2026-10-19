@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/c/:slug",
-      "destination": "/convite/ver"
+      "destination": "/api/c?slug=:slug"
     },
     {
       "source": "/convite",

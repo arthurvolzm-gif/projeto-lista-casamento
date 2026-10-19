@@ -158,6 +158,12 @@
     <p class="dica">Este é o link que você envia para os convidados.</p>
     <div class="link-campo"><span id="link-base"></span><input id="slug" maxlength="60"></div>
     <p class="login-msg" id="slug-msg"></p>
+    <label class="c" style="display:block;font-weight:600;margin:10px 0 4px">Mensagem para enviar <small style="font-weight:400;color:#777">(sugestão, edite como quiser)</small></label>
+    <textarea id="msg-zap" rows="8" style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:10px;font:inherit;resize:vertical"></textarea>
+    <p class="dica" style="margin:4px 0 8px">Use <b>{link}</b> onde o link deve aparecer. Se apagar, o link vai no final.</p>
+    <label class="c" style="display:block;font-weight:600;margin:6px 0 4px">Foto que aparece no WhatsApp <small style="font-weight:400;color:#777">(opcional)</small></label>
+    <div class="foto-campo" data-foto="fotoZap"></div>
+    <p class="dica" style="margin:4px 0 8px">Ela aparece junto do link, na prévia da conversa. Se não escolher, usa a foto de capa.</p>
     <div class="comp-acoes"><button type="button" class="bt-roxo" id="bt-copiar">Copiar link</button><a class="bt-zap" id="bt-zap" target="_blank" rel="noopener">Enviar no WhatsApp</a><a class="bt-claro" id="bt-abrir" target="_blank" rel="noopener">Abrir convite</a></div>
     <label class="chave"><input type="checkbox" id="publicado"> Convite publicado (desmarque para tirar do ar)</label>
     <button type="button" class="link" data-fechar>Fechar</button>

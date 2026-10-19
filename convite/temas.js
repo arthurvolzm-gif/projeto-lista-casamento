@@ -74,6 +74,8 @@ window.CONVITE_PADRAO = {
   paisNoivo: 'Ana Lima\nCarlos Lima',
   mostrarPais: true,
   fotoCapa: '',
+  fotoZap: '',
+  msgZap: '',
   fotos: [],
   data: '2026-09-29',
   hora: '15:30',

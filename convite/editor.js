@@ -217,14 +217,22 @@
   /* ---------- compartilhar ---------- */
   const linkDe = s => D.ativo ? `${location.origin}/c/${s}` : `${location.origin}/convite/ver?c=${s}`;
   $('#bt-compartilhar').onclick = () => {
-    $('#modal-comp').hidden = false;
+    $('#modal-comp').hidden = false; document.querySelectorAll('#modal-comp .foto-campo').forEach(fotoCampo);
     $('#link-base').textContent = D.ativo ? location.host + '/c/' : location.host + '/convite/ver?c=';
     $('#slug').value = conv.slug; $('#publicado').checked = conv.publicado !== false; linksComp();
   };
+  const MSG_PADRAO = 'É com muita alegria que compartilhamos nosso convite de casamento com você! 🤍\n\nAcesse para conferir todos os detalhes do nosso grande dia:\n\n💍 {link}\n\nEsperamos você!\n{noiva} & {noivo}';
+  const montarMsg = () => {
+    const d = conv.dados, url = linkDe(conv.slug);
+    let t = (d.msgZap != null && d.msgZap !== '') ? d.msgZap : MSG_PADRAO;
+    t = t.replace(/\{noiva\}/g, d.noiva || '').replace(/\{noivo\}/g, d.noivo || '');
+    return /\{link\}/.test(t) ? t.replace(/\{link\}/g, url) : t.trimEnd() + '\n' + url;
+  };
   function linksComp() {
     const url = linkDe(conv.slug), d = conv.dados;
-    const txt = `Você recebeu um convite especial 💌\n${d.noiva} & ${d.noivo} vão se casar!\nToque no link para abrir o convite:\n${url}`;
-    $('#bt-zap').href = 'https://wa.me/?text=' + encodeURIComponent(txt); $('#bt-abrir').href = url;
+    const ta = $('#msg-zap');
+    if (document.activeElement !== ta) ta.value = (d.msgZap != null && d.msgZap !== '') ? d.msgZap : MSG_PADRAO;
+    $('#bt-zap').href = 'https://wa.me/?text=' + encodeURIComponent(montarMsg()); $('#bt-abrir').href = url;
   }
   $('#slug').oninput = () => {
     const v = $('#slug').value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/-{2,}/g, '-').slice(0, 60);
@@ -233,6 +241,7 @@
     if (v.length >= 4) { conv.slug = v.replace(/^-|-$/g, ''); linksComp(); mudou(); }
   };
   $('#publicado').onchange = () => { conv.publicado = $('#publicado').checked; mudou(); };
+  $('#msg-zap').oninput = e => { conv.dados.msgZap = e.target.value; linksComp(); mudou(); };
   $('#bt-copiar').onclick = async () => {
     try { await navigator.clipboard.writeText(linkDe(conv.slug)); $('#bt-copiar').textContent = 'Link copiado!'; }
     catch (e) { $('#slug').select(); $('#bt-copiar').textContent = 'Copie o link acima'; }
