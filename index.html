@@ -265,7 +265,7 @@ footer p+p{margin-top:6px}
 
 <section class="bonus-sec">
   <div class="wrap">
-    <h2>Bônus Exclusivos Para Quem Garantir <em>o Acesso Hoje</em></h2>
+    <h2>Bônus Exclusivos Para Quem Garantir <em id="bonus-dias">o Acesso Hoje</em></h2>
     <p class="sub">Além do checklist completo, você leva 3 bônus para economizar e deixar cada detalhe mais especial.</p>
     <div class="bonus">
       <div class="bn">
@@ -417,6 +417,19 @@ footer p+p{margin-top:6px}
   pop.addEventListener('click', function(e){ if (e.target === pop || e.target.hasAttribute('data-fechar')) pop.classList.remove('on'); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') pop.classList.remove('on'); });
 })();
+</script>
+<script>
+/* Título dos bônus: os 3 últimos dias, sempre terminando em hoje (horário de Brasília) */
+(function(){ try{
+  var MES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  var p=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).split('-');
+  var h=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]));
+  var d=[2,1,0].map(function(n){ var x=new Date(h.getTime()-n*864e5); return {d:x.getUTCDate(),m:x.getUTCMonth()}; });
+  var t;
+  if(d[0].m===d[2].m) t=d[0].d+', '+d[1].d+' e '+d[2].d+' de '+MES[d[2].m];
+  else t=d.map(function(x,i){ var ult=i===2||d[i+1].m!==x.m; return x.d+(ult?' de '+MES[x.m]:''); }).join(', ').replace(/, ([^,]*)$/,' e $1');
+  var el=document.getElementById('bonus-dias'); if(el) el.textContent='nos Dias '+t;
+}catch(e){} })();
 </script>
 </body>
 </html>
