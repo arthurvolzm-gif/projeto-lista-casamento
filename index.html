@@ -56,6 +56,15 @@ header a.mini{white-space:nowrap;font-size:13px;font-weight:600;color:var(--tint
 .botoes{display:grid;gap:12px;margin:26px auto 0;max-width:520px}
 .btn-cont{display:block;padding:12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.75);color:#fff;font-weight:600;font-size:15px;text-decoration:none}
 .btn-branco{display:block;padding:13px;border-radius:10px;background:#fff;color:#4b2b83;font-weight:700;font-size:15px;text-decoration:none}
+
+/* vídeo do topo */
+.vsl{position:relative;width:min(300px,78vw);aspect-ratio:9/16;margin:24px auto 0;border-radius:22px;overflow:hidden;border:3px solid #1c1c34;background:#14142a;box-shadow:0 22px 44px -18px rgba(20,0,60,.6);cursor:pointer}
+.vsl video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vsl-aviso{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;border:0;width:100%;font-family:inherit;color:#fff;background:rgba(18,18,40,.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);cursor:pointer;transition:opacity .25s}
+.vsl-aviso[hidden]{display:none}
+.vsl-aviso b{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.vsl-aviso small{font-size:12.5px;font-weight:600;opacity:.95}
+.vsl-aviso svg{width:34px;height:34px}
 .leque{position:relative;height:290px;max-width:420px;margin:34px auto 0}
 .leque img{position:absolute;top:0;width:182px;border-radius:8px;box-shadow:0 18px 38px -14px rgba(20,0,60,.55);border:3px solid #fff}
 .leque .l1{left:50%;margin-left:-178px;transform:rotate(-9deg);top:28px}
@@ -209,6 +218,14 @@ footer p+p{margin-top:6px}
 <section class="hero">
   <div class="wrap">
     <h1>Organize seu casamento inteiro sem esquecer nenhum detalhe</h1>
+    <div class="vsl" id="vsl">
+      <video id="vsl-video" src="video/vsl.mp4" poster="video/vsl-poster.webp" muted autoplay loop playsinline preload="auto" aria-label="Vídeo de apresentação do checklist"></video>
+      <button class="vsl-aviso" id="vsl-aviso" type="button" aria-label="Clique para ouvir o vídeo do começo">
+        <b>Seu vídeo já começou</b>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="#fff"/><path d="m16 9 5 6M21 9l-5 6"/></svg>
+        <small>Clique para ouvir</small>
+      </button>
+    </div>
     <p class="lead">O checklist completo do primeiro "sim" ao grande dia: cronograma, fornecedores, convidados e gastos em um só lugar.</p>
     <div class="botoes">
       <a class="btn-branco" href="#planos">Quero meu checklist agora</a>
@@ -430,6 +447,33 @@ footer p+p{margin-top:6px}
   else t=d.map(function(x,i){ var ult=i===2||d[i+1].m!==x.m; return x.d+(ult?' de '+MES[x.m]:''); }).join(', ').replace(/, ([^,]*)$/,' e $1');
   var el=document.getElementById('bonus-dias'); if(el) el.textContent='nos Dias '+t;
 }catch(e){} })();
+</script>
+<script>
+/* Vídeo do topo: começa mudo; ao clicar, volta ao começo com som */
+(function(){
+  var box=document.getElementById('vsl'), v=document.getElementById('vsl-video'), av=document.getElementById('vsl-aviso');
+  if(!box||!v||!av) return;
+  var ouvindo=false;
+  function ouvir(){
+    ouvindo=true; v.loop=false; v.muted=false; v.currentTime=0; av.hidden=true;
+    var p=v.play(); if(p&&p.catch) p.catch(function(){});
+    try{ if(window.fbq) fbq('trackCustom','VSLPlay'); }catch(e){}
+  }
+  function repetir(){
+    v.currentTime=0; v.muted=false; av.hidden=true; var p=v.play(); if(p&&p.catch) p.catch(function(){});
+  }
+  av.addEventListener('click',function(e){ e.stopPropagation(); ouvir(); });
+  box.addEventListener('click',function(){
+    if(!ouvindo){ ouvir(); return; }
+    if(v.paused){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); } else { v.pause(); }
+  });
+  v.addEventListener('ended',function(){
+    av.hidden=false; av.querySelector('b').textContent='Assistir de novo';
+    av.querySelector('small').textContent='Clique para rever';
+    av.onclick=function(e){ e.stopPropagation(); repetir(); };
+  });
+  var tenta=v.play(); if(tenta&&tenta.catch) tenta.catch(function(){});
+})();
 </script>
 </body>
 </html>
