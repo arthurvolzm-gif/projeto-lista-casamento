@@ -6,7 +6,7 @@
 <title>CheckLove: Checklist Completo do Casamento</title>
 <meta name="description" content="O checklist completo do casamento, mês a mês: cronograma, fornecedores, convidados, gastos e mais. PDF para imprimir ou usar no celular.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"></noscript>
 <script>
 /* =========================================================
    CONFIGURAÇÃO (cole os links da plataforma de pagamento)
@@ -219,7 +219,7 @@ footer p+p{margin-top:6px}
   <div class="wrap">
     <h1>Organize seu casamento inteiro sem esquecer nenhum detalhe</h1>
     <div class="vsl" id="vsl">
-      <video id="vsl-video" src="video/vsl.mp4" poster="video/vsl-poster.webp" muted autoplay loop playsinline preload="auto" aria-label="Vídeo de apresentação do checklist"></video>
+      <video id="vsl-video" poster="video/vsl-poster.webp" width="540" height="960" muted loop playsinline preload="none" aria-label="Vídeo de apresentação do checklist"></video>
       <button class="vsl-aviso" id="vsl-aviso" type="button" aria-label="Clique para ouvir o vídeo do começo">
         <b>Seu vídeo já começou</b>
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="#fff"/><path d="m16 9 5 6M21 9l-5 6"/></svg>
@@ -273,9 +273,9 @@ footer p+p{margin-top:6px}
     <h2>Quem já usou <em>comenta</em></h2>
     <p class="sub">Mensagens que recebemos de quem comprou.</p>
     <div class="deps">
-      <img src="img/dep-1.webp" alt="Mensagem de cliente no WhatsApp" loading="lazy">
-      <img src="img/dep-2.webp" alt="Mensagem de cliente no WhatsApp" loading="lazy">
-      <img src="img/dep-3.webp" alt="Mensagem de cliente no WhatsApp" loading="lazy">
+      <img src="img/dep-1.webp" alt="Mensagem de cliente no WhatsApp" width="900" height="501" loading="lazy" decoding="async">
+      <img src="img/dep-2.webp" alt="Mensagem de cliente no WhatsApp" width="900" height="821" loading="lazy" decoding="async">
+      <img src="img/dep-3.webp" alt="Mensagem de cliente no WhatsApp" width="900" height="518" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
@@ -449,30 +449,33 @@ footer p+p{margin-top:6px}
 }catch(e){} })();
 </script>
 <script>
-/* Vídeo do topo: começa mudo; ao clicar, volta ao começo com som */
+/* Vídeo do topo: só baixa depois que a página carregou; começa mudo, ao clicar volta ao início com som */
 (function(){
   var box=document.getElementById('vsl'), v=document.getElementById('vsl-video'), av=document.getElementById('vsl-aviso');
   if(!box||!v||!av) return;
-  var ouvindo=false;
+  var SRC='video/vsl.mp4?v=2', ouvindo=false;
+  function tocar(){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  function carregar(){ if(!v.getAttribute('src')){ v.src=SRC; v.load(); } }
   function ouvir(){
-    ouvindo=true; v.loop=false; v.muted=false; v.currentTime=0; av.hidden=true;
-    var p=v.play(); if(p&&p.catch) p.catch(function(){});
+    ouvindo=true; carregar(); v.loop=false; v.muted=false; v.currentTime=0; av.hidden=true; tocar();
     try{ if(window.fbq) fbq('trackCustom','VSLPlay'); }catch(e){}
   }
-  function repetir(){
-    v.currentTime=0; v.muted=false; av.hidden=true; var p=v.play(); if(p&&p.catch) p.catch(function(){});
-  }
+  function repetir(){ v.currentTime=0; v.muted=false; av.hidden=true; tocar(); }
   av.addEventListener('click',function(e){ e.stopPropagation(); ouvir(); });
   box.addEventListener('click',function(){
     if(!ouvindo){ ouvir(); return; }
-    if(v.paused){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); } else { v.pause(); }
+    if(v.paused) tocar(); else v.pause();
   });
   v.addEventListener('ended',function(){
     av.hidden=false; av.querySelector('b').textContent='Assistir de novo';
     av.querySelector('small').textContent='Clique para rever';
     av.onclick=function(e){ e.stopPropagation(); repetir(); };
   });
-  var tenta=v.play(); if(tenta&&tenta.catch) tenta.catch(function(){});
+  /* início automático e mudo, sem atrapalhar o carregamento; pula se a conexão for lenta ou o modo economia estiver ligado */
+  var c=navigator.connection||{}, lenta=c.saveData||/(^|-)(2g|3g)$/.test(c.effectiveType||'');
+  function iniciar(){ if(lenta||ouvindo) return; carregar(); tocar(); }
+  function agendar(){ (window.requestIdleCallback||function(f){ setTimeout(f,1200); })(iniciar,{timeout:3000}); }
+  if(document.readyState==='complete') agendar(); else window.addEventListener('load',agendar);
 })();
 </script>
 </body>
