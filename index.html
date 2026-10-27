@@ -455,7 +455,7 @@ footer p+p{margin-top:6px}
 (function(){
   var box=document.getElementById('vsl'), v=document.getElementById('vsl-video'), av=document.getElementById('vsl-aviso');
   if(!box||!v||!av) return;
-  var SRC='video/vsl.mp4?v=4', ouvindo=false;
+  var SRC='video/vsl.mp4?v=5', ouvindo=false;
   function tocar(){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
   function carregar(){ if(!v.getAttribute('src')){ v.src=SRC; v.load(); } }
   function ouvir(){
