@@ -5,20 +5,6 @@
 
   function feitos(arr) { return arr.filter(function (x) { return x.ok; }).length; }
 
-  /* continua no grupo Planejamento */
-  PL.mod('papelaria', {
-    titulo: 'Papelaria', icone: 'papel',
-    render: function () {
-      var p = PL.s.papelaria, todos = p.pre.concat(p.cer, p.festa);
-      var html = U.cab('Planejamento', '<i>Papelaria</i> do casamento', 'Do save the date às tags das lembrancinhas, separado por momento. Marque o que já está pronto.', [U.btnPrint()]);
-      html += '<section class="card">' + U.prog(feitos(todos), todos.length) + '</section>';
-      html += '<div class="g3">' + [['pre', 'Antes do casamento'], ['cer', 'Cerimônia'], ['festa', 'Festa e recepção']].map(function (g) {
-        return '<section class="card"><h2>' + g[1] + ' <small>' + feitos(p[g[0]]) + '/' + p[g[0]].length + '</small></h2>' + U.checklist('papelaria/' + g[0], p[g[0]]) + '</section>';
-      }).join('') + '</div>';
-      return html;
-    }
-  });
-
   PL.mod('identidade', {
     titulo: 'Identidade visual', icone: 'gota',
     render: function () {
@@ -153,7 +139,7 @@
   }
 
   PL.mod('civil', {
-    titulo: 'Civil e cartório', icone: 'selo',
+    titulo: 'Civil e cartório', icone: 'selo', menu: 'Civil',
     render: function () {
       var c = PL.s.civil;
       var html = U.cab('Cerimônia', 'Civil e <i>cartório</i>', 'Os documentos e prazos mudam de um cartório para outro. Confirmem tudo no cartório escolhido.', [U.btnPrint()]);

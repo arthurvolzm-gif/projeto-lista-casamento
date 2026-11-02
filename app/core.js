@@ -46,6 +46,19 @@
       eventos: [], moodboard: []
     };
   };
+  /* versões antigas: contratos viraram um campo do fornecedor */
+  function migrar(s) {
+    if (s.contratos && s.contratos.length) {
+      s.fornecedores = s.fornecedores || [];
+      s.contratos.forEach(function (c) {
+        var f = s.fornecedores.find(function (x) { return (x.nome || '').trim().toLowerCase() === (c.nome || '').trim().toLowerCase(); });
+        if (f) { if (!f.contrato) f.contrato = c.link || ''; }
+        else s.fornecedores.push({ id: PL.uid(), cat: 'Outro', nome: c.nome, contato: '', valor: 0, status: /Assinado|Pago/.test(c.status) ? 'Contratado' : 'Negociando', obs: '', contrato: c.link || '' });
+      });
+      s.contratos = [];
+    }
+    return s;
+  }
   function carregar() {
     var s = null;
     try { s = JSON.parse(localStorage.getItem(CHAVE) || 'null'); } catch (e) { s = null; }
@@ -57,7 +70,7 @@
         Object.keys(base[k]).forEach(function (k2) { if (s[k][k2] == null) s[k][k2] = base[k][k2]; });
       }
     });
-    return s;
+    return migrar(s);
   }
   PL.s = carregar();
   /* troca a chave do armazenamento local (uma por conta) e recarrega */
@@ -69,7 +82,7 @@
       if (s[k] == null) s[k] = base[k];
       else if (!Array.isArray(base[k]) && typeof base[k] === 'object') Object.keys(base[k]).forEach(function (k2) { if (s[k][k2] == null) s[k][k2] = base[k][k2]; });
     });
-    return s;
+    return migrar(s);
   };
   PL.temDados = function (s) { s = s || PL.s; return !!(s.perfil.noiva || s.perfil.noivo || s.perfil.data || s.gastos.length || s.convidados.length || s.tarefas.length || s.fornecedores.length); };
   var tSalvar = null;
@@ -102,19 +115,32 @@
     def.id = id; PL.mods[id] = def; PL.ordem.push(id);
     PL.grupos[PL.grupos.length - 1].itens.push(id);
   };
+  /* menu em 5 áreas, cada uma com abas */
+  PL.AREAS = [
+    { nome: 'Início', icone: 'casa', mods: ['inicio', 'tarefas', 'agenda'] },
+    { nome: 'Dinheiro', icone: 'din', mods: ['financeiro', 'fornecedores', 'biblioteca'] },
+    { nome: 'Pessoas', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
+    { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'identidade', 'eventos', 'moodboard'] },
+    { nome: 'Casa e viagem', icone: 'aviao', mods: ['enxoval', 'luamel'] }
+  ];
+  PL.areaDe = function (id) { return PL.AREAS.find(function (a) { return a.mods.indexOf(id) >= 0; }); };
   PL.rota = function () { var h = (location.hash || '').replace('#', '').split('/')[0]; return PL.mods[h] ? h : 'inicio'; };
   PL.ir = function (id) { if (location.hash !== '#' + id) location.hash = id; else PL.render(); };
 
-  var main, menu, miniCasal;
+  var main, menu, miniCasal, baixo, rodape;
   PL.render = function (manterFoco) {
     var id = PL.rota(), m = PL.mods[id];
     document.documentElement.setAttribute('data-tema', PL.s.perfil.tema || 'roxo');
     var chave = manterFoco && document.activeElement && document.activeElement.getAttribute('data-k');
     var y = window.scrollY;
     var html = '<div class="print-cab">' + PL.esc(PL.casal()) + (PL.s.perfil.data ? ' · ' + PL.dataLonga(PL.s.perfil.data) : '') + ' · ' + PL.esc(m.titulo) + '</div>';
+    var area = PL.areaDe(id);
+    if (area && area.mods.length > 1) html += '<nav class="abas no-print" aria-label="' + PL.esc(area.nome) + '">' + area.mods.map(function (mid) {
+      var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '"' + (mid === id ? ' aria-current="page"' : '') + '>' + PL.esc(mm.menu || mm.titulo) + '</a>';
+    }).join('') + '</nav>';
     main.innerHTML = html + m.render();
     if (m.depois) m.depois(main);
-    menu.querySelectorAll('a').forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + id); });
+    pintarMenu(id, area);
     document.title = m.titulo + ' · Planner CheckLove';
     pintarMini();
     if (manterFoco) {
@@ -123,6 +149,17 @@
     }
     tick();
   };
+  function pintarMenu(id, area) {
+    menu.innerHTML = PL.AREAS.map(function (a) {
+      var on = a === area;
+      return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (on ? 'on' : '') + '">' + PL.ic(a.icone) + PL.esc(a.nome) + '</a>' +
+        (on ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
+    }).join('');
+    baixo.innerHTML = PL.AREAS.map(function (a) {
+      return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome === 'Casa e viagem' ? 'Casa' : a.nome) + '</span></a>';
+    }).join('');
+    rodape.querySelectorAll('a[data-to]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-to') === id); });
+  }
   function pintarMini() {
     var p = PL.s.perfil, d = PL.dias();
     miniCasal.innerHTML = '<b>' + PL.esc(PL.casal()) + '</b><span>' + (p.data ? (d > 0 ? 'Faltam ' + d + (d === 1 ? ' dia' : ' dias') : d === 0 ? 'É hoje!' : PL.dataBR(p.data)) : 'Defina a data no perfil') + '</span>';
@@ -153,6 +190,7 @@
     var p = el.getAttribute('data-p'); if (p == null) return false;
     var o = PL.alvo(p, el.getAttribute('data-id')); if (!o) return false;
     o[el.getAttribute('data-f')] = valorDe(el);
+    if (PL.aoMudar) PL.aoMudar(p, el.getAttribute('data-id'), el.getAttribute('data-f'), o);
     PL.salvar();
     return true;
   }
@@ -203,6 +241,7 @@
     var item = arr.splice(i, 1)[0];
     if (d.p === 'mesas') PL.s.convidados.forEach(function (c) { if (c.mesa === item.id) c.mesa = ''; });
     desfeito = { arr: arr, i: i, item: item };
+    if (PL.aoRemover) PL.aoRemover(d.p, item);
     PL.salvar(); PL.render(true);
     PL.toast('Item removido.', 'Desfazer', 'desfazer');
   };
@@ -365,14 +404,14 @@
   /* ---------- casca ---------- */
   PL.iniciar = function () {
     document.body.innerHTML =
-      '<div class="topo-movel"><button type="button" class="ic" data-act="menu" aria-label="Abrir menu">' + PL.ic('menu') + '</button><a class="marca" href="#inicio"><b>Check<i>Love</i></b></a></div>' +
-      '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
-      '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' + (PL.rodapeLado || '') + '</aside>' +
-      '<main class="principal"><div class="conteudo" id="main"></div></main></div><div class="veu" data-act="fechar"></div><div class="toast" id="toast" hidden role="status"></div>';
+      '<div class="topo-movel"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><b>Check<i>Love</i></b></a><span class="esp"></span>' +
+      '<a class="ic" href="#ajuda" data-act="ir" data-to="ajuda" aria-label="Como usar">' + PL.ic('ajuda') + '</a><a class="ic" href="#perfil" data-act="ir" data-to="perfil" aria-label="Meu perfil">' + PL.ic('user') + '</a></div>' +
+      '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
+      '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
+      '<div class="lado-rodape" id="rodape"><a href="#perfil" data-act="ir" data-to="perfil">' + PL.ic('user') + 'Meu perfil</a><a href="#ajuda" data-act="ir" data-to="ajuda">' + PL.ic('ajuda') + 'Como usar</a>' + (PL.rodapeLado || '') + '</div></aside>' +
+      '<main class="principal"><div class="conteudo" id="main"></div></main></div><nav class="abas-baixo" id="baixo" aria-label="Áreas"></nav><div class="toast" id="toast" hidden role="status"></div>';
     main = document.getElementById('main'); menu = document.getElementById('menu'); miniCasal = document.getElementById('mini');
-    menu.innerHTML = PL.grupos.map(function (g) {
-      return '<div><h4>' + PL.esc(g.titulo) + '</h4>' + g.itens.map(function (id) { var m = PL.mods[id]; return '<a href="#' + id + '" data-act="ir" data-to="' + id + '">' + PL.ic(m.icone) + PL.esc(m.menu || m.titulo) + '</a>'; }).join('') + '</div>';
-    }).join('');
+    baixo = document.getElementById('baixo'); rodape = document.getElementById('rodape');
     window.addEventListener('hashchange', function () { PL.render(); window.scrollTo(0, 0); });
     PL.render();
   };

@@ -20,7 +20,7 @@
   PL.grupo('Principal');
 
   PL.mod('inicio', {
-    titulo: 'Início', icone: 'casa',
+    titulo: 'Início', icone: 'casa', menu: 'Visão geral',
     render: function () {
       var s = PL.s, p = s.perfil, t = totaisGastos();
       var conv = s.convidados.length, conf = s.convidados.filter(function (c) { return c.status === 'Confirmado'; }).length;
@@ -67,12 +67,33 @@
         return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
       }).join('') + '</div></section>';
       if (PL.conta) html += '<section class="card"><h2>Sua conta</h2><div class="lin"><span>Conectado como <b>' + e(PL.conta.email) + '</b>. Tudo o que você preenche é salvo na conta e aparece em qualquer aparelho em que você entrar.</span><span class="esp"></span>' + U.btn('sair', 'Sair', '', 'sec') + '</div></section>';
+      if (PL.conta) html += compartilhar();
       html += '<section class="card"><h2>Seus dados</h2><p class="nota" style="margin-bottom:12px">' + (PL.conta ? 'Além da conta, uma cópia fica neste aparelho. O backup é uma garantia extra: baixe de vez em quando.' : 'Tudo fica salvo neste navegador, neste aparelho. Para usar em outro aparelho ou não perder nada, baixe o backup de vez em quando e importe onde quiser.') + '</p>' +
         '<div class="lin">' + U.btn('backup', 'Baixar backup', 'pasta', 'leve') + '<label class="btn sec">' + PL.ic('mais') + 'Importar backup<input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
         U.btn('exemplo', 'Ver com dados de exemplo', '', 'sec') + '<span class="esp"></span>' + U.btn('zerar', 'Apagar tudo', 'lixo', 'perigo') + '</div></section>';
       return html;
     }
   });
+  function compartilhar() {
+    var c = PL.conta;
+    if (!c.dono) return '<section class="card"><h2>Planner compartilhado</h2><p>Você está editando o planner de <b>' + e(c.donoEmail || 'outra conta') + '</b>. O que você muda aparece para os dois.</p></section>';
+    var m = c.membros || [];
+    return '<section class="card"><h2>Compartilhar o planner</h2><p class="nota" style="margin-bottom:12px">Coloque o e-mail do noivo, da noiva ou da cerimonialista. A pessoa cria a conta com esse mesmo e-mail em ' + e(location.host) + '/app e passa a ver e editar este planner.</p>' +
+      (m.length ? '<ul class="chk" style="margin-bottom:6px">' + m.map(function (x) { return '<li><div class="txt" style="padding:4px 6px">' + e(x) + '</div><button type="button" class="ic" data-act="tirarMembro" data-email="' + e(x) + '" aria-label="Parar de compartilhar">' + PL.ic('lixo') + '</button></li>'; }).join('') + '</ul>' : '') +
+      '<form class="add-linha" data-form="membro"><input name="email" type="email" placeholder="email@exemplo.com" aria-label="E-mail para compartilhar" required><button class="btn leve" type="submit">' + PL.ic('mais') + 'Compartilhar</button></form></section>';
+  }
+  PL.forms.membro = function (d) {
+    var em = (d.email || '').toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { PL.toast('Esse e-mail não parece válido.'); return false; }
+    if (em === (PL.conta.email || '').toLowerCase()) { PL.toast('Esse já é o seu e-mail.'); return false; }
+    var m = (PL.conta.membros || []).slice(); if (m.indexOf(em) < 0) m.push(em);
+    PL.salvarMembros(m).then(function () { PL.render(true); PL.toast('Compartilhado com ' + em + '.'); }, function () { PL.toast('Não deu para compartilhar agora. Confira a internet.'); });
+    return false;
+  };
+  PL.acoes.tirarMembro = function (d) {
+    var m = (PL.conta.membros || []).filter(function (x) { return x !== d.email; });
+    PL.salvarMembros(m).then(function () { PL.render(true); PL.toast('Compartilhamento removido.'); }, function () { PL.toast('Não deu para remover agora.'); });
+  };
   PL.acoes.tema = function (d) { PL.s.perfil.tema = d.tema; PL.salvar(); PL.render(true); };
   PL.acoes.backup = function () {
     PL.baixar('planner-checklove-' + PL.hoje() + '.json', JSON.stringify(PL.s), 'application/json');
@@ -127,7 +148,7 @@
       html += '<section class="card"><h2>Gastos <small>clique em um valor para editar</small></h2><div class="tabela"><table class="tb"><thead><tr><th>Categoria</th><th>Descrição</th><th class="num">Valor</th><th class="num">Pago</th><th class="num">Falta</th><th>Vencimento</th><th>Status</th><th></th></tr></thead><tbody>' +
         s.gastos.map(function (g) {
           var st = statusGasto(g);
-          return '<tr><td style="min-width:150px">' + U.sel('gastos', g.id, 'cat', g.cat, D.gastos, 'Categoria') + '</td><td style="min-width:160px">' + U.inp('gastos', g.id, 'desc', g.desc, { aria: 'Descrição' }) + '</td>' +
+          return '<tr><td style="min-width:150px">' + U.sel('gastos', g.id, 'cat', g.cat, D.gastos, 'Categoria') + '</td><td style="min-width:160px">' + U.inp('gastos', g.id, 'desc', g.desc, { aria: 'Descrição' }) + (g.forn && PL.alvo('fornecedores', g.forn) ? '<small class="nota" style="padding:0 8px">ligado a Fornecedores</small>' : '') + '</td>' +
             '<td class="num" style="min-width:110px">' + U.inp('gastos', g.id, 'valor', g.valor, { n: 1, aria: 'Valor' }) + '</td><td class="num" style="min-width:110px">' + U.inp('gastos', g.id, 'pago', g.pago, { n: 1, aria: 'Pago' }) + '</td>' +
             '<td class="num">' + PL.brl(Math.max(0, PL.num(g.valor) - PL.num(g.pago))) + '</td><td style="min-width:140px">' + U.inp('gastos', g.id, 'venc', g.venc, { tipo: 'date', aria: 'Vencimento' }) + '</td>' +
             '<td><span class="chip ' + st[1] + '">' + st[0] + '</span></td><td>' + U.del('gastos', g.id) + '</td></tr>';
@@ -163,30 +184,48 @@
       html += U.kpis([{ r: 'Fornecedores', v: f.length }, { r: 'Contratados', v: n('Contratado'), cls: 'ok' }, { r: 'Negociando', v: n('Negociando') + n('Orçamento pedido'), cls: 'alerta' }, { r: 'Pesquisando', v: n('Pesquisando') }]);
       html += '<section class="card"><h2>Adicionar fornecedor</h2>' + U.form('forn', [
         U.f('cat', 'Categoria', { opts: D.fornecedores.concat(['Celebrante', 'Convites e papelaria', 'Transporte', 'Outro']) }), U.f('nome', 'Nome', { req: true }),
-        U.f('contato', 'Telefone ou WhatsApp'), U.f('valor', 'Valor (R$)', { n: 1, ph: '0,00' }), U.f('status', 'Status', { opts: STATUS_FORN }), U.f('obs', 'Observações', { cls: 'largo' })
-      ]) + '</section>';
+        U.f('contato', 'Telefone ou WhatsApp'), U.f('valor', 'Valor (R$)', { n: 1, ph: '0,00' }), U.f('status', 'Status', { opts: STATUS_FORN }), U.f('contrato', 'Link do contrato', { tipo: 'url', ph: 'https://drive.google.com/...' }), U.f('obs', 'Observações', { cls: 'largo' })
+      ]) + '<p class="nota" style="margin-top:10px">Ao marcar um fornecedor como <b>Contratado</b> com valor, o gasto entra sozinho no financeiro.</p>' +
+        '<details class="nota" style="margin-top:8px"><summary style="cursor:pointer;font-weight:600">Como guardar os contratos no Google Drive</summary><ol class="passos" style="margin-top:10px"><li>Crie uma pasta "Casamento" no Drive e, dentro dela, "Contratos".</li><li>Salve cada contrato em PDF com o nome do fornecedor.</li><li>Clique com o botão direito no arquivo, em Compartilhar e em Copiar link.</li><li>Cole o link no fornecedor. Antes de assinar, confira os itens em Roteiros e mensagens, "O que conferir no contrato".</li></ol></details></section>';
       if (!f.length) return html + '<section class="card">' + U.vazio('Nenhum fornecedor ainda.') + '</section>';
-      html += '<section class="card"><h2>Lista</h2><div class="tabela"><table class="tb"><thead><tr><th>Categoria</th><th>Nome</th><th>Contato</th><th class="num">Valor</th><th>Status</th><th>Observações</th><th></th></tr></thead><tbody>' +
+      html += '<section class="card"><h2>Lista</h2><div class="tabela"><table class="tb"><thead><tr><th>Categoria</th><th>Nome</th><th>Contato</th><th class="num">Valor</th><th>Status</th><th>Contrato</th><th>Observações</th><th></th></tr></thead><tbody>' +
         f.map(function (x) {
           return '<tr><td style="min-width:140px">' + U.inp('fornecedores', x.id, 'cat', x.cat, { r: 0, aria: 'Categoria' }) + '</td><td style="min-width:150px">' + U.inp('fornecedores', x.id, 'nome', x.nome, { r: 0, aria: 'Nome' }) + '</td>' +
             '<td style="min-width:140px">' + U.inp('fornecedores', x.id, 'contato', x.contato, { r: 0, aria: 'Contato' }) + '</td><td class="num" style="min-width:110px">' + U.inp('fornecedores', x.id, 'valor', x.valor, { n: 1, aria: 'Valor' }) + '</td>' +
-            '<td style="min-width:150px">' + U.sel('fornecedores', x.id, 'status', x.status, STATUS_FORN, 'Status') + '</td><td style="min-width:180px">' + U.inp('fornecedores', x.id, 'obs', x.obs, { r: 0, aria: 'Observações' }) + '</td><td>' + U.del('fornecedores', x.id) + '</td></tr>';
+            '<td style="min-width:150px">' + U.sel('fornecedores', x.id, 'status', x.status, STATUS_FORN, 'Status') + '</td>' +
+            '<td style="min-width:190px"><div class="lin" style="gap:4px;flex-wrap:nowrap">' + U.inp('fornecedores', x.id, 'contrato', x.contrato, { tipo: 'url', ph: 'Link', aria: 'Link do contrato' }) + (/^https?:\/\//i.test(x.contrato || '') ? '<a class="ic mov" href="' + e(x.contrato) + '" target="_blank" rel="noopener" aria-label="Abrir contrato" title="Abrir contrato">' + PL.ic('link') + '</a>' : '') + '</div></td><td style="min-width:180px">' + U.inp('fornecedores', x.id, 'obs', x.obs, { r: 0, aria: 'Observações' }) + '</td><td>' + U.del('fornecedores', x.id) + '</td></tr>';
         }).join('') + '</tbody></table></div></section>';
       return html;
     }
   });
-  PL.forms.forn = function (d) { PL.add('fornecedores', { cat: d.cat, nome: d.nome, contato: d.contato, valor: PL.num(d.valor), status: d.status, obs: d.obs }); };
+  PL.forms.forn = function (d) { var f = PL.add('fornecedores', { cat: d.cat, nome: d.nome, contato: d.contato, valor: PL.num(d.valor), status: d.status, obs: d.obs, contrato: d.contrato }); sincGasto(f); };
+  /* fornecedor contratado vira gasto no financeiro, ligado pelo id */
+  var MAPA_CAT = { 'Vestido': 'Vestido e acessórios', 'Outro': 'Outros' };
+  function sincGasto(f) {
+    if (!f || f.status !== 'Contratado' || !(PL.num(f.valor) > 0)) return;
+    var g = PL.s.gastos.find(function (x) { return x.forn === f.id; });
+    if (g) { g.valor = PL.num(f.valor); return; }
+    var cat = D.gastos.indexOf(f.cat) >= 0 ? f.cat : (MAPA_CAT[f.cat] || 'Outros');
+    PL.s.gastos.push({ id: PL.uid(), cat: cat, desc: f.nome, valor: PL.num(f.valor), pago: 0, venc: '', forn: f.id });
+    PL.salvar();
+    setTimeout(function () { PL.toast('Gasto de ' + (f.nome || 'fornecedor') + ' criado no financeiro.', 'Ver', 'irFin'); }, 50);
+  }
+  PL.acoes.irFin = function () { PL.ir('financeiro'); };
+  PL.aoMudar = function (p, id, campo, o) {
+    if (p === 'fornecedores' && (campo === 'status' || campo === 'valor')) sincGasto(o);
+    if (p === 'gastos' && campo === 'valor' && o.forn) { var f = PL.alvo('fornecedores', o.forn); if (f) f.valor = o.valor; }
+  };
   PL.acoes.copiarForn = function () {
     var txt = 'Fornecedores · ' + PL.casal() + (PL.s.perfil.data ? ' · ' + PL.dataBR(PL.s.perfil.data) : '') + '\n\n' +
       PL.s.fornecedores.filter(function (x) { return x.status !== 'Descartado'; }).map(function (x) { return x.cat + ': ' + x.nome + (x.contato ? ' · ' + x.contato : '') + ' (' + x.status + ')'; }).join('\n');
     PL.copiar(txt);
   };
   PL.acoes.csvForn = function () {
-    PL.csv('fornecedores-casamento', ['Categoria', 'Nome', 'Contato', 'Valor', 'Status', 'Observações'], PL.s.fornecedores.map(function (x) { return [x.cat, x.nome, x.contato, PL.dec(PL.num(x.valor)), x.status, x.obs]; }));
+    PL.csv('fornecedores-casamento', ['Categoria', 'Nome', 'Contato', 'Valor', 'Status', 'Contrato', 'Observações'], PL.s.fornecedores.map(function (x) { return [x.cat, x.nome, x.contato, PL.dec(PL.num(x.valor)), x.status, x.contrato || '', x.obs]; }));
   };
 
   PL.mod('agenda', {
-    titulo: 'Agenda e contagem', icone: 'cal',
+    titulo: 'Agenda e contagem', icone: 'cal', menu: 'Agenda do dia',
     render: function () {
       var a = PL.s.agenda.slice().sort(function (x, y) { return (x.hora || '').localeCompare(y.hora || ''); });
       var html = U.cab('Planejamento', 'Agenda e <i>contagem</i>', 'O cronograma do grande dia, hora a hora. Entregue para a cerimonialista e para os fornecedores.', [U.btnPrint()]) + U.contagem();
@@ -200,7 +239,7 @@
   PL.forms.agenda = function (d) { PL.add('agenda', { hora: d.hora, t: d.t, resp: d.resp }); };
 
   PL.mod('tarefas', {
-    titulo: 'Tarefas e prazos', icone: 'tarefa',
+    titulo: 'Tarefas e prazos', icone: 'tarefa', menu: 'Tarefas',
     render: function () {
       var t = PL.s.tarefas, hoje = PL.hoje(), ordem = { Alta: 0, 'Média': 1, Baixa: 2 };
       var pend = t.filter(function (x) { return !x.ok; }).sort(function (a, b) { return (a.prazo || '9999').localeCompare(b.prazo || '9999') || (ordem[a.prio] - ordem[b.prio]); });
@@ -213,6 +252,9 @@
       html += '<section class="card"><h2>Nova tarefa</h2>' + U.form('tarefa', [U.f('t', 'Tarefa', { req: true, cls: 'largo' }), U.f('prazo', 'Prazo', { tipo: 'date' }), U.f('prio', 'Prioridade', { opts: ['Média', 'Alta', 'Baixa'] })]) + '</section>';
       html += '<section class="card"><h2>Pendentes <small>' + pend.length + '</small></h2>' + (pend.length ? linhasTarefas(pend, hoje) : U.vazio('Nada pendente.')) + '</section>';
       if (feitas.length) html += '<section class="card"><h2>Concluídas <small>' + feitas.length + '</small></h2>' + linhasTarefas(feitas, hoje) + '</section>';
+      var pap = PL.s.papelaria, todos = pap.pre.concat(pap.cer, pap.festa), ok = function (a) { return a.filter(function (x) { return x.ok; }).length; };
+      html += '<section class="card"><h2>Papelaria <small>' + ok(todos) + '/' + todos.length + '</small></h2><p class="nota" style="margin-bottom:12px">Do save the date às tags das lembrancinhas, separado por momento.</p><div class="g3">' +
+        [['pre', 'Antes do casamento'], ['cer', 'Cerimônia'], ['festa', 'Festa e recepção']].map(function (g) { return '<div><h3 style="font-size:14px;color:var(--tinta);margin-bottom:6px">' + g[1] + ' <span class="nota">' + ok(pap[g[0]]) + '/' + pap[g[0]].length + '</span></h3>' + U.checklist('papelaria/' + g[0], pap[g[0]]) + '</div>'; }).join('') + '</div></section>';
       return html;
     }
   });
@@ -240,21 +282,4 @@
     PL.s.cronoGerado = true; PL.salvar(); PL.render(true); PL.toast('Cronograma criado.');
   };
 
-  var STATUS_CONT = ['Em análise', 'Negociando', 'Assinado', 'Pago'];
-  PL.mod('contratos', {
-    titulo: 'Contratos', icone: 'pasta',
-    render: function () {
-      var c = PL.s.contratos;
-      var html = U.cab('Planejamento', 'Pasta de <i>contratos</i>', 'Guarde os contratos no Google Drive (ou onde preferir) e deixe aqui o link e a situação de cada um.');
-      html += '<div class="g2"><section class="card"><h2>Adicionar contrato</h2>' + U.form('contrato', [U.f('nome', 'Fornecedor ou contrato', { req: true }), U.f('status', 'Situação', { opts: STATUS_CONT }), U.f('link', 'Link do arquivo', { tipo: 'url', ph: 'https://drive.google.com/...', cls: 'largo' })]) + '</section>' +
-        '<section class="card"><h2>Como organizar no Drive</h2><ol class="passos"><li>Crie uma pasta "Casamento" no Google Drive e, dentro dela, uma pasta "Contratos".</li><li>Salve cada contrato em PDF com o nome do fornecedor.</li><li>Clique com o botão direito no arquivo, em Compartilhar e em Copiar link.</li><li>Cole o link aqui. Antes de assinar, confira os itens em Biblioteca, "O que conferir no contrato".</li></ol></section></div>';
-      html += '<section class="card"><h2>Contratos <small>' + c.length + '</small></h2>' + (c.length ? '<div class="tabela"><table class="tb"><thead><tr><th>Contrato</th><th>Situação</th><th>Link</th><th></th><th></th></tr></thead><tbody>' + c.map(function (x) {
-        var ok = /^https?:\/\//i.test(x.link || '');
-        return '<tr><td style="min-width:180px">' + U.inp('contratos', x.id, 'nome', x.nome, { r: 0, aria: 'Contrato' }) + '</td><td style="min-width:140px">' + U.sel('contratos', x.id, 'status', x.status, STATUS_CONT, 'Situação') + '</td><td style="min-width:220px">' + U.inp('contratos', x.id, 'link', x.link, { tipo: 'url', aria: 'Link' }) + '</td>' +
-          '<td>' + (ok ? '<a class="btn leve peq" href="' + e(x.link) + '" target="_blank" rel="noopener">' + PL.ic('link') + 'Abrir</a>' : '') + '</td><td>' + U.del('contratos', x.id) + '</td></tr>';
-      }).join('') + '</tbody></table></div>' : U.vazio('Nenhum contrato ainda.')) + '</section>';
-      return html;
-    }
-  });
-  PL.forms.contrato = function (d) { PL.add('contratos', { nome: d.nome, status: d.status, link: d.link }); };
 })();

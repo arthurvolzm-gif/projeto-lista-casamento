@@ -194,10 +194,10 @@
 
   var CATS = ['Decoração', 'Vestido e acessórios', 'Flores e buquê', 'Bolo e doces', 'Mesa posta', 'Cabelo e maquiagem', 'Convites e papelaria', 'Outros'];
   PL.mod('moodboard', {
-    titulo: 'Mural de inspiração', icone: 'foto', menu: 'Mural de inspiração',
+    titulo: 'Mural de inspiração', icone: 'foto', menu: 'Mural',
     render: function () {
       var mb = PL.s.moodboard, cat = PL.temp.catMural || CATS[0];
-      var html = U.cab('Inspiração', 'Mural de <i>inspiração</i>', 'Junte as referências de cada parte do casamento. As fotos ficam guardadas neste aparelho.');
+      var html = U.cab('Inspiração', 'Mural de <i>inspiração</i>', (PL.conta ? 'Junte as referências de cada parte do casamento. As fotos ficam guardadas na sua conta.' : 'Junte as referências de cada parte do casamento. As fotos ficam guardadas neste aparelho.'));
       html += '<section class="card"><h2>Adicionar foto</h2><div class="form"><label class="campo">Categoria<select id="mural-cat" data-act-cat>' + CATS.map(function (c) { return '<option' + (c === cat ? ' selected' : '') + '>' + e(c) + '</option>'; }).join('') + '</select></label>' +
         '<label class="btn">' + PL.ic('foto') + 'Escolher fotos<input type="file" accept="image/*" multiple data-arquivo="mural" hidden></label></div>' +
         '<form class="add-linha" data-form="muralUrl"><input name="url" type="url" placeholder="Ou cole o endereço de uma imagem (terminado em .jpg, .png...)" aria-label="Endereço da imagem"><button class="btn leve" type="submit">' + PL.ic('link') + 'Adicionar</button></form>' +
@@ -221,8 +221,13 @@
     PL.toast('Preparando ' + arqs.length + (arqs.length === 1 ? ' foto...' : ' fotos...'));
     arqs.forEach(function (f) {
       reduzir(f, function (src) {
-        if (src) PL.s.moodboard.push({ id: PL.uid(), cat: cat, src: src });
-        if (++feitas === arqs.length) { PL.salvar(true); PL.render(true); PL.toast('Fotos adicionadas ao mural.'); }
+        var fim = function (item) {
+          if (item) PL.s.moodboard.push(item);
+          if (++feitas === arqs.length) { PL.salvar(true); PL.render(true); PL.toast('Fotos adicionadas ao mural.'); }
+        };
+        if (!src) return fim(null);
+        if (PL.nuvemFoto) PL.nuvemFoto(src).then(function (r) { fim({ id: PL.uid(), cat: cat, src: r.url, path: r.path }); }, function () { fim({ id: PL.uid(), cat: cat, src: src }); });
+        else fim({ id: PL.uid(), cat: cat, src: src });
       });
     });
   });
@@ -243,14 +248,14 @@
   };
 
   PL.mod('biblioteca', {
-    titulo: 'Biblioteca', icone: 'livro',
+    titulo: 'Roteiros e mensagens', icone: 'livro',
     render: function () {
       var doc = PL.temp.doc && D.biblioteca.find(function (x) { return x.id === PL.temp.doc; });
       if (doc) {
         var corpo = doc.texto ? '<p class="texto-doc" id="doc-txt">' + e(doc.texto) + '</p>' : '<ol class="lista-doc" id="doc-txt">' + doc.itens.map(function (i) { return '<li>' + e(i) + '</li>'; }).join('') + '</ol>';
         return U.cab('Biblioteca', e(doc.titulo), e(doc.sub), [U.btn('fecharDoc', 'Voltar', '', 'sec'), '<button type="button" class="btn sec" data-act="copiar" data-alvo="#doc-txt">' + PL.ic('copiar') + 'Copiar</button>', U.btnPrint()]) + '<section class="card">' + corpo + '</section>';
       }
-      return U.cab('Inspiração', '<i>Biblioteca</i>', 'Roteiros, perguntas e mensagens prontas para as conversas com fornecedores.') +
+      return U.cab('Dinheiro', 'Roteiros e <i>mensagens</i>', 'Roteiros, perguntas e mensagens prontas para as conversas com fornecedores.') +
         '<div class="docs">' + D.biblioteca.map(function (x) { return '<button type="button" class="doc" data-act="abrirDoc" data-doc="' + x.id + '"><b>' + e(x.titulo) + '</b><span>' + e(x.sub) + '</span><em>Abrir</em></button>'; }).join('') + '</div>';
     }
   });
