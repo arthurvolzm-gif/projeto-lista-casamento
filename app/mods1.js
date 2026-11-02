@@ -66,7 +66,8 @@
       html += '<section class="card"><h2>Cor do planner</h2><div class="temas">' + D.temas.map(function (t) {
         return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
       }).join('') + '</div></section>';
-      html += '<section class="card"><h2>Seus dados</h2><p class="nota" style="margin-bottom:12px">Tudo fica salvo neste navegador, neste aparelho. Para usar em outro aparelho ou não perder nada, baixe o backup de vez em quando e importe onde quiser.</p>' +
+      if (PL.conta) html += '<section class="card"><h2>Sua conta</h2><div class="lin"><span>Conectado como <b>' + e(PL.conta.email) + '</b>. Tudo o que você preenche é salvo na conta e aparece em qualquer aparelho em que você entrar.</span><span class="esp"></span>' + U.btn('sair', 'Sair', '', 'sec') + '</div></section>';
+      html += '<section class="card"><h2>Seus dados</h2><p class="nota" style="margin-bottom:12px">' + (PL.conta ? 'Além da conta, uma cópia fica neste aparelho. O backup é uma garantia extra: baixe de vez em quando.' : 'Tudo fica salvo neste navegador, neste aparelho. Para usar em outro aparelho ou não perder nada, baixe o backup de vez em quando e importe onde quiser.') + '</p>' +
         '<div class="lin">' + U.btn('backup', 'Baixar backup', 'pasta', 'leve') + '<label class="btn sec">' + PL.ic('mais') + 'Importar backup<input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
         U.btn('exemplo', 'Ver com dados de exemplo', '', 'sec') + '<span class="esp"></span>' + U.btn('zerar', 'Apagar tudo', 'lixo', 'perigo') + '</div></section>';
       return html;

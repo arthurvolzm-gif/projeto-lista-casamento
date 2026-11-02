@@ -60,12 +60,25 @@
     return s;
   }
   PL.s = carregar();
+  /* troca a chave do armazenamento local (uma por conta) e recarrega */
+  PL.usarChave = function (k) { CHAVE = k; PL.s = carregar(); };
+  PL.normalizar = function (s) {
+    var base = PL.novo();
+    if (!s || typeof s !== 'object') return base;
+    Object.keys(base).forEach(function (k) {
+      if (s[k] == null) s[k] = base[k];
+      else if (!Array.isArray(base[k]) && typeof base[k] === 'object') Object.keys(base[k]).forEach(function (k2) { if (s[k][k2] == null) s[k][k2] = base[k][k2]; });
+    });
+    return s;
+  };
+  PL.temDados = function (s) { s = s || PL.s; return !!(s.perfil.noiva || s.perfil.noivo || s.perfil.data || s.gastos.length || s.convidados.length || s.tarefas.length || s.fornecedores.length); };
   var tSalvar = null;
   PL.salvar = function (ja) {
     clearTimeout(tSalvar);
     var f = function () {
       try { localStorage.setItem(CHAVE, JSON.stringify(PL.s)); }
       catch (e) { PL.toast('Não deu para salvar: o espaço deste navegador acabou. Remova algumas imagens do mural ou faça um backup.'); }
+      if (PL.aoSalvar) PL.aoSalvar();
     };
     if (ja) f(); else tSalvar = setTimeout(f, 250);
   };
@@ -354,7 +367,7 @@
     document.body.innerHTML =
       '<div class="topo-movel"><button type="button" class="ic" data-act="menu" aria-label="Abrir menu">' + PL.ic('menu') + '</button><a class="marca" href="#inicio"><b>Check<i>Love</i></b></a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
-      '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav></aside>' +
+      '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' + (PL.rodapeLado || '') + '</aside>' +
       '<main class="principal"><div class="conteudo" id="main"></div></main></div><div class="veu" data-act="fechar"></div><div class="toast" id="toast" hidden role="status"></div>';
     main = document.getElementById('main'); menu = document.getElementById('menu'); miniCasal = document.getElementById('mini');
     menu.innerHTML = PL.grupos.map(function (g) {
