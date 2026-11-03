@@ -176,9 +176,11 @@
       return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (on ? 'on' : '') + '">' + PL.ic(a.icone) + PL.esc(a.nome) + '</a>' +
         (on ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
     }).join('');
-    baixo.innerHTML = PL.AREAS.map(function (a) {
+    /* no celular: Bônus fica no ícone do topo e Perfil entra no lugar dele na barra de baixo */
+    baixo.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
       return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome) + '</span></a>';
-    }).join('');
+    }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + '<span>Perfil</span></a>';
+    var bt = document.getElementById('topo-bonus'); if (bt) bt.classList.toggle('on', !!area && area.mods[0] === 'bonus');
     rodape.querySelectorAll('a[data-to]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-to') === id); });
   }
   function pintarMini() {
@@ -427,7 +429,7 @@
   PL.iniciar = function () {
     document.body.innerHTML =
       '<div class="topo-movel"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><b>Check<i>Love</i></b></a><span class="esp"></span>' +
-      '<a class="ic" href="#perfil" data-act="ir" data-to="perfil" aria-label="Meu perfil">' + PL.ic('user') + '</a></div>' +
+      '<a class="ic" id="topo-bonus" href="#bonus" data-act="ir" data-to="bonus" aria-label="Bônus">' + PL.ic('presente') + '</a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
       '<div class="lado-rodape" id="rodape"><a href="#perfil" data-act="ir" data-to="perfil">' + PL.ic('user') + 'Meu perfil</a>' + (PL.rodapeLado || '') + '</div></aside>' +
