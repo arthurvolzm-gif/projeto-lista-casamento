@@ -256,8 +256,8 @@
       var html = U.cab('Planejamento', 'Tarefas e <i>prazos</i>', 'Gere o cronograma de 12 meses com os prazos calculados pela data do casamento, e acrescente o que for de vocês.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Pendentes', v: pend.length }, { r: 'Atrasadas', v: atras, cls: atras ? 'erro' : '' }, { r: 'Concluídas', v: feitas.length, cls: 'ok' }]);
       var gerado = PL.s.cronoGerado && t.some(function (x) { return x.grupo; });
-      if (gerado) html += '<section class="card"><h2>Cronograma de 12 meses</h2>' + U.prog(feitas.length, t.length) + '</section>';
-      else html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">' + PL.esc(PL.t('Cria {n} tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, as tarefas que já passaram aparecem como atrasadas para vocês resolverem primeiro.', { n: D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</p>' +
+      if (gerado) html += '<section class="card"><h2>Cronograma de 12 meses ' + U.btn('ajustarCrono', 'Ajustar prazos à data', 'cal', 'leve peq') + '</h2>' + U.prog(feitas.length, t.length) + '</section>';
+      else html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">' + PL.esc(PL.t('Cria {n} tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, os prazos são distribuídos entre hoje e o casamento, na mesma ordem.', { n: D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</p>' +
         U.btn('gerarCrono', PL.s.cronoGerado ? 'Gerar de novo' : 'Gerar tarefas do cronograma', 'cal', 'leve') + (t.length ? '<div style="margin-top:12px">' + U.prog(feitas.length, t.length) + '</div>' : '') + '</section>';
       html += '<section class="card"><h2>Nova tarefa</h2>' + U.form('tarefa', [U.f('t', 'Tarefa', { req: true, cls: 'largo' }), U.f('prazo', 'Prazo', { tipo: 'date' }), U.f('prio', 'Prioridade', { opts: ['Média', 'Alta', 'Baixa'] })]) + '</section>';
       html += t.length ? porMes(t, hoje, ordem) : '<section class="card">' + U.vazio('Nada pendente.') + '</section>';
@@ -294,23 +294,47 @@
   function linhasTarefas(arr, hoje) {
     return '<div class="tabela"><table class="tb"><thead><tr><th></th><th>Tarefa</th><th>Prazo</th><th>Prioridade</th><th></th><th></th></tr></thead><tbody>' + arr.map(function (x) {
       var atras = !x.ok && x.prazo && x.prazo < hoje;
-      return '<tr class="' + (x.ok ? 'feito' : '') + '"><td style="width:36px">' + U.chk('tarefas', x.id, 'ok', x.ok, 'Concluída') + '</td><td style="min-width:220px">' + U.inp('tarefas', x.id, 't', x.t, { r: 0, aria: 'Tarefa' }) + (x.grupo ? '<small class="nota" style="padding:0 8px">' + e(x.grupo) + '</small>' : '') + '</td>' +
+      return '<tr class="' + (x.ok ? 'feito' : '') + '"><td style="width:36px">' + U.chk('tarefas', x.id, 'ok', x.ok, 'Concluída') + '</td><td style="min-width:220px">' + U.inp('tarefas', x.id, 't', x.t, { r: 0, aria: 'Tarefa' }) + (x.grupo && !x.ajustado ? '<small class="nota" style="padding:0 8px">' + e(x.grupo) + '</small>' : '') + '</td>' +
         '<td style="width:150px">' + U.inp('tarefas', x.id, 'prazo', x.prazo, { tipo: 'date', aria: 'Prazo' }) + '</td><td style="width:120px">' + U.sel('tarefas', x.id, 'prio', x.prio, ['Alta', 'Média', 'Baixa'], 'Prioridade') + '</td>' +
         '<td>' + (atras ? '<span class="chip erro">Atrasada</span>' : x.prio === 'Alta' && !x.ok ? '<span class="chip alerta">Alta</span>' : '') + '</td><td>' + U.del('tarefas', x.id) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
   }
   PL.forms.tarefa = function (d) { PL.add('tarefas', { t: d.t, prazo: d.prazo, prio: d.prio, ok: false }); };
+  /* Com 12 meses ou mais até o casamento, cada etapa vence "N meses antes". Com menos, as etapas
+     mensais são distribuídas por igual entre hoje e 1 mês antes do casamento (ou 1 semana antes, se
+     faltar pouco), na mesma ordem. Última semana e véspera ficam como estão. */
+  function prazosCrono(data) {
+    var DIA = 864e5, base = new Date(data + 'T12:00:00'), hoje = new Date(PL.hoje() + 'T12:00:00');
+    var umAno = new Date(base); umAno.setMonth(umAno.getMonth() - 12);
+    var fim = new Date(base); fim.setMonth(fim.getMonth() - 1);
+    if ((fim - hoje) / DIA < 14) fim = new Date(base.getTime() - 7 * DIA);
+    var ajustar = hoje > umAno && fim > hoje, r = {};
+    D.cronograma.forEach(function (g) {
+      var d = new Date(base), m = g[0].match(/^(\d+) m/);
+      if (m && ajustar) d = new Date(hoje.getTime() + Math.round((fim - hoje) * (13 - Number(m[1])) / 12 / DIA) * DIA);
+      else if (m) d.setMonth(d.getMonth() - Number(m[1]));
+      else if (/semana/i.test(g[0])) d.setDate(d.getDate() - 7);
+      else d.setDate(d.getDate() - 1);
+      r[g[0]] = { prazo: PL.iso(d), ajustado: !!(m && ajustar) };
+    });
+    return r;
+  }
+  /* recalcula só os prazos das tarefas do cronograma (ex.: mudou a data ou gerou com a regra antiga) */
+  PL.acoes.ajustarCrono = function () {
+    var data = PL.s.perfil.data;
+    if (!data) { PL.toast('Coloque a data do casamento no perfil primeiro.'); PL.ir('perfil'); return; }
+    var prazos = prazosCrono(data), n = 0;
+    PL.s.tarefas.forEach(function (x) { var pz = x.grupo && prazos[x.grupo]; if (!pz) return; x.prazo = pz.prazo; if (pz.ajustado) x.ajustado = true; else delete x.ajustado; n++; });
+    PL.salvar(); PL.render(true); PL.toast(n ? 'Prazos ajustados à data do casamento.' : 'Nenhuma tarefa do cronograma para ajustar.');
+  };
   PL.acoes.gerarCrono = function () {
     var data = PL.s.perfil.data;
     if (!data) { PL.toast('Coloque a data do casamento no perfil primeiro.'); PL.ir('perfil'); return; }
     if (PL.s.cronoGerado && !window.confirm(PL.t('O cronograma já foi gerado. Gerar de novo acrescenta as tarefas outra vez. Continuar?'))) return;
-    var base = new Date(data + 'T12:00:00');
+    var prazos = prazosCrono(data);
     D.cronograma.forEach(function (g, i) {
-      var d = new Date(base), m = g[0].match(/^(\d+) m/);
-      if (m) d.setMonth(d.getMonth() - Number(m[1]));
-      else if (/semana/i.test(g[0])) d.setDate(d.getDate() - 7);
-      else d.setDate(d.getDate() - 1);
-      g[1].forEach(function (t) { PL.s.tarefas.push({ id: PL.uid(), t: PL.t(t), prazo: PL.iso(d), prio: i >= 11 ? 'Alta' : 'Média', grupo: g[0], ok: false }); });
+      var pz = prazos[g[0]];
+      g[1].forEach(function (t) { var x = { id: PL.uid(), t: PL.t(t), prazo: pz.prazo, prio: i >= 11 ? 'Alta' : 'Média', grupo: g[0], ok: false }; if (pz.ajustado) x.ajustado = true; PL.s.tarefas.push(x); });
     });
     PL.s.cronoGerado = true; PL.salvar(); PL.render(true); PL.toast('Cronograma criado.');
   };
