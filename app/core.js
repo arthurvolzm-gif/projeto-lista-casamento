@@ -141,7 +141,7 @@
     { nome: 'Início', icone: 'casa', mods: ['inicio', 'tarefas', 'agenda'] },
     { nome: 'Finanças', icone: 'din', mods: ['financeiro', 'fornecedores'] },
     { nome: 'Convidados', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
-    { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'identidade', 'eventos', 'moodboard'] },
+    { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'eventos', 'moodboard'] },
     { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel'] }
   ];
   PL.areaDe = function (id) { return PL.AREAS.find(function (a) { return a.mods.indexOf(id) >= 0; }); };

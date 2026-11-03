@@ -1,71 +1,9 @@
-/* Planner CheckLove: papelaria, identidade visual, convites, padrinhos, votos e civil */
+/* Planner CheckLove: papelaria, convites, padrinhos, votos e civil */
 (function () {
   'use strict';
   var PL = window.PL, U = PL.ui, D = PL.D, e = PL.esc;
 
   function feitos(arr) { return arr.filter(function (x) { return x.ok; }).length; }
-
-  PL.mod('identidade', {
-    titulo: 'Identidade visual', icone: 'gota',
-    render: function () {
-      var id = PL.s.identidade, sug = PL.temp.sugestoes || [];
-      var html = U.cab('Planejamento', 'Identidade <i>visual</i>', 'As cores, as fontes e as ideias que dão a cara do casamento. Copie os códigos das cores e mande para a decoração e a papelaria.', [U.btnPrint()]);
-      html += '<section class="card"><h2>Paleta de cores <small>toque na cor para trocar</small></h2>' + (id.cores.length ? '<div class="cores">' + id.cores.map(function (c) {
-        return '<div class="cor"><div class="amostra" style="background:' + e(c.hex) + '"><input type="color" value="' + e(c.hex) + '"' + U.attrs('identidade/cores', c.id, 'hex') + ' aria-label="Trocar cor"></div>' +
-          '<div class="info">' + U.inp('identidade/cores', c.id, 'nome', c.nome, { r: 0, ph: 'Nome da cor', aria: 'Nome da cor' }) + '<code>' + e(c.hex.toUpperCase()) + '</code></div>' +
-          '<div class="pe"><button type="button" class="btn leve peq" data-act="copiar" data-txt="' + e(c.hex.toUpperCase()) + '">Copiar</button>' + U.del('identidade/cores', c.id) + '</div></div>';
-      }).join('') + '</div>' : U.vazio('Nenhuma cor ainda. Escolha abaixo ou tire as cores de uma foto de referência.')) +
-        '<form class="add-linha" data-form="cor" style="align-items:center"><input type="color" name="hex" value="#c9a29a" aria-label="Cor"><input name="nome" placeholder="Nome da cor (ex.: rosé, verde oliva)" aria-label="Nome da cor"><button class="btn leve" type="submit">' + PL.ic('mais') + 'Adicionar cor</button></form></section>';
-      html += '<section class="card"><h2>Tirar cores de uma foto</h2><p class="nota">Escolha uma foto de decoração, de flores ou do convite. O planner sugere as cores principais e você adiciona as que quiser.</p>' +
-        '<div class="lin" style="margin-top:10px"><label class="btn leve">' + PL.ic('foto') + 'Escolher foto<input type="file" accept="image/*" data-arquivo="paleta" hidden></label></div>' +
-        (sug.length ? '<div class="sugestoes">' + sug.map(function (h) { return '<button type="button" style="background:' + h + '" data-act="addCor" data-hex="' + h + '" title="Adicionar ' + h + '" aria-label="Adicionar a cor ' + h + '"></button>'; }).join('') + '</div>' : '') + '</section>';
-      html += '<div class="g2"><section class="card"><h2>Fontes</h2>' + (id.fontes.length ? '<ul class="chk">' + id.fontes.map(function (f) {
-        return '<li><div class="txt">' + U.inp('identidade/fontes', f.id, 'nome', f.nome, { r: 0, aria: 'Fonte' }) + '</div><div class="txt">' + U.inp('identidade/fontes', f.id, 'uso', f.uso, { r: 0, aria: 'Uso' }) + '</div>' + U.del('identidade/fontes', f.id) + '</li>';
-      }).join('') + '</ul>' : U.vazio('Ex.: uma fonte cursiva para os nomes e uma simples para os textos.')) +
-        '<form class="add-linha" data-form="fonte"><input name="nome" placeholder="Nome da fonte" aria-label="Nome da fonte"><input name="uso" placeholder="Onde usar" aria-label="Onde usar"><button class="btn leve" type="submit">' + PL.ic('mais') + 'Adicionar</button></form></section>' +
-        '<section class="card"><h2>Ideias e referências</h2>' + U.area('identidade', '', 'notas', id.notas, 'Estilo, materiais, flores, sensações que vocês querem passar...', 7) + '</section></div>';
-      var resumo = resumoCores();
-      html += '<section class="card"><h2>Resumo para fornecedores ' + (resumo ? '<button type="button" class="btn leve peq" data-act="copiar" data-alvo="#resumo-cores">' + PL.ic('copiar') + 'Copiar</button>' : '') + '</h2>' +
-        (resumo ? '<p class="texto-doc" id="resumo-cores">' + e(resumo) + '</p>' : U.vazio('Adicione cores e fontes para montar o resumo.')) + '</section>';
-      return html;
-    }
-  });
-  function resumoCores() {
-    var id = PL.s.identidade; if (!id.cores.length && !id.fontes.length) return '';
-    var t = PL.t('Identidade visual') + ' · ' + PL.casal();
-    if (id.cores.length) t += '\n\n' + PL.t('Cores:') + '\n' + id.cores.map(function (c) { return '• ' + (c.nome || PL.t('Cor')) + ': ' + c.hex.toUpperCase(); }).join('\n');
-    if (id.fontes.length) t += '\n\n' + PL.t('Fontes:') + '\n' + id.fontes.map(function (f) { return '• ' + f.nome + (f.uso ? ' (' + f.uso + ')' : ''); }).join('\n');
-    return t;
-  }
-  PL.forms.cor = function (d) { PL.add('identidade/cores', { hex: d.hex || '#cccccc', nome: d.nome }); };
-  PL.forms.fonte = function (d) { if (!d.nome) return false; PL.add('identidade/fontes', { nome: d.nome, uso: d.uso }); };
-  PL.acoes.addCor = function (d) {
-    PL.add('identidade/cores', { hex: d.hex, nome: '' });
-    PL.temp.sugestoes = (PL.temp.sugestoes || []).filter(function (h) { return h !== d.hex; });
-    PL.render(true);
-  };
-  document.addEventListener('change', function (ev) {
-    var el = ev.target; if (el.getAttribute('data-arquivo') !== 'paleta' || !el.files[0]) return;
-    var img = new Image(), url = URL.createObjectURL(el.files[0]);
-    img.onload = function () { PL.temp.sugestoes = extrairCores(img); URL.revokeObjectURL(url); PL.render(true); };
-    img.src = url;
-  });
-  function extrairCores(img) {
-    var w = 120, h = Math.max(1, Math.round(img.height / img.width * w)), cv = document.createElement('canvas'); cv.width = w; cv.height = h;
-    var cx = cv.getContext('2d'); cx.drawImage(img, 0, 0, w, h);
-    var px = cx.getImageData(0, 0, w, h).data, b = {};
-    for (var i = 0; i < px.length; i += 4) {
-      if (px[i + 3] < 128) continue;
-      var k = (px[i] >> 4) + ',' + (px[i + 1] >> 4) + ',' + (px[i + 2] >> 4);
-      var o = b[k] || (b[k] = { n: 0, r: 0, g: 0, b: 0 }); o.n++; o.r += px[i]; o.g += px[i + 1]; o.b += px[i + 2];
-    }
-    var lista = Object.keys(b).map(function (k) { var o = b[k]; return [o.r / o.n, o.g / o.n, o.b / o.n, o.n]; }).sort(function (a, c) { return c[3] - a[3]; }), esc = [];
-    lista.forEach(function (c) {
-      if (esc.length >= 6) return;
-      if (esc.every(function (x) { return Math.abs(x[0] - c[0]) + Math.abs(x[1] - c[1]) + Math.abs(x[2] - c[2]) > 70; })) esc.push(c);
-    });
-    return esc.map(function (c) { return '#' + c.slice(0, 3).map(function (v) { return Math.round(v).toString(16).padStart(2, '0'); }).join(''); });
-  }
 
   /* ============ CERIMÔNIA E CONVIDADOS ============ */
   PL.grupo('Cerimônia e convidados');
