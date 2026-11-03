@@ -255,7 +255,9 @@
       var atras = pend.filter(function (x) { return x.prazo && x.prazo < hoje; }).length;
       var html = U.cab('Planejamento', 'Tarefas e <i>prazos</i>', 'Gere o cronograma de 12 meses com os prazos calculados pela data do casamento, e acrescente o que for de vocês.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Pendentes', v: pend.length }, { r: 'Atrasadas', v: atras, cls: atras ? 'erro' : '' }, { r: 'Concluídas', v: feitas.length, cls: 'ok' }]);
-      html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">' + PL.esc(PL.t('Cria {n} tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, as tarefas que já passaram aparecem como atrasadas para vocês resolverem primeiro.', { n: D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</p>' +
+      var gerado = PL.s.cronoGerado && t.some(function (x) { return x.grupo; });
+      if (gerado) html += '<section class="card"><h2>Cronograma de 12 meses</h2>' + U.prog(feitas.length, t.length) + '</section>';
+      else html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">' + PL.esc(PL.t('Cria {n} tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, as tarefas que já passaram aparecem como atrasadas para vocês resolverem primeiro.', { n: D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</p>' +
         U.btn('gerarCrono', PL.s.cronoGerado ? 'Gerar de novo' : 'Gerar tarefas do cronograma', 'cal', 'leve') + (t.length ? '<div style="margin-top:12px">' + U.prog(feitas.length, t.length) + '</div>' : '') + '</section>';
       html += '<section class="card"><h2>Nova tarefa</h2>' + U.form('tarefa', [U.f('t', 'Tarefa', { req: true, cls: 'largo' }), U.f('prazo', 'Prazo', { tipo: 'date' }), U.f('prio', 'Prioridade', { opts: ['Média', 'Alta', 'Baixa'] })]) + '</section>';
       html += t.length ? porMes(t, hoje, ordem) : '<section class="card">' + U.vazio('Nada pendente.') + '</section>';
