@@ -57,7 +57,7 @@
     titulo: 'Meu perfil', icone: 'user',
     render: function () {
       var p = PL.s.perfil;
-      var html = U.cab('Principal', 'Meu <i>perfil</i>', 'Esses dados aparecem na contagem regressiva, no topo dos PDFs e nas mensagens prontas.');
+      var html = U.cab('Principal', 'Meu <i>perfil</i>', 'Esses dados aparecem na contagem regressiva, e no topo dos PDFs.');
       html += '<section class="card"><h2>Dados do casal</h2><div class="form">' +
         U.campo('Nome da noiva', U.inp('perfil', '', 'noiva', p.noiva)) + U.campo('Nome do noivo', U.inp('perfil', '', 'noivo', p.noivo)) +
         U.campo('Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) + U.campo('Horário', U.inp('perfil', '', 'hora', p.hora, { tipo: 'time' })) +

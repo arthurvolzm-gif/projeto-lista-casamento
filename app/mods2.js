@@ -74,16 +74,13 @@
     titulo: 'Convites', icone: 'carta',
     render: function () {
       var c = PL.s.convites, cv = PL.s.convidados, env = cv.filter(function (x) { return x.convite; }).length;
-      var html = U.cab('Cerimônia', 'Controle dos <i>convites</i>', 'Tipo de convite, prazo de entrega, mensagens prontas para o WhatsApp e quem já recebeu.');
+      var html = U.cab('Cerimônia', 'Controle dos <i>convites</i>', 'Tipo de convite, prazo de entrega e quem já recebeu.');
       html += '<div class="g2"><section class="card"><h2>Tipo de convite</h2><div class="filtros">' + [['virtual', 'Virtual'], ['fisico', 'Impresso'], ['ambos', 'Os dois']].map(function (t) {
         return '<button type="button" class="' + (c.tipo === t[0] ? 'on' : '') + '" data-act="tipoConvite" data-tipo="' + t[0] + '">' + t[1] + '</button>';
       }).join('') + '</div><div class="form" style="margin-top:14px">' +
         U.campo('Começar a entregar em', U.inp('convites', '', 'inicio', c.inicio, { tipo: 'date' })) + U.campo('Terminar até', U.inp('convites', '', 'fim', c.fim, { tipo: 'date' })) +
         U.campo('Prazo para confirmar presença', U.inp('convites', '', 'prazo', c.prazo, { tipo: 'date' })) + U.campo('Link do convite virtual', U.inp('convites', '', 'link', c.link, { tipo: 'url', ph: 'https://...' })) + '</div></section>' +
         '<section class="card"><h2>Entregues</h2>' + (cv.length ? U.prog(env, cv.length) + '<p class="nota" style="margin-top:10px">Marque na lista abaixo quem já recebeu. Os nomes vêm da lista de convidados.</p>' : U.vazio('Cadastre os convidados para controlar a entrega.<br><br><button type="button" class="btn leve peq" data-act="ir" data-to="convidados">Ir para convidados</button>')) + '</section></div>';
-      html += '<section class="card"><h2>Mensagens prontas <small>troque o [nome] e envie</small></h2><div class="g2">' + D.mensagens.map(function (m) {
-        return '<div class="msg"><div class="lin"><b>' + e(m.titulo) + '</b><span class="esp"></span><button type="button" class="btn leve peq" data-act="copiar" data-alvo="#msg-' + m.id + '">' + PL.ic('copiar') + 'Copiar</button></div><p id="msg-' + m.id + '">' + e(preencher(m.texto)) + '</p></div>';
-      }).join('') + '</div></section>';
       if (cv.length) html += '<section class="card"><h2>Quem já recebeu</h2><input type="search" placeholder="Buscar convidado" data-busca="#lista-conv tr" aria-label="Buscar convidado" style="margin-bottom:10px;max-width:320px">' +
         '<div class="tabela"><table class="tb" id="lista-conv"><tbody>' + cv.map(function (x) {
           return '<tr data-txt="' + e(x.nome + ' ' + x.grupo) + '"><td style="width:36px">' + U.chk('convidados', x.id, 'convite', x.convite, 'Convite entregue') + '</td><td>' + e(x.nome) + '<small class="nota" style="display:block">' + e(x.grupo || '') + '</small></td><td style="text-align:right">' + (x.convite ? '<span class="chip ok">Entregue</span>' : '<span class="chip">A entregar</span>') + '</td></tr>';
@@ -91,11 +88,6 @@
       return html;
     }
   });
-  function preencher(t) {
-    var p = PL.s.perfil, c = PL.s.convites;
-    return PL.t(t).replace(/\{convidado\}/g, PL.t('[nome]')).replace(/\{casal\}/g, PL.casal()).replace(/\{data\}/g, p.data ? PL.dataLonga(p.data) : PL.t('[data]'))
-      .replace(/\{hora\}/g, p.hora || PL.t('[horário]')).replace(/\{cidade\}/g, p.cidade || PL.t('[cidade]')).replace(/\{link\}/g, c.link || PL.t('[link do convite]')).replace(/\{prazo\}/g, c.prazo ? PL.dataBR(c.prazo) : PL.t('[data]'));
-  }
   PL.acoes.tipoConvite = function (d) { PL.s.convites.tipo = d.tipo; PL.salvar(); PL.render(true); };
 
   var TIPOS_PAD = ['Casal de padrinhos', 'Padrinho', 'Madrinha', 'Daminha', 'Pajem'];
