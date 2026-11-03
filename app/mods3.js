@@ -1,4 +1,4 @@
-/* Planner CheckLove: convidados, mesas, cortejo, playlist, casa e viagem, inspiração, biblioteca e ajuda */
+/* Planner CheckLove: convidados, mesas, cortejo, playlist, casa e viagem, inspiração, biblioteca */
 (function () {
   'use strict';
   var PL = window.PL, U = PL.ui, D = PL.D, e = PL.esc;
@@ -261,19 +261,6 @@
   });
   PL.acoes.abrirDoc = function (d) { PL.temp.doc = d.doc; PL.render(); window.scrollTo(0, 0); };
   PL.acoes.fecharDoc = function () { PL.temp.doc = null; PL.render(); };
-
-  /* ============ AJUDA ============ */
-  PL.grupo('Ajuda');
-  PL.mod('ajuda', {
-    titulo: 'Como usar', icone: 'ajuda',
-    render: function () {
-      return U.cab('Ajuda', 'Como <i>usar</i>', 'Respostas rápidas sobre o planner.') +
-        '<div class="g2"><section class="card"><h2>Onde ficam os dados</h2><p>Tudo o que vocês preenchem fica salvo automaticamente neste navegador, neste aparelho. Não precisa apertar salvar.</p><p class="nota" style="margin-top:8px">Se limpar os dados do navegador ou trocar de aparelho, o planner começa vazio. Por isso, baixe o backup no perfil de vez em quando.</p></section>' +
-        '<section class="card"><h2>Usar em outro aparelho</h2><ol class="passos"><li>No perfil, toque em "Baixar backup".</li><li>Envie o arquivo para o outro aparelho (WhatsApp, e-mail ou Drive).</li><li>Abra o planner no outro aparelho, vá ao perfil e toque em "Importar backup".</li></ol></section>' +
-        '<section class="card"><h2>Exportar em PDF</h2><p>Em cada página, toque em "Exportar PDF" e escolha "Salvar como PDF" na janela que abrir. O PDF sai só com a página aberta, com o nome do casal no topo.</p></section>' +
-        '<section class="card"><h2>Colocar na tela do celular</h2><ol class="passos"><li>Abra o planner no navegador do celular.</li><li>No iPhone, toque em Compartilhar e em "Adicionar à Tela de Início". No Android, toque nos três pontos e em "Adicionar à tela inicial".</li><li>O planner abre como um aplicativo.</li></ol></section></div>';
-    }
-  });
 
   /* ============ DADOS DE EXEMPLO ============ */
   PL.exemplo = function () {

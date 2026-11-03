@@ -427,10 +427,10 @@
   PL.iniciar = function () {
     document.body.innerHTML =
       '<div class="topo-movel"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><b>Check<i>Love</i></b></a><span class="esp"></span>' +
-      '<a class="ic" href="#ajuda" data-act="ir" data-to="ajuda" aria-label="Como usar">' + PL.ic('ajuda') + '</a><a class="ic" href="#perfil" data-act="ir" data-to="perfil" aria-label="Meu perfil">' + PL.ic('user') + '</a></div>' +
+      '<a class="ic" href="#perfil" data-act="ir" data-to="perfil" aria-label="Meu perfil">' + PL.ic('user') + '</a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
-      '<div class="lado-rodape" id="rodape"><a href="#perfil" data-act="ir" data-to="perfil">' + PL.ic('user') + 'Meu perfil</a><a href="#ajuda" data-act="ir" data-to="ajuda">' + PL.ic('ajuda') + 'Como usar</a>' + (PL.rodapeLado || '') + '</div></aside>' +
+      '<div class="lado-rodape" id="rodape"><a href="#perfil" data-act="ir" data-to="perfil">' + PL.ic('user') + 'Meu perfil</a>' + (PL.rodapeLado || '') + '</div></aside>' +
       '<main class="principal"><div class="conteudo" id="main"></div></main></div><nav class="abas-baixo" id="baixo" aria-label="Áreas"></nav><div class="toast" id="toast" hidden role="status"></div>';
     main = document.getElementById('main'); menu = document.getElementById('menu'); miniCasal = document.getElementById('mini');
     baixo = document.getElementById('baixo'); rodape = document.getElementById('rodape');
