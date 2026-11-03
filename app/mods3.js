@@ -255,7 +255,7 @@
         var corpo = doc.texto ? '<p class="texto-doc" id="doc-txt">' + e(doc.texto) + '</p>' : '<ol class="lista-doc" id="doc-txt">' + doc.itens.map(function (i) { return '<li>' + e(i) + '</li>'; }).join('') + '</ol>';
         return U.cab('Biblioteca', e(doc.titulo), e(doc.sub), [U.btn('fecharDoc', 'Voltar', '', 'sec'), '<button type="button" class="btn sec" data-act="copiar" data-alvo="#doc-txt">' + PL.ic('copiar') + 'Copiar</button>', U.btnPrint()]) + '<section class="card">' + corpo + '</section>';
       }
-      return U.cab('Dinheiro', 'Roteiros e <i>mensagens</i>', 'Roteiros, perguntas e mensagens prontas para as conversas com fornecedores.') +
+      return U.cab('Finanças', 'Roteiros e <i>mensagens</i>', 'Roteiros, perguntas e mensagens prontas para as conversas com fornecedores.') +
         '<div class="docs">' + D.biblioteca.map(function (x) { return '<button type="button" class="doc" data-act="abrirDoc" data-doc="' + x.id + '"><b>' + e(x.titulo) + '</b><span>' + e(x.sub) + '</span><em>Abrir</em></button>'; }).join('') + '</div>';
     }
   });

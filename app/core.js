@@ -139,8 +139,8 @@
   /* menu em 5 áreas, cada uma com abas */
   PL.AREAS = [
     { nome: 'Início', icone: 'casa', mods: ['inicio', 'tarefas', 'agenda'] },
-    { nome: 'Dinheiro', icone: 'din', mods: ['financeiro', 'fornecedores', 'biblioteca'] },
-    { nome: 'Pessoas', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
+    { nome: 'Finanças', icone: 'din', mods: ['financeiro', 'fornecedores', 'biblioteca'] },
+    { nome: 'Convidados', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
     { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'identidade', 'eventos', 'moodboard'] },
     { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel'] }
   ];
