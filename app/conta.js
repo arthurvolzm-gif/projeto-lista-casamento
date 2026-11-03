@@ -141,7 +141,7 @@
     clearTimeout(tNuvem);
     tNuvem = setTimeout(function () {
       tNuvem = null;
-      enviar().then(function () { PL.contaErro = false; }, function () { PL.contaErro = true; PL.toast('Sem conexão com a conta. As mudanças estão salvas neste aparelho e sobem quando a internet voltar.'); });
+      enviar().then(function () { PL.contaErro = false; }, function () { var jaAvisou = PL.contaErro; PL.contaErro = true; if (!jaAvisou) PL.toast('Sem conexão com a conta. As mudanças estão salvas neste aparelho e sobem quando a internet voltar.'); });
     }, 1500);
   };
   PL.salvarMembros = async function (lista) {
