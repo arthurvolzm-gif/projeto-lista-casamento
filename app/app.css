@@ -276,8 +276,8 @@ ol.lista-doc{padding-left:22px;display:flex;flex-direction:column;gap:6px}
   .topo-movel .ic svg{width:20px;height:20px}
   .topo-movel .ic:hover{background:var(--bg);color:var(--tinta)}
   .topo-movel .ic.on{background:var(--acc-sua);color:var(--acc)}
-  .abas-baixo{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-top:1px solid var(--linha);padding:6px max(6px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
-  .abas-baixo a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-radius:10px;text-decoration:none;color:var(--suave);font-size:10.5px;font-weight:600}
+  .abas-baixo{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-top:1px solid var(--linha);padding:6px max(6px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
+  .abas-baixo a,.abas-baixo .menu-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-radius:10px;text-decoration:none;color:var(--suave);font-size:10.5px;font-weight:600}
   .abas-baixo a svg{width:21px;height:21px}
   .abas-baixo a.on{color:var(--acc-esc);background:var(--acc-sua)}
   .principal{padding-top:16px;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
@@ -433,3 +433,19 @@ html.ob-on,html.ob-on body{overflow:hidden}
 @keyframes bvLetra{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 @media (prefers-reduced-motion:reduce){.bv,.bv-1,.bv-2,.ob,.ob-corpo{animation:none}}
 @media (max-width:900px){.abas{width:auto;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}.abas a{padding:9px 14px}}
+
+/* menu lateral no celular (3 risquinhos na barra de baixo) */
+@media (max-width:900px){
+  .abas-baixo .menu-btn{border:0;background:none;font:inherit;font-size:10.5px;font-weight:600;cursor:pointer}
+  .abas-baixo .menu-btn svg{width:21px;height:21px}
+  .abas-baixo a,.abas-baixo .menu-btn{font-size:9.5px;letter-spacing:-.01em;padding:5px 0;min-width:0}
+  .abas-baixo span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body.menu-aberto .menu-btn{color:var(--acc-esc);background:var(--acc-sua)}
+  body.menu-aberto .lado{display:flex;position:fixed;left:0;top:0;bottom:0;height:auto;width:min(300px,84vw);z-index:60;box-shadow:12px 0 40px -12px rgba(40,20,80,.35);animation:ladoIn .25s ease-out;padding-bottom:max(18px,env(safe-area-inset-bottom,0px))}
+  body.menu-aberto .veu{display:block;position:fixed;inset:0;z-index:55;background:rgba(31,27,46,.38);animation:veuIn .25s ease-out}
+  body.menu-aberto{overflow:hidden}
+}
+@keyframes ladoIn{from{transform:translateX(-100%)}to{transform:none}}
+@keyframes veuIn{from{opacity:0}to{opacity:1}}
+@media (max-width:900px){.abas-baixo{padding-left:max(2px,env(safe-area-inset-left,0px));padding-right:max(2px,env(safe-area-inset-right,0px));gap:0}.abas-baixo a,.abas-baixo .menu-btn{letter-spacing:-.025em}}
+@media (max-width:380px){.abas-baixo a,.abas-baixo .menu-btn{font-size:8.8px}}
