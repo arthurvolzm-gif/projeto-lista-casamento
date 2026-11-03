@@ -171,17 +171,18 @@
     tick();
   };
   function pintarMenu(id, area) {
-    menu.innerHTML = PL.AREAS.map(function (a) {
+    menu.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
       var on = a === area;
       return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (on ? 'on' : '') + '">' + PL.ic(a.icone) + PL.esc(a.nome) + '</a>' +
         (on ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
-    }).join('');
+    }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + 'Perfil</a>';
     /* no celular: Bônus fica no ícone do topo e Perfil entra no lugar dele na barra de baixo */
     baixo.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
       return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome) + '</span></a>';
     }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + '<span>Perfil</span></a>';
     var bt = document.getElementById('topo-bonus'); if (bt) bt.classList.toggle('on', !!area && area.mods[0] === 'bonus');
-    rodape.querySelectorAll('a[data-to]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-to') === id); });
+    var naBonus = !!area && area.mods[0] === 'bonus';
+    rodape.querySelectorAll('a[data-to]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-to') === 'bonus' ? naBonus : a.getAttribute('data-to') === id); });
   }
   function pintarMini() {
     var p = PL.s.perfil, d = PL.dias();
@@ -432,7 +433,7 @@
       '<a class="ic" id="topo-bonus" href="#bonus" data-act="ir" data-to="bonus" aria-label="Bônus">' + PL.ic('presente') + '</a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
-      '<div class="lado-rodape" id="rodape"><a href="#perfil" data-act="ir" data-to="perfil">' + PL.ic('user') + 'Meu perfil</a>' + (PL.rodapeLado || '') + '</div></aside>' +
+      '<div class="lado-rodape" id="rodape"><a href="#bonus" data-act="ir" data-to="bonus">' + PL.ic('presente') + 'Bônus</a>' + (PL.rodapeLado || '') + '</div></aside>' +
       '<main class="principal"><div class="conteudo" id="main"></div></main></div><nav class="abas-baixo" id="baixo" aria-label="Áreas"></nav><div class="toast" id="toast" hidden role="status"></div>';
     main = document.getElementById('main'); menu = document.getElementById('menu'); miniCasal = document.getElementById('mini');
     baixo = document.getElementById('baixo'); rodape = document.getElementById('rodape');
