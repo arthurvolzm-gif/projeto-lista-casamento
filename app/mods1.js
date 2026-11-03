@@ -56,37 +56,54 @@
   PL.mod('perfil', {
     titulo: 'Meu perfil', icone: 'user',
     render: function () {
-      var p = PL.s.perfil;
-      var html = U.cab('Principal', 'Meu <i>perfil</i>', 'Esses dados aparecem na contagem regressiva, e no topo dos PDFs.');
-      html += '<section class="card"><h2>Dados do casal</h2><div class="form">' +
-        U.campo('Nome da noiva', U.inp('perfil', '', 'noiva', p.noiva)) + U.campo('Nome do noivo', U.inp('perfil', '', 'noivo', p.noivo)) +
-        U.campo('Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) + U.campo('Horário', U.inp('perfil', '', 'hora', p.hora, { tipo: 'time' })) +
-        U.campo('Cidade', U.inp('perfil', '', 'cidade', p.cidade)) + U.campo('Local da cerimônia', U.inp('perfil', '', 'local', p.local)) +
-        U.campo('Orçamento total (' + PL.simbolo() + ')', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</div></section>';
-      html += idiomaMoeda();
-      html += '<section class="card"><h2>Cor do planner</h2><div class="temas">' + D.temas.map(function (t) {
-        return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
-      }).join('') + '</div></section>';
-      if (PL.conta) html += '<section class="card"><h2>Sua conta</h2><div class="lin"><span>' + PL.t('Conectado como <b>{email}</b>. Tudo o que você preenche é salvo na conta e aparece em qualquer aparelho em que você entrar.', { email: e(PL.conta.email) }) + '</span><span class="esp"></span>' + U.btn('sair', 'Sair', '', 'sec') + '</div></section>';
+      var p = PL.s.perfil, s = PL.s;
+      var ini = [p.noiva, p.noivo].filter(Boolean).map(function (n) { return n.trim().charAt(0).toUpperCase(); }).join('&');
+      var dias = p.data ? Math.ceil((new Date(p.data + 'T12:00:00') - new Date(PL.hoje() + 'T12:00:00')) / 864e5) : null;
+      var tf = s.tarefas.length, td = s.tarefas.filter(function (x) { return x.ok; }).length;
+      var conf = s.convidados.filter(function (x) { return x.status === 'Confirmado'; }).length;
+      var linha = function (ic, rot, ctrl, extra) { return '<div class="pf-linha' + (extra || '') + '"><span class="pf-ic">' + PL.ic(ic) + '</span><span class="pf-rot">' + rot + '</span><span class="pf-ctrl">' + ctrl + '</span></div>'; };
+      var acao = function (act, ic, rot, cls) { return '<button type="button" class="pf-linha pf-acao' + (cls ? ' ' + cls : '') + '" data-act="' + act + '"><span class="pf-ic">' + PL.ic(ic) + '</span><span class="pf-rot">' + rot + '</span><span class="pf-seta">' + PL.ic('baixo') + '</span></button>'; };
+      var html = '<section class="pf-topo">' +
+        '<div class="pf-avatar">' + (ini ? e(ini) : PL.ic('taca')) + '</div>' +
+        '<h1 class="pf-nome">' + e(PL.casal()) + '</h1>' +
+        (PL.conta ? '<p class="pf-email">' + e(PL.conta.email) + '</p>' : '') +
+        '<div class="pf-chips">' + (p.data ? '<span class="chip acc">' + PL.ic('cal') + PL.dataLonga(p.data) + '</span>' : '<span class="chip">' + PL.ic('cal') + 'Defina a data abaixo</span>') + (p.cidade ? '<span class="chip">' + e(p.cidade) + '</span>' : '') + '</div>' +
+        '<div class="pf-stats">' +
+          '<div><b>' + (dias == null ? '–' : dias > 0 ? dias : 0) + '</b><span>' + (dias === 1 ? 'dia para o casamento' : 'dias para o casamento') + '</span></div>' +
+          '<div><b>' + PL.pct(td, tf) + '%</b><span>das tarefas feitas</span></div>' +
+          '<div><b>' + conf + '</b><span>' + (conf === 1 ? 'convidado confirmado' : 'convidados confirmados') + '</span></div>' +
+        '</div></section>';
+      html += '<h2 class="pf-titulo">Dados do casamento</h2><section class="card pf-grupo">' +
+        linha('user', 'Nome da noiva', U.inp('perfil', '', 'noiva', p.noiva, { ph: 'Digite o nome' })) +
+        linha('user', 'Nome do noivo', U.inp('perfil', '', 'noivo', p.noivo, { ph: 'Digite o nome' })) +
+        linha('cal', 'Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) +
+        linha('cal', 'Horário', U.inp('perfil', '', 'hora', p.hora, { tipo: 'time' })) +
+        linha('casa', 'Cidade', U.inp('perfil', '', 'cidade', p.cidade, { ph: 'Ex.: Curitiba' })) +
+        linha('taca', 'Local da cerimônia', U.inp('perfil', '', 'local', p.local, { ph: 'Ex.: Igreja, sítio, salão' })) +
+        linha('din', 'Orçamento total (' + PL.simbolo() + ')', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</section>';
+      var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
+      html += '<h2 class="pf-titulo">Preferências</h2><section class="card pf-grupo">' +
+        linha('din', 'Moeda', U.sel('perfil', '', 'moeda', p.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda')) +
+        '<div class="pf-linha pf-col"><span class="pf-ic">' + PL.ic('gota') + '</span><span class="pf-rot">Cor do planner</span><div class="temas">' + D.temas.map(function (t) {
+          return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
+        }).join('') + '</div></div></section>';
       if (PL.conta) html += compartilhar();
-      html += '<section class="card"><h2>Seus dados</h2><p class="nota" style="margin-bottom:12px">' + (PL.conta ? 'Além da conta, uma cópia fica neste aparelho. O backup é uma garantia extra: baixe de vez em quando.' : 'Tudo fica salvo neste navegador, neste aparelho. Para usar em outro aparelho ou não perder nada, baixe o backup de vez em quando e importe onde quiser.') + '</p>' +
-        '<div class="lin">' + U.btn('backup', 'Baixar backup', 'pasta', 'leve') + '<label class="btn sec">' + PL.ic('mais') + 'Importar backup<input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
-        U.btn('exemplo', 'Ver com dados de exemplo', '', 'sec') + '<span class="esp"></span>' + U.btn('zerar', 'Apagar tudo', 'lixo', 'perigo') + '</div></section>';
-      return html;
+      html += '<h2 class="pf-titulo">Seus dados</h2><section class="card pf-grupo">' +
+        acao('backup', 'pasta', 'Baixar backup') +
+        '<label class="pf-linha pf-acao"><span class="pf-ic">' + PL.ic('mais') + '</span><span class="pf-rot">Importar backup</span><span class="pf-seta">' + PL.ic('baixo') + '</span><input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
+        acao('exemplo', 'foto', 'Ver com dados de exemplo') + '</section>' +
+        '<p class="pf-nota">' + (PL.conta ? 'Tudo fica salvo na sua conta e neste aparelho. O backup é uma garantia extra.' : 'Tudo fica salvo neste navegador, neste aparelho. Baixe o backup de vez em quando.') + '</p>';
+      html += '<section class="card pf-grupo">' + (PL.conta ? acao('sair', 'user', 'Sair da conta') : '') + acao('zerar', 'lixo', 'Apagar tudo', 'pf-perigo') + '</section>';
+      return '<div class="pf">' + html + '</div>';
     }
   });
   var MOEDAS = [['BRL', 'Real (R$)'], ['USD', 'Dólar americano (US$)'], ['EUR', 'Euro (€)'], ['GBP', 'Libra esterlina (£)'], ['JPY', 'Iene (¥)'], ['CAD', 'Dólar canadense (CA$)'], ['AUD', 'Dólar australiano (A$)'], ['MXN', 'Peso mexicano (MX$)'], ['ARS', 'Peso argentino (ARS)'], ['CLP', 'Peso chileno (CLP)'], ['CHF', 'Franco suíço (CHF)']];
-  function idiomaMoeda() {
-    var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
-    return '<section class="card"><h2>Moeda</h2>' +
-      '<p class="nota" style="margin-bottom:12px">Os valores aparecem na moeda do seu país. Se quiser outra, escolha abaixo. Vale para todo o planner, inclusive para quem você compartilhar.</p>' +
-      '<label class="campo" style="max-width:320px">Moeda' + U.sel('perfil', '', 'moeda', PL.s.perfil.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda') + '</label></section>';
-  }
+
   function compartilhar() {
     var c = PL.conta;
-    if (!c.dono) return '<section class="card"><h2>Planner compartilhado</h2><p>' + PL.t('Você está editando o planner de <b>{email}</b>. O que você muda aparece para os dois.', { email: e(c.donoEmail || PL.t('outra conta')) }) + '</p></section>';
+    if (!c.dono) return '<h2 class="pf-titulo">Planner compartilhado</h2><section class="card pf-bloco"><p>' + PL.t('Você está editando o planner de <b>{email}</b>. O que você muda aparece para os dois.', { email: e(c.donoEmail || PL.t('outra conta')) }) + '</p></section>';
     var m = c.membros || [];
-    return '<section class="card"><h2>Compartilhar o planner</h2><p class="nota" style="margin-bottom:12px">' + PL.t('Coloque o e-mail do noivo, da noiva ou da cerimonialista. A pessoa cria a conta com esse mesmo e-mail em {site} e passa a ver e editar este planner.', { site: e(location.host + '/app') }) + '</p>' +
+    return '<h2 class="pf-titulo">Compartilhar o planner</h2><section class="card pf-bloco"><p class="nota" style="margin-bottom:12px">' + PL.t('Coloque o e-mail do noivo, da noiva ou da cerimonialista. A pessoa cria a conta com esse mesmo e-mail em {site} e passa a ver e editar este planner.', { site: e(location.host + '/app') }) + '</p>' +
       (m.length ? '<ul class="chk" style="margin-bottom:6px">' + m.map(function (x) { return '<li><div class="txt" style="padding:4px 6px">' + e(x) + '</div><button type="button" class="ic" data-act="tirarMembro" data-email="' + e(x) + '" aria-label="Parar de compartilhar">' + PL.ic('lixo') + '</button></li>'; }).join('') + '</ul>' : '') +
       '<form class="add-linha" data-form="membro"><input name="email" type="email" placeholder="email@exemplo.com" aria-label="E-mail para compartilhar" required><button class="btn leve" type="submit">' + PL.ic('mais') + 'Compartilhar</button></form></section>';
   }

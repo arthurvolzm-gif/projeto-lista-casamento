@@ -13,7 +13,7 @@
     var b = w.querySelector('.sel-btn'); if (!b) return;
     b.querySelector('.sel-txt').textContent = texto(sel);
     b.disabled = sel.disabled;
-    w.classList.toggle('vazio', !sel.value);
+    w.classList.toggle('sel-vazio', !sel.value);
   }
   function melhorar(sel) {
     if (sel.hasAttribute('data-nativo') || (sel.parentNode && sel.parentNode.classList && sel.parentNode.classList.contains('sel'))) return;
