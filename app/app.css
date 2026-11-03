@@ -457,3 +457,8 @@ html.ob-on,html.ob-on body{overflow:hidden}
   body.menu-aberto .topo-movel .menu-btn{background:var(--acc-sua);color:var(--acc)}
   .abas-baixo a{font-size:10.5px;letter-spacing:0}
 }
+.menu .menu-seta{margin-left:auto;display:inline-flex;transition:transform .2s}
+.menu .menu-seta svg{width:15px;height:15px;color:var(--mudo)}
+.menu a.aberto .menu-seta{transform:rotate(180deg)}
+.menu .sub{animation:subIn .2s ease-out}
+@keyframes subIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}

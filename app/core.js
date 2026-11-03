@@ -171,11 +171,14 @@
     }
     tick();
   };
+  /* menu lateral: tocar numa área só abre as abas dela; a navegação acontece na aba escolhida */
+  var menuAberto = null, menuArea = null;
   function pintarMenu(id, area) {
+    if (area !== menuArea) { menuArea = area; menuAberto = area ? area.nome : null; }
     menu.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
-      var on = a === area;
-      return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (on ? 'on' : '') + '">' + PL.ic(a.icone) + PL.esc(a.nome) + '</a>' +
-        (on ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
+      var on = a === area, aberto = menuAberto === a.nome;
+      return '<a href="#' + a.mods[0] + '" data-act="area" data-area="' + PL.esc(a.nome) + '" aria-expanded="' + aberto + '" class="' + (on ? 'on' : '') + (aberto ? ' aberto' : '') + '">' + PL.ic(a.icone) + PL.esc(a.nome) + '<span class="menu-seta">' + PL.ic('baixo') + '</span></a>' +
+        (aberto ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
     }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + 'Perfil</a>';
     /* no celular: Bônus fica no ícone do topo e Perfil entra no lugar dele na barra de baixo */
     baixo.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
@@ -282,6 +285,10 @@
   };
   PL.acoes.ir = function (d) { PL.ir(d.to); fecharMenu(); };
   PL.acoes.print = function () { window.print(); };
+  PL.acoes.area = function (d) {
+    menuAberto = menuAberto === d.area ? null : d.area;
+    var id = PL.rota(); pintarMenu(id, PL.areaDe(id));
+  };
   PL.acoes.menu = function () { document.body.classList.toggle('menu-aberto'); };
   PL.acoes.fechar = fecharMenu;
   PL.acoes.copiar = function (d, el) {
