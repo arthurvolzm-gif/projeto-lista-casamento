@@ -313,3 +313,26 @@ ol.lista-doc{padding-left:22px;display:flex;flex-direction:column;gap:6px}
 .mes.aberto .mes-corpo{display:block}
 @media print{.mes-corpo{display:block!important}.mes-seta{display:none}}
 @media (max-width:600px){.mes-cab{padding:14px;gap:8px}.mes-nome{font-size:17px}.mes-info{gap:6px}.mes-corpo{padding:0 10px 12px}}
+
+/* lista de opções no visual do planner (selecao.js) */
+.sel{position:relative;width:100%;min-width:0}
+.sel-nativo{position:absolute!important;inset:0;width:100%!important;height:100%!important;opacity:0;pointer-events:none;z-index:-1}
+.sel-btn{width:100%;min-width:0;display:flex;align-items:center;gap:8px;text-align:left;border:1px solid var(--linha);background:var(--card,#fff);border-radius:9px;padding:9px 11px;font-size:14px;font-weight:500;color:var(--tinta);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.sel-btn:hover{border-color:var(--acc-borda)}
+.sel-btn:focus-visible,.sel.aberto .sel-btn{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-sua)}
+.sel-btn:disabled{opacity:.55;cursor:default}
+.sel-txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sel-seta{display:inline-flex;color:var(--acc);flex:none;transition:transform .2s}
+.sel-seta svg{width:16px;height:16px}
+.sel.aberto .sel-seta{transform:rotate(180deg)}
+.sel-tb .sel-btn{border-color:transparent;background:transparent;padding:7px 8px}
+.sel-tb .sel-btn:hover{border-color:var(--linha);background:var(--card,#fff)}
+.sel-lista{position:fixed;z-index:1000;overflow-y:auto;background:var(--card,#fff);border:1px solid var(--linha);border-radius:12px;box-shadow:0 12px 32px rgba(40,20,80,.16),0 2px 6px rgba(40,20,80,.06);padding:6px;outline:none;animation:selIn .14s ease-out}
+@keyframes selIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sel-op{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;font-size:14px;color:var(--tinta);cursor:pointer;line-height:1.3}
+.sel-op.foco,.sel-op:hover{background:var(--acc-sua)}
+.sel-op.on{color:var(--acc-esc);font-weight:600}
+.sel-op.off{opacity:.45;cursor:default}
+.sel-ck{width:16px;flex:none;display:inline-flex;color:var(--acc)}
+.sel-ck svg{width:16px;height:16px}
+@media print{.sel-btn{border:0!important;background:transparent!important;padding:2px 0!important;box-shadow:none!important}.sel-seta{display:none}}
