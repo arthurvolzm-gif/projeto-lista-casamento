@@ -58,3 +58,13 @@ create policy "planner_fotos_enviar" on storage.objects for insert to authentica
   with check (bucket_id = 'planner' and public.pode_planner((storage.foldername(name))[1]));
 create policy "planner_fotos_apagar" on storage.objects for delete to authenticated
   using (bucket_id = 'planner' and public.pode_planner((storage.foldername(name))[1]));
+
+-- materiais em PDF dos bônus (bucket privado; quem está logado gera um link temporário)
+-- Suba os arquivos em Storage → materiais com estes nomes exatos:
+--   Checklist-Completo-do-Casamento.pdf
+--   Bonus-2-Guia-do-Casamento-Economico.pdf
+--   Bonus-3-Manual-dos-Padrinhos.pdf
+insert into storage.buckets (id, name, public) values ('materiais', 'materiais', false) on conflict (id) do nothing;
+drop policy if exists "materiais_ler_logado" on storage.objects;
+create policy "materiais_ler_logado" on storage.objects for select to authenticated
+  using (bucket_id = 'materiais');

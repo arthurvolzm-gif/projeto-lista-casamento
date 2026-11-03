@@ -218,6 +218,27 @@ ol.lista-doc{padding-left:22px;display:flex;flex-direction:column;gap:6px}
 .toast button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:8px;padding:6px 10px;font-weight:600;cursor:pointer}
 .print-cab{display:none}
 
+/* bônus */
+.bonus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.bcard{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra);display:flex;flex-direction:column}
+.bcard>img,.bcard-ic{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:var(--acc-sua)}
+.bcard-ic{display:flex;align-items:center;justify-content:center;color:var(--acc);background:linear-gradient(135deg,var(--acc-sua),var(--acc-borda))}
+.bcard-ic svg{width:64px;height:64px;stroke-width:1.3}
+.bcard-corpo{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.bcard-corpo .chip{align-self:flex-start}
+.bcard-corpo h3{font-family:var(--disp);font-size:20px;font-weight:600;color:var(--tinta);line-height:1.2}
+.bcard-corpo p{font-size:13.5px;color:var(--suave)}
+.bcard-acoes{display:flex;flex-direction:column;gap:8px;margin-top:auto;padding-top:6px}
+.bcard-acoes .btn{width:100%}
+.btn[disabled]{opacity:.7;cursor:default}
+.guia{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:22px;align-items:start}
+.guia-corpo h2{font-family:var(--disp);font-size:22px;font-weight:600;color:var(--tinta);margin-bottom:12px}
+.guia-img{width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover}
+.lista-ok-app{list-style:none;display:flex;flex-direction:column;gap:8px}
+.lista-ok-app li{position:relative;padding-left:26px}
+.lista-ok-app li::before{content:'✓';position:absolute;left:2px;color:var(--ok);font-weight:800}
+@media (max-width:700px){.guia{grid-template-columns:minmax(0,1fr)}}
+
 /* entrada (login) */
 .entrada{min-height:100%;display:flex;align-items:center;justify-content:center;padding:32px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px));background:radial-gradient(circle at 20% 10%,var(--acc-sua),transparent 55%),var(--bg)}
 .entrada-card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--linha);border-radius:20px;padding:30px 26px;box-shadow:var(--sombra);display:flex;flex-direction:column;gap:12px}

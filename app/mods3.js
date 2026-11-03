@@ -127,7 +127,7 @@
     render: function () {
       var en = PL.s.enxoval, ok = feitos(en), comodos = [];
       en.forEach(function (x) { if (comodos.indexOf(x.comodo) < 0) comodos.push(x.comodo); });
-      var html = U.cab('Casa e viagem', 'Enxoval da <i>casa nova</i>', 'O que comprar para cada cômodo, com quantidade. Marque o que já tem ou já ganhou.', [U.btnPrint()]);
+      var html = U.cab('Bônus', 'Enxoval da <i>casa nova</i>', 'O que comprar para cada cômodo, com quantidade. Marque o que já tem ou já ganhou.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Itens', v: en.length }, { r: 'Já tenho', v: ok, cls: 'ok' }, { r: 'Faltam', v: en.length - ok, cls: en.length - ok ? 'alerta' : '' }]);
       html += '<section class="card"><h2>Adicionar item' + (en.length ? '' : ' <button type="button" class="btn leve peq" data-act="listaEnxoval">Usar a lista pronta (' + D.comodos.reduce(function (n, g) { return n + g[1].length; }, 0) + ' itens)</button>') + '</h2>' +
         U.form('enx', [U.f('comodo', 'Cômodo', { req: true, lista: 'lista-comodos', ph: 'Ex.: Cozinha' }), U.f('t', 'Item', { req: true }), U.f('qtd', 'Quantidade', { tipo: 'number', v: 1 })]) +
@@ -152,7 +152,7 @@
     titulo: 'Lua de mel', icone: 'aviao',
     render: function () {
       var l = PL.s.luamel;
-      var html = U.cab('Casa e viagem', 'Lua de <i>mel</i>', 'O destino, as reservas e o que preparar antes de viajar.', [U.btnPrint()]);
+      var html = U.cab('Bônus', 'Lua de <i>mel</i>', 'O destino, as reservas e o que preparar antes de viajar.', [U.btnPrint()]);
       html += '<div class="g2"><section class="card"><h2>A viagem</h2><div class="form">' + U.campo('Destino', U.inp('luamel', '', 'destino', l.destino), 'largo') +
         U.campo('Ida', U.inp('luamel', '', 'ida', l.ida, { tipo: 'date' })) + U.campo('Volta', U.inp('luamel', '', 'volta', l.volta, { tipo: 'date' })) +
         U.campo('Hospedagem', U.inp('luamel', '', 'hospedagem', l.hospedagem)) + U.campo('Voo e reservas', U.inp('luamel', '', 'voo', l.voo)) +

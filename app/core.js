@@ -121,7 +121,7 @@
     { nome: 'Dinheiro', icone: 'din', mods: ['financeiro', 'fornecedores', 'biblioteca'] },
     { nome: 'Pessoas', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
     { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'identidade', 'eventos', 'moodboard'] },
-    { nome: 'Casa e viagem', icone: 'aviao', mods: ['enxoval', 'luamel'] }
+    { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel'] }
   ];
   PL.areaDe = function (id) { return PL.AREAS.find(function (a) { return a.mods.indexOf(id) >= 0; }); };
   PL.rota = function () { var h = (location.hash || '').replace('#', '').split('/')[0]; return PL.mods[h] ? h : 'inicio'; };
@@ -156,7 +156,7 @@
         (on ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
     }).join('');
     baixo.innerHTML = PL.AREAS.map(function (a) {
-      return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome === 'Casa e viagem' ? 'Casa' : a.nome) + '</span></a>';
+      return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome) + '</span></a>';
     }).join('');
     rodape.querySelectorAll('a[data-to]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-to') === id); });
   }
@@ -327,6 +327,7 @@
     tabela: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>',
     copiar: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
     link: '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
+    presente: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8M12 8v13"/><path d="M12 8S10.5 3 8 3.5 6.5 8 12 8zM12 8s1.5-5 4-4.5S17.5 8 12 8z"/>',
     menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', mais: '<path d="M12 5v14M5 12h14"/>'
   };
   PL.ic = function (n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (IC[n] || '') + '</svg>'; };

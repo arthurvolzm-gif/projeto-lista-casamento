@@ -186,6 +186,15 @@
     if (mudou) PL.salvar();
   }
 
+  /* materiais em PDF no bucket privado "materiais": link temporário só para quem está logado */
+  PL.material = async function (arquivo) {
+    if (!usuario || !ATIVO) throw new Error('sem conta');
+    var r = await sb.storage.from('materiais').createSignedUrl(arquivo, 600, { download: arquivo });
+    if (r.error || !r.data) throw (r.error || new Error('sem link'));
+    var a = document.createElement('a'); a.href = r.data.signedUrl; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
   PL.acoes.sair = async function () {
     clearTimeout(tNuvem);
     try { await enviar(); } catch (x) {}
