@@ -1,4 +1,4 @@
-/* Planner CheckLove: convidados, mesas, cortejo, playlist, casa e viagem, inspiração, biblioteca */
+/* Planner CheckLove: convidados, mesas, cortejo, playlist, casa e viagem, inspiração */
 (function () {
   'use strict';
   var PL = window.PL, U = PL.ui, D = PL.D, e = PL.esc;
@@ -246,21 +246,6 @@
     if (!/^https?:\/\//i.test(d.url || '')) { PL.toast('Cole um endereço que comece com https://'); return false; }
     PL.add('moodboard', { cat: PL.temp.catMural || CATS[0], src: d.url });
   };
-
-  PL.mod('biblioteca', {
-    titulo: 'Roteiros e mensagens', icone: 'livro',
-    render: function () {
-      var doc = PL.temp.doc && D.biblioteca.find(function (x) { return x.id === PL.temp.doc; });
-      if (doc) {
-        var corpo = doc.texto ? '<p class="texto-doc" id="doc-txt">' + e(doc.texto) + '</p>' : '<ol class="lista-doc" id="doc-txt">' + doc.itens.map(function (i) { return '<li>' + e(i) + '</li>'; }).join('') + '</ol>';
-        return U.cab('Biblioteca', e(doc.titulo), e(doc.sub), [U.btn('fecharDoc', 'Voltar', '', 'sec'), '<button type="button" class="btn sec" data-act="copiar" data-alvo="#doc-txt">' + PL.ic('copiar') + 'Copiar</button>', U.btnPrint()]) + '<section class="card">' + corpo + '</section>';
-      }
-      return U.cab('Finanças', 'Roteiros e <i>mensagens</i>', 'Roteiros, perguntas e mensagens prontas para as conversas com fornecedores.') +
-        '<div class="docs">' + D.biblioteca.map(function (x) { return '<button type="button" class="doc" data-act="abrirDoc" data-doc="' + x.id + '"><b>' + e(x.titulo) + '</b><span>' + e(x.sub) + '</span><em>Abrir</em></button>'; }).join('') + '</div>';
-    }
-  });
-  PL.acoes.abrirDoc = function (d) { PL.temp.doc = d.doc; PL.render(); window.scrollTo(0, 0); };
-  PL.acoes.fecharDoc = function () { PL.temp.doc = null; PL.render(); };
 
   /* ============ DADOS DE EXEMPLO ============ */
   PL.exemplo = function () {
