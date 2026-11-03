@@ -61,7 +61,6 @@ create policy "planner_fotos_apagar" on storage.objects for delete to authentica
 
 -- materiais em PDF dos bônus (bucket privado; quem está logado gera um link temporário)
 -- Suba os arquivos em Storage → materiais com estes nomes exatos:
---   Checklist-Completo-do-Casamento.pdf
 --   Bonus-2-Guia-do-Casamento-Economico.pdf
 --   Bonus-3-Manual-dos-Padrinhos.pdf
 insert into storage.buckets (id, name, public) values ('materiais', 'materiais', false) on conflict (id) do nothing;

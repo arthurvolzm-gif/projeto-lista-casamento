@@ -4,7 +4,6 @@
   var PL = window.PL, U = PL.ui, e = PL.esc;
 
   var ARQ = {
-    checklist: ['Checklist-Completo-do-Casamento.pdf', 'Checklist Completo do Casamento'],
     guia: ['Bonus-2-Guia-do-Casamento-Economico.pdf', 'Guia do Casamento Econômico'],
     manual: ['Bonus-3-Manual-dos-Padrinhos.pdf', 'Manual dos Padrinhos']
   };
@@ -29,8 +28,7 @@
           cartao({ img: '/img/bonus2-foto.webp?v=3', alt: 'Noivos sorrindo no dia do casamento', tag: 'Guia em PDF', titulo: 'Guia do Casamento Econômico', texto: 'Tudo para gastar menos em cada parte do casamento: data, horário, convidados, local, comida, decoração, fornecedores, convites e lembrancinhas.', botoes: [ir('guia', 'Abrir o guia')] }),
           cartao({ img: '/img/bonus3-foto.webp?v=2', alt: 'Caixas para convite de padrinhos', tag: 'Site + manual', titulo: 'Kit Padrinhos', texto: 'Monte a caixinha e o convite dos seus padrinhos com 30 modelos prontos e mande o arquivo para a gráfica. Inclui o manual dos padrinhos.', botoes: [site('/caixinha', 'Abrir o site dos padrinhos'), site('/convite-padrinhos', 'Criar o convite dos padrinhos', 'leve'), baixar('manual', 'Baixar o manual', 'sec')] }),
           cartao({ img: '/img/bonus1-casa.webp', alt: 'Casa nova com jardim', pos: 'center 45%', tag: 'No app', titulo: 'Enxoval da casa nova', texto: 'A lista do que comprar para cada cômodo, com quantidade, para marcar o que já tem ou já ganhou.', botoes: [ir('enxoval', 'Abrir o enxoval')] }),
-          cartao({ icone: 'aviao', tag: 'No app', titulo: 'Lua de mel', texto: 'Destino, datas, reservas e a lista do que preparar antes de viajar, tudo em um lugar.', botoes: [ir('luamel', 'Abrir a lua de mel')] }),
-          cartao({ img: '/img/checklist-01.webp', alt: 'Capa do Checklist Completo do Casamento', pos: 'center 30%', tag: 'PDF para imprimir', titulo: 'Checklist Completo do Casamento', texto: 'O passo a passo do casamento em um material para imprimir: cronograma mês a mês, cerimônia e festa, civil, orçamentos e convidados.', botoes: [baixar('checklist')] })
+          cartao({ icone: 'aviao', tag: 'No app', titulo: 'Lua de mel', texto: 'Destino, datas, reservas e a lista do que preparar antes de viajar, tudo em um lugar.', botoes: [ir('luamel', 'Abrir a lua de mel')] })
         ].join('') + '</div>';
     }
   });
