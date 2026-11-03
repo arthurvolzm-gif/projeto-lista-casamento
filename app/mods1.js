@@ -62,7 +62,7 @@
         U.campo('Nome da noiva', U.inp('perfil', '', 'noiva', p.noiva)) + U.campo('Nome do noivo', U.inp('perfil', '', 'noivo', p.noivo)) +
         U.campo('Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) + U.campo('Horário', U.inp('perfil', '', 'hora', p.hora, { tipo: 'time' })) +
         U.campo('Cidade', U.inp('perfil', '', 'cidade', p.cidade)) + U.campo('Local da cerimônia', U.inp('perfil', '', 'local', p.local)) +
-        U.campo('Orçamento total (R$)', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</div></section>';
+        U.campo('Orçamento total (' + PL.simbolo() + ')', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</div></section>';
       html += idiomaMoeda();
       html += '<section class="card"><h2>Cor do planner</h2><div class="temas">' + D.temas.map(function (t) {
         return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
@@ -75,17 +75,13 @@
       return html;
     }
   });
-  var MOEDAS = [['BRL', 'Real (R$)'], ['USD', 'Dólar americano (US$)'], ['EUR', 'Euro (€)'], ['GBP', 'Libra esterlina (£)'], ['CAD', 'Dólar canadense (CA$)'], ['AUD', 'Dólar australiano (A$)'], ['MXN', 'Peso mexicano (MX$)'], ['ARS', 'Peso argentino (ARS)'], ['CLP', 'Peso chileno (CLP)'], ['CHF', 'Franco suíço (CHF)']];
+  var MOEDAS = [['BRL', 'Real (R$)'], ['USD', 'Dólar americano (US$)'], ['EUR', 'Euro (€)'], ['GBP', 'Libra esterlina (£)'], ['JPY', 'Iene (¥)'], ['CAD', 'Dólar canadense (CA$)'], ['AUD', 'Dólar australiano (A$)'], ['MXN', 'Peso mexicano (MX$)'], ['ARS', 'Peso argentino (ARS)'], ['CLP', 'Peso chileno (CLP)'], ['CHF', 'Franco suíço (CHF)']];
   function idiomaMoeda() {
-    var I = window.PL_I18N; if (!I) return '';
-    return '<section class="card"><h2>Idiomas e moedas <small>para noivas do mundo todo</small></h2>' +
-      '<p class="nota" style="margin-bottom:12px">O idioma vale para este aparelho. A moeda vale para todo o planner, inclusive para quem você compartilhar.</p>' +
-      '<div class="idiomas">' + Object.keys(I.langs).map(function (k) {
-        var l = I.langs[k]; return '<button type="button" data-act="idioma" data-l="' + k + '" class="' + (I.idioma === k ? 'on' : '') + '" lang="' + l.loc + '" data-notr><span aria-hidden="true">' + l.band + '</span> ' + e(l.nome) + '</button>';
-      }).join('') + '</div>' +
-      '<label class="campo" style="margin-top:14px;max-width:320px">Moeda' + U.sel('perfil', '', 'moeda', PL.s.perfil.moeda || 'BRL', MOEDAS, 'Moeda') + '</label></section>';
+    var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
+    return '<section class="card"><h2>Moeda</h2>' +
+      '<p class="nota" style="margin-bottom:12px">Os valores aparecem na moeda do seu país. Se quiser outra, escolha abaixo. Vale para todo o planner, inclusive para quem você compartilhar.</p>' +
+      '<label class="campo" style="max-width:320px">Moeda' + U.sel('perfil', '', 'moeda', PL.s.perfil.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda') + '</label></section>';
   }
-  PL.acoes.idioma = function (d) { if (window.PL_I18N && d.l !== window.PL_I18N.idioma) { PL.salvar(true); window.PL_I18N.mudar(d.l); } };
   function compartilhar() {
     var c = PL.conta;
     if (!c.dono) return '<section class="card"><h2>Planner compartilhado</h2><p>' + PL.t('Você está editando o planner de <b>{email}</b>. O que você muda aparece para os dois.', { email: e(c.donoEmail || PL.t('outra conta')) }) + '</p></section>';
@@ -154,7 +150,7 @@
         '<section class="card"><h2>Por categoria</h2>' + porCategoria() + '</section></div>';
       html += '<section class="card"><h2>Adicionar gasto</h2>' + U.form('gasto', [
         U.f('cat', 'Categoria', { opts: D.gastos }), U.f('desc', 'Descrição', { ph: 'Ex.: nome do fornecedor' }),
-        U.f('valor', 'Valor total (R$)', { n: 1, ph: '0,00' }), U.f('pago', 'Já pago (R$)', { n: 1, ph: '0,00' }), U.f('venc', 'Próximo vencimento', { tipo: 'date' })
+        U.f('valor', 'Valor total (' + PL.simbolo() + ')', { n: 1, ph: '0,00' }), U.f('pago', 'Já pago (' + PL.simbolo() + ')', { n: 1, ph: '0,00' }), U.f('venc', 'Próximo vencimento', { tipo: 'date' })
       ]) + '</section>';
       if (!s.gastos.length) return html + '<section class="card">' + U.vazio('Nenhum gasto ainda. Comece pelo local e pelo buffet, que costumam ser os maiores.') + '</section>';
       html += '<section class="card"><h2>Gastos <small>clique em um valor para editar</small></h2><div class="tabela"><table class="tb"><thead><tr><th>Categoria</th><th>Descrição</th><th class="num">Valor</th><th class="num">Pago</th><th class="num">Falta</th><th>Vencimento</th><th>Status</th><th></th></tr></thead><tbody>' +
@@ -196,7 +192,7 @@
       html += U.kpis([{ r: 'Fornecedores', v: f.length }, { r: 'Contratados', v: n('Contratado'), cls: 'ok' }, { r: 'Negociando', v: n('Negociando') + n('Orçamento pedido'), cls: 'alerta' }, { r: 'Pesquisando', v: n('Pesquisando') }]);
       html += '<section class="card"><h2>Adicionar fornecedor</h2>' + U.form('forn', [
         U.f('cat', 'Categoria', { opts: D.fornecedores.concat(['Celebrante', 'Convites e papelaria', 'Transporte', 'Outro']) }), U.f('nome', 'Nome', { req: true }),
-        U.f('contato', 'Telefone ou WhatsApp'), U.f('valor', 'Valor (R$)', { n: 1, ph: '0,00' }), U.f('status', 'Status', { opts: STATUS_FORN }), U.f('contrato', 'Link do contrato', { tipo: 'url', ph: 'https://drive.google.com/...' }), U.f('obs', 'Observações', { cls: 'largo' })
+        U.f('contato', 'Telefone ou WhatsApp'), U.f('valor', 'Valor (' + PL.simbolo() + ')', { n: 1, ph: '0,00' }), U.f('status', 'Status', { opts: STATUS_FORN }), U.f('contrato', 'Link do contrato', { tipo: 'url', ph: 'https://drive.google.com/...' }), U.f('obs', 'Observações', { cls: 'largo' })
       ]) + '<p class="nota" style="margin-top:10px">Ao marcar um fornecedor como <b>Contratado</b> com valor, o gasto entra sozinho no financeiro.</p>' +
         '<details class="nota" style="margin-top:8px"><summary style="cursor:pointer;font-weight:600">Como guardar os contratos no Google Drive</summary><ol class="passos" style="margin-top:10px"><li>Crie uma pasta "Casamento" no Drive e, dentro dela, "Contratos".</li><li>Salve cada contrato em PDF com o nome do fornecedor.</li><li>Clique com o botão direito no arquivo, em Compartilhar e em Copiar link.</li><li>Cole o link no fornecedor. Antes de assinar, confira os itens em Roteiros e mensagens, "O que conferir no contrato".</li></ol></details></section>';
       if (!f.length) return html + '<section class="card">' + U.vazio('Nenhum fornecedor ainda.') + '</section>';

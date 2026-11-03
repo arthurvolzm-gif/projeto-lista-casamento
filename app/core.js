@@ -18,7 +18,23 @@
     else v = v.replace(/,/g, '');
     var n = parseFloat(v); return isFinite(n) ? n : 0;
   };
-  PL.moeda = function () { return (PL.s && PL.s.perfil && PL.s.perfil.moeda) || 'BRL'; };
+  /* moeda: a escolhida no perfil ou, se ficar em "Automática", a do país do aparelho (fuso horário e idioma do navegador) */
+  var PAIS_MOEDA = { BR: 'BRL', PT: 'EUR', ES: 'EUR', FR: 'EUR', IT: 'EUR', DE: 'EUR', IE: 'EUR', NL: 'EUR', BE: 'EUR', AT: 'EUR', LU: 'EUR', FI: 'EUR', GR: 'EUR',
+    US: 'USD', GB: 'GBP', CA: 'CAD', AU: 'AUD', CH: 'CHF', MX: 'MXN', AR: 'ARS', CL: 'CLP', JP: 'JPY', NZ: 'NZD', CO: 'COP', PE: 'PEN', UY: 'UYU', PY: 'PYG', AO: 'AOA', MZ: 'MZN', CV: 'CVE', SE: 'SEK', NO: 'NOK', DK: 'DKK', PL: 'PLN' };
+  var FUSO_PAIS = { 'America/Sao_Paulo': 'BR', 'America/Bahia': 'BR', 'America/Fortaleza': 'BR', 'America/Recife': 'BR', 'America/Belem': 'BR', 'America/Manaus': 'BR', 'America/Cuiaba': 'BR', 'America/Campo_Grande': 'BR', 'America/Porto_Velho': 'BR', 'America/Boa_Vista': 'BR', 'America/Rio_Branco': 'BR', 'America/Maceio': 'BR', 'America/Araguaina': 'BR', 'America/Santarem': 'BR', 'America/Noronha': 'BR',
+    'Europe/Lisbon': 'PT', 'Atlantic/Madeira': 'PT', 'Atlantic/Azores': 'PT', 'Europe/Madrid': 'ES', 'Europe/Paris': 'FR', 'Europe/Rome': 'IT', 'Europe/Berlin': 'DE', 'Europe/Dublin': 'IE', 'Europe/Amsterdam': 'NL', 'Europe/Brussels': 'BE', 'Europe/Vienna': 'AT', 'Europe/Luxembourg': 'LU', 'Europe/Helsinki': 'FI', 'Europe/Athens': 'GR',
+    'Europe/London': 'GB', 'Europe/Zurich': 'CH', 'America/Mexico_City': 'MX', 'America/Argentina/Buenos_Aires': 'AR', 'America/Buenos_Aires': 'AR', 'America/Santiago': 'CL', 'Asia/Tokyo': 'JP', 'Pacific/Auckland': 'NZ', 'America/Bogota': 'CO', 'America/Lima': 'PE', 'America/Montevideo': 'UY', 'America/Asuncion': 'PY', 'Africa/Luanda': 'AO', 'Africa/Maputo': 'MZ', 'Atlantic/Cape_Verde': 'CV', 'Europe/Stockholm': 'SE', 'Europe/Oslo': 'NO', 'Europe/Copenhagen': 'DK', 'Europe/Warsaw': 'PL' };
+  PL.moedaPais = (function () {
+    var fuso = ''; try { fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    var pais = FUSO_PAIS[fuso];
+    if (!pais && /^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit|Indiana)/.test(fuso)) pais = 'US';
+    if (!pais && /^America\/(Toronto|Vancouver|Edmonton|Winnipeg|Halifax|Regina|St_Johns)/.test(fuso)) pais = 'CA';
+    if (!pais && /^Australia\//.test(fuso)) pais = 'AU';
+    if (!pais) { var m = /-([A-Z]{2})$/.exec(navigator.language || ''); if (m) pais = m[1]; }
+    return PAIS_MOEDA[pais] || 'BRL';
+  })();
+  PL.moeda = function () { return (PL.s && PL.s.perfil && PL.s.perfil.moeda) || PL.moedaPais; };
+  PL.simbolo = function () { try { return (0).toLocaleString(PL.loc, { style: 'currency', currency: PL.moeda() }).replace(/[\d\s.,\u00a0]/g, ''); } catch (e) { return 'R$'; } };
   PL.brl = function (n) { return (n || 0).toLocaleString(PL.loc, { style: 'currency', currency: PL.moeda() }); };
   PL.dec = function (n) { return n ? n.toLocaleString(PL.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''; };
   PL.hoje = function () { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
@@ -39,7 +55,7 @@
   PL.novo = function () {
     return {
       v: 1,
-      perfil: { noiva: '', noivo: '', data: '', hora: '', cidade: '', local: '', orcamento: 0, tema: 'roxo', moeda: 'BRL' },
+      perfil: { noiva: '', noivo: '', data: '', hora: '', cidade: '', local: '', orcamento: 0, tema: 'roxo', moeda: '' },
       gastos: [], fornecedores: [], tarefas: [], agenda: [], contratos: [],
       papelaria: { pre: lista(D.papelaria.pre), cer: lista(D.papelaria.cer), festa: lista(D.papelaria.festa) },
       identidade: { cores: [], fontes: [], notas: '' },

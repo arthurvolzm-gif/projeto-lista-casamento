@@ -156,7 +156,7 @@
       html += '<div class="g2"><section class="card"><h2>A viagem</h2><div class="form">' + U.campo('Destino', U.inp('luamel', '', 'destino', l.destino), 'largo') +
         U.campo('Ida', U.inp('luamel', '', 'ida', l.ida, { tipo: 'date' })) + U.campo('Volta', U.inp('luamel', '', 'volta', l.volta, { tipo: 'date' })) +
         U.campo('Hospedagem', U.inp('luamel', '', 'hospedagem', l.hospedagem)) + U.campo('Voo e reservas', U.inp('luamel', '', 'voo', l.voo)) +
-        U.campo('Orçamento (R$)', U.inp('luamel', '', 'orcamento', l.orcamento, { n: 1, ph: '0,00' })) + '</div>' +
+        U.campo('Orçamento (' + PL.simbolo() + ')', U.inp('luamel', '', 'orcamento', l.orcamento, { n: 1, ph: '0,00' })) + '</div>' +
         (l.ida && l.volta ? '<p class="nota" style="margin-top:10px">' + PL.esc(PL.t('{n} noites de viagem.', { n: Math.max(0, Math.round((new Date(l.volta) - new Date(l.ida)) / 864e5)) })) + '</p>' : '') + '</section>' +
         '<section class="card"><h2>Observações</h2>' + U.area('luamel', '', 'obs', l.obs, 'Passeios, restaurantes, documentos, dicas...', 9) + '</section></div>';
       html += '<section class="card"><h2>Preparativos <small>' + feitos(l.prep) + '/' + l.prep.length + '</small></h2>' + U.checklist('luamel/prep', l.prep) + '</section>';
