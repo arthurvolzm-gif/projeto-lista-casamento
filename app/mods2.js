@@ -32,9 +32,9 @@
   });
   function resumoCores() {
     var id = PL.s.identidade; if (!id.cores.length && !id.fontes.length) return '';
-    var t = 'Identidade visual · ' + PL.casal();
-    if (id.cores.length) t += '\n\nCores:\n' + id.cores.map(function (c) { return '• ' + (c.nome || 'Cor') + ': ' + c.hex.toUpperCase(); }).join('\n');
-    if (id.fontes.length) t += '\n\nFontes:\n' + id.fontes.map(function (f) { return '• ' + f.nome + (f.uso ? ' (' + f.uso + ')' : ''); }).join('\n');
+    var t = PL.t('Identidade visual') + ' · ' + PL.casal();
+    if (id.cores.length) t += '\n\n' + PL.t('Cores:') + '\n' + id.cores.map(function (c) { return '• ' + (c.nome || PL.t('Cor')) + ': ' + c.hex.toUpperCase(); }).join('\n');
+    if (id.fontes.length) t += '\n\n' + PL.t('Fontes:') + '\n' + id.fontes.map(function (f) { return '• ' + f.nome + (f.uso ? ' (' + f.uso + ')' : ''); }).join('\n');
     return t;
   }
   PL.forms.cor = function (d) { PL.add('identidade/cores', { hex: d.hex || '#cccccc', nome: d.nome }); };
@@ -93,8 +93,8 @@
   });
   function preencher(t) {
     var p = PL.s.perfil, c = PL.s.convites;
-    return t.replace(/\{convidado\}/g, '[nome]').replace(/\{casal\}/g, PL.casal()).replace(/\{data\}/g, p.data ? PL.dataLonga(p.data) : '[data]')
-      .replace(/\{hora\}/g, p.hora || '[horário]').replace(/\{cidade\}/g, p.cidade || '[cidade]').replace(/\{link\}/g, c.link || '[link do convite]').replace(/\{prazo\}/g, c.prazo ? PL.dataBR(c.prazo) : '[data]');
+    return PL.t(t).replace(/\{convidado\}/g, PL.t('[nome]')).replace(/\{casal\}/g, PL.casal()).replace(/\{data\}/g, p.data ? PL.dataLonga(p.data) : PL.t('[data]'))
+      .replace(/\{hora\}/g, p.hora || PL.t('[horário]')).replace(/\{cidade\}/g, p.cidade || PL.t('[cidade]')).replace(/\{link\}/g, c.link || PL.t('[link do convite]')).replace(/\{prazo\}/g, c.prazo ? PL.dataBR(c.prazo) : PL.t('[data]'));
   }
   PL.acoes.tipoConvite = function (d) { PL.s.convites.tipo = d.tipo; PL.salvar(); PL.render(true); };
 
@@ -135,7 +135,7 @@
   });
   function conta(t) {
     var n = (t || '').trim() ? t.trim().split(/\s+/).length : 0, s = Math.round(n / 130 * 60);
-    return n + ' palavras · cerca de ' + (s < 60 ? s + ' s' : Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s');
+    return PL.t('{n} palavras · cerca de {t}', { n: n, t: s < 60 ? s + ' s' : Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s' });
   }
 
   PL.mod('civil', {

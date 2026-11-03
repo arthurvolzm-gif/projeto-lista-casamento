@@ -49,7 +49,7 @@
     var txt = el.innerHTML; el.disabled = true; el.textContent = 'Preparando...';
     PL.material(a[0]).then(function () { el.disabled = false; el.innerHTML = txt; }, function () {
       el.disabled = false; el.innerHTML = txt;
-      PL.toast('Não foi possível baixar o ' + a[1] + ' agora. Tente de novo em instantes.');
+      PL.toast(PL.t('Não foi possível baixar o {x} agora. Tente de novo em instantes.', { x: PL.t(a[1]) }));
     });
   };
 })();

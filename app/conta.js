@@ -17,10 +17,19 @@
     if (/rate limit|too many/i.test(m)) return 'Muitas tentativas seguidas. Espere alguns minutos e tente de novo.';
     if (/invalid email|valid email/i.test(m)) return 'Esse e-mail não parece válido.';
     if (/failed to fetch|network/i.test(m)) return 'Sem conexão. Confira a internet e tente de novo.';
-    return 'Não deu certo: ' + m;
+    return PL.t('Não deu certo: {m}', { m: m });
   }
 
   /* ---------- tela de entrada ---------- */
+  function idiomasEntrada() {
+    var I = window.PL_I18N; if (!I) return '';
+    return '<div class="entrada-idiomas" data-notr>' + Object.keys(I.langs).map(function (k) {
+      var l = I.langs[k]; return '<button type="button" data-idioma="' + k + '" class="' + (I.idioma === k ? 'on' : '') + '" lang="' + l.loc + '" title="' + e(l.nome) + '"><span aria-hidden="true">' + l.band + '</span> ' + k.toUpperCase() + '</button>';
+    }).join('') + '</div>';
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-idioma]'); if (b && window.PL_I18N) window.PL_I18N.mudar(b.getAttribute('data-idioma'));
+  });
   function tela(modo, aviso, erro) {
     var t = {
       entrar: ['Entrar no planner', 'Use o e-mail e a senha da sua conta.', 'Entrar'],
@@ -40,7 +49,7 @@
       (modo === 'entrar' ? '<button type="button" data-modo="esqueci">Esqueci minha senha</button><span>Ainda não tem conta? <button type="button" data-modo="criar">Criar conta</button></span>' : '') +
       (modo === 'criar' ? '<span>Já tem conta? <button type="button" data-modo="entrar">Entrar</button></span>' : '') +
       (modo === 'esqueci' ? '<button type="button" data-modo="entrar">Voltar para entrar</button>' : '') +
-      '</div></div></main>';
+      '</div>' + idiomasEntrada() + '</div></main>';
     var c = document.querySelector('.entrada-form input'); if (c) c.focus();
   }
 
@@ -59,10 +68,10 @@
       } else if (modo === 'criar') {
         var c = await sb.auth.signUp({ email: email, password: senha, options: { emailRedirectTo: location.origin + '/app' } }); if (c.error) throw c.error;
         if (c.data.session) await abrir(c.data.session);
-        else tela('entrar', 'Conta criada. Abra o e-mail que enviamos para ' + email + ' e clique no link para confirmar. Depois é só entrar.');
+        else tela('entrar', PL.t('Conta criada. Abra o e-mail que enviamos para {email} e clique no link para confirmar. Depois é só entrar.', { email: email }));
       } else if (modo === 'esqueci') {
         var q = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/app' }); if (q.error) throw q.error;
-        tela('entrar', 'Se existir uma conta com ' + email + ', o link para criar uma senha nova chega em alguns minutos. Confira também o spam.');
+        tela('entrar', PL.t('Se existir uma conta com {email}, o link para criar uma senha nova chega em alguns minutos. Confira também o spam.', { email: email }));
       } else if (modo === 'nova') {
         var n = await sb.auth.updateUser({ password: senha }); if (n.error) throw n.error;
         var s = await sb.auth.getSession(); await abrir(s.data.session, 'Senha alterada.');

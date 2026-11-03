@@ -31,9 +31,9 @@
       var nome = p.noiva || p.noivo;
       var html = U.cab('Bem-vindos', nome ? 'Olá, <i>' + e(nome) + '</i>' : 'Seu <i>planner</i>', 'Tudo do casamento em um só lugar. Comece pelo perfil e siga pelo menu.') + U.contagem();
       html += U.kpis([
-        { r: 'Orçamento usado', v: p.orcamento ? PL.pct(t.prev, PL.num(p.orcamento)) + '%' : PL.brl(t.prev), s: p.orcamento ? PL.brl(t.prev) + ' de ' + PL.brl(PL.num(p.orcamento)) : 'defina o orçamento no perfil', cls: p.orcamento && t.prev > PL.num(p.orcamento) ? 'erro' : 'acc' },
-        { r: 'Já pago', v: PL.brl(t.pago), s: 'falta ' + PL.brl(t.falta), cls: 'ok' },
-        { r: 'Tarefas', v: td + '/' + tf, s: tf ? PL.pct(td, tf) + '% concluído' : 'nenhuma ainda' },
+        { r: 'Orçamento usado', v: p.orcamento ? PL.pct(t.prev, PL.num(p.orcamento)) + '%' : PL.brl(t.prev), s: p.orcamento ? PL.t('{a} de {b}', { a: PL.brl(t.prev), b: PL.brl(PL.num(p.orcamento)) }) : 'defina o orçamento no perfil', cls: p.orcamento && t.prev > PL.num(p.orcamento) ? 'erro' : 'acc' },
+        { r: 'Já pago', v: PL.brl(t.pago), s: PL.t('falta {v}', { v: PL.brl(t.falta) }), cls: 'ok' },
+        { r: 'Tarefas', v: td + '/' + tf, s: tf ? PL.t('{p}% concluído', { p: PL.pct(td, tf) }) : 'nenhuma ainda' },
         { r: 'Convidados', v: conf + '/' + conv, s: 'confirmados' }
       ]);
       html += '<div class="g2"><section class="card"><h2>Próximas tarefas <button type="button" class="btn leve peq" data-act="ir" data-to="tarefas">Ver todas</button></h2>' +
@@ -44,7 +44,7 @@
         '<section class="card"><h2>Pagamentos a vencer <button type="button" class="btn leve peq" data-act="ir" data-to="financeiro">Financeiro</button></h2>' +
         (venc.length ? '<ul class="chk">' + venc.map(function (g) {
           var atras = g.venc < hoje;
-          return '<li><div class="txt" style="padding:4px 0">' + e(g.desc || g.cat) + '<small style="padding:0">' + e(g.cat) + ' · vence ' + PL.dataBR(g.venc) + '</small></div><b style="font-variant-numeric:tabular-nums">' + PL.brl(PL.num(g.valor) - PL.num(g.pago)) + '</b>' + (atras ? '<span class="chip erro">Vencido</span>' : '') + '</li>';
+          return '<li><div class="txt" style="padding:4px 0">' + e(g.desc || g.cat) + '<small style="padding:0">' + e(PL.t('{cat} · vence {d}', { cat: PL.t(g.cat), d: PL.dataBR(g.venc) })) + '</small></div><b style="font-variant-numeric:tabular-nums">' + PL.brl(PL.num(g.valor) - PL.num(g.pago)) + '</b>' + (atras ? '<span class="chip erro">Vencido</span>' : '') + '</li>';
         }).join('') + '</ul>' : U.vazio('Nenhum pagamento com vencimento marcado.')) + '</section></div>';
       var fotos = s.moodboard.slice(0, 6);
       html += '<section class="card"><h2>Mural de inspiração <button type="button" class="btn leve peq" data-act="ir" data-to="moodboard">Abrir mural</button></h2>' +
@@ -63,10 +63,11 @@
         U.campo('Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) + U.campo('Horário', U.inp('perfil', '', 'hora', p.hora, { tipo: 'time' })) +
         U.campo('Cidade', U.inp('perfil', '', 'cidade', p.cidade)) + U.campo('Local da cerimônia', U.inp('perfil', '', 'local', p.local)) +
         U.campo('Orçamento total (R$)', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</div></section>';
+      html += idiomaMoeda();
       html += '<section class="card"><h2>Cor do planner</h2><div class="temas">' + D.temas.map(function (t) {
         return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
       }).join('') + '</div></section>';
-      if (PL.conta) html += '<section class="card"><h2>Sua conta</h2><div class="lin"><span>Conectado como <b>' + e(PL.conta.email) + '</b>. Tudo o que você preenche é salvo na conta e aparece em qualquer aparelho em que você entrar.</span><span class="esp"></span>' + U.btn('sair', 'Sair', '', 'sec') + '</div></section>';
+      if (PL.conta) html += '<section class="card"><h2>Sua conta</h2><div class="lin"><span>' + PL.t('Conectado como <b>{email}</b>. Tudo o que você preenche é salvo na conta e aparece em qualquer aparelho em que você entrar.', { email: e(PL.conta.email) }) + '</span><span class="esp"></span>' + U.btn('sair', 'Sair', '', 'sec') + '</div></section>';
       if (PL.conta) html += compartilhar();
       html += '<section class="card"><h2>Seus dados</h2><p class="nota" style="margin-bottom:12px">' + (PL.conta ? 'Além da conta, uma cópia fica neste aparelho. O backup é uma garantia extra: baixe de vez em quando.' : 'Tudo fica salvo neste navegador, neste aparelho. Para usar em outro aparelho ou não perder nada, baixe o backup de vez em quando e importe onde quiser.') + '</p>' +
         '<div class="lin">' + U.btn('backup', 'Baixar backup', 'pasta', 'leve') + '<label class="btn sec">' + PL.ic('mais') + 'Importar backup<input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
@@ -74,11 +75,22 @@
       return html;
     }
   });
+  var MOEDAS = [['BRL', 'Real (R$)'], ['USD', 'Dólar americano (US$)'], ['EUR', 'Euro (€)'], ['GBP', 'Libra esterlina (£)'], ['CAD', 'Dólar canadense (CA$)'], ['AUD', 'Dólar australiano (A$)'], ['MXN', 'Peso mexicano (MX$)'], ['ARS', 'Peso argentino (ARS)'], ['CLP', 'Peso chileno (CLP)'], ['CHF', 'Franco suíço (CHF)']];
+  function idiomaMoeda() {
+    var I = window.PL_I18N; if (!I) return '';
+    return '<section class="card"><h2>Idiomas e moedas <small>para noivas do mundo todo</small></h2>' +
+      '<p class="nota" style="margin-bottom:12px">O idioma vale para este aparelho. A moeda vale para todo o planner, inclusive para quem você compartilhar.</p>' +
+      '<div class="idiomas">' + Object.keys(I.langs).map(function (k) {
+        var l = I.langs[k]; return '<button type="button" data-act="idioma" data-l="' + k + '" class="' + (I.idioma === k ? 'on' : '') + '" lang="' + l.loc + '" data-notr><span aria-hidden="true">' + l.band + '</span> ' + e(l.nome) + '</button>';
+      }).join('') + '</div>' +
+      '<label class="campo" style="margin-top:14px;max-width:320px">Moeda' + U.sel('perfil', '', 'moeda', PL.s.perfil.moeda || 'BRL', MOEDAS, 'Moeda') + '</label></section>';
+  }
+  PL.acoes.idioma = function (d) { if (window.PL_I18N && d.l !== window.PL_I18N.idioma) { PL.salvar(true); window.PL_I18N.mudar(d.l); } };
   function compartilhar() {
     var c = PL.conta;
-    if (!c.dono) return '<section class="card"><h2>Planner compartilhado</h2><p>Você está editando o planner de <b>' + e(c.donoEmail || 'outra conta') + '</b>. O que você muda aparece para os dois.</p></section>';
+    if (!c.dono) return '<section class="card"><h2>Planner compartilhado</h2><p>' + PL.t('Você está editando o planner de <b>{email}</b>. O que você muda aparece para os dois.', { email: e(c.donoEmail || PL.t('outra conta')) }) + '</p></section>';
     var m = c.membros || [];
-    return '<section class="card"><h2>Compartilhar o planner</h2><p class="nota" style="margin-bottom:12px">Coloque o e-mail do noivo, da noiva ou da cerimonialista. A pessoa cria a conta com esse mesmo e-mail em ' + e(location.host) + '/app e passa a ver e editar este planner.</p>' +
+    return '<section class="card"><h2>Compartilhar o planner</h2><p class="nota" style="margin-bottom:12px">' + PL.t('Coloque o e-mail do noivo, da noiva ou da cerimonialista. A pessoa cria a conta com esse mesmo e-mail em {site} e passa a ver e editar este planner.', { site: e(location.host + '/app') }) + '</p>' +
       (m.length ? '<ul class="chk" style="margin-bottom:6px">' + m.map(function (x) { return '<li><div class="txt" style="padding:4px 6px">' + e(x) + '</div><button type="button" class="ic" data-act="tirarMembro" data-email="' + e(x) + '" aria-label="Parar de compartilhar">' + PL.ic('lixo') + '</button></li>'; }).join('') + '</ul>' : '') +
       '<form class="add-linha" data-form="membro"><input name="email" type="email" placeholder="email@exemplo.com" aria-label="E-mail para compartilhar" required><button class="btn leve" type="submit">' + PL.ic('mais') + 'Compartilhar</button></form></section>';
   }
@@ -87,7 +99,7 @@
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { PL.toast('Esse e-mail não parece válido.'); return false; }
     if (em === (PL.conta.email || '').toLowerCase()) { PL.toast('Esse já é o seu e-mail.'); return false; }
     var m = (PL.conta.membros || []).slice(); if (m.indexOf(em) < 0) m.push(em);
-    PL.salvarMembros(m).then(function () { PL.render(true); PL.toast('Compartilhado com ' + em + '.'); }, function () { PL.toast('Não deu para compartilhar agora. Confira a internet.'); });
+    PL.salvarMembros(m).then(function () { PL.render(true); PL.toast(PL.t('Compartilhado com {email}.', { email: em })); }, function () { PL.toast('Não deu para compartilhar agora. Confira a internet.'); });
     return false;
   };
   PL.acoes.tirarMembro = function (d) {
@@ -99,11 +111,11 @@
     PL.baixar('planner-checklove-' + PL.hoje() + '.json', JSON.stringify(PL.s), 'application/json');
   };
   PL.acoes.zerar = function () {
-    if (!window.confirm('Apagar todos os dados do planner neste navegador? Faça um backup antes, se quiser guardar.')) return;
+    if (!window.confirm(PL.t('Apagar todos os dados do planner neste navegador? Faça um backup antes, se quiser guardar.'))) return;
     PL.s = PL.novo(); PL.salvar(true); PL.render(); PL.toast('Planner zerado.');
   };
   PL.acoes.exemplo = function () {
-    if (!window.confirm('Isso substitui os dados atuais por dados de exemplo. Continuar?')) return;
+    if (!window.confirm(PL.t('Isso substitui os dados atuais por dados de exemplo. Continuar?'))) return;
     PL.s = PL.exemplo(); PL.salvar(true); PL.ir('inicio'); PL.toast('Exemplo carregado. Use "Apagar tudo" no perfil para começar do zero.');
   };
   document.addEventListener('change', function (ev) {
@@ -129,7 +141,7 @@
         [U.btn('csvGastos', 'Planilha', 'tabela'), U.btnPrint()]);
       html += U.kpis([
         { r: 'Orçamento', v: PL.brl(orc), s: orc ? '' : 'defina no perfil' },
-        { r: 'Previsto', v: PL.brl(t.prev), s: s.gastos.length + ' itens', cls: 'acc' },
+        { r: 'Previsto', v: PL.brl(t.prev), s: PL.t('{n} itens', { n: s.gastos.length }), cls: 'acc' },
         { r: 'Pago', v: PL.brl(t.pago), cls: 'ok' },
         { r: 'A pagar', v: PL.brl(t.falta), cls: t.falta ? 'alerta' : '' },
         { r: orc && disp < 0 ? 'Acima do orçamento' : 'Disponível', v: PL.brl(Math.abs(disp)), cls: orc && disp < 0 ? 'erro' : '' }
@@ -208,7 +220,7 @@
     var cat = D.gastos.indexOf(f.cat) >= 0 ? f.cat : (MAPA_CAT[f.cat] || 'Outros');
     PL.s.gastos.push({ id: PL.uid(), cat: cat, desc: f.nome, valor: PL.num(f.valor), pago: 0, venc: '', forn: f.id });
     PL.salvar();
-    setTimeout(function () { PL.toast('Gasto de ' + (f.nome || 'fornecedor') + ' criado no financeiro.', 'Ver', 'irFin'); }, 50);
+    setTimeout(function () { PL.toast(PL.t('Gasto de {nome} criado no financeiro.', { nome: f.nome || PL.t('fornecedor') }), 'Ver', 'irFin'); }, 50);
   }
   PL.acoes.irFin = function () { PL.ir('financeiro'); };
   PL.aoMudar = function (p, id, campo, o) {
@@ -216,8 +228,8 @@
     if (p === 'gastos' && campo === 'valor' && o.forn) { var f = PL.alvo('fornecedores', o.forn); if (f) f.valor = o.valor; }
   };
   PL.acoes.copiarForn = function () {
-    var txt = 'Fornecedores · ' + PL.casal() + (PL.s.perfil.data ? ' · ' + PL.dataBR(PL.s.perfil.data) : '') + '\n\n' +
-      PL.s.fornecedores.filter(function (x) { return x.status !== 'Descartado'; }).map(function (x) { return x.cat + ': ' + x.nome + (x.contato ? ' · ' + x.contato : '') + ' (' + x.status + ')'; }).join('\n');
+    var txt = PL.t('Fornecedores') + ' · ' + PL.casal() + (PL.s.perfil.data ? ' · ' + PL.dataBR(PL.s.perfil.data) : '') + '\n\n' +
+      PL.s.fornecedores.filter(function (x) { return x.status !== 'Descartado'; }).map(function (x) { return PL.t(x.cat) + ': ' + x.nome + (x.contato ? ' · ' + x.contato : '') + ' (' + PL.t(x.status) + ')'; }).join('\n');
     PL.copiar(txt);
   };
   PL.acoes.csvForn = function () {
@@ -247,7 +259,7 @@
       var atras = pend.filter(function (x) { return x.prazo && x.prazo < hoje; }).length;
       var html = U.cab('Planejamento', 'Tarefas e <i>prazos</i>', 'Gere o cronograma de 12 meses com os prazos calculados pela data do casamento, e acrescente o que for de vocês.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Pendentes', v: pend.length }, { r: 'Atrasadas', v: atras, cls: atras ? 'erro' : '' }, { r: 'Concluídas', v: feitas.length, cls: 'ok' }]);
-      html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">Cria ' + D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) + ' tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, as tarefas que já passaram aparecem como atrasadas para vocês resolverem primeiro.</p>' +
+      html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">' + PL.esc(PL.t('Cria {n} tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, as tarefas que já passaram aparecem como atrasadas para vocês resolverem primeiro.', { n: D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</p>' +
         U.btn('gerarCrono', PL.s.cronoGerado ? 'Gerar de novo' : 'Gerar tarefas do cronograma', 'cal', 'leve') + (t.length ? '<div style="margin-top:12px">' + U.prog(feitas.length, t.length) + '</div>' : '') + '</section>';
       html += '<section class="card"><h2>Nova tarefa</h2>' + U.form('tarefa', [U.f('t', 'Tarefa', { req: true, cls: 'largo' }), U.f('prazo', 'Prazo', { tipo: 'date' }), U.f('prio', 'Prioridade', { opts: ['Média', 'Alta', 'Baixa'] })]) + '</section>';
       html += '<section class="card"><h2>Pendentes <small>' + pend.length + '</small></h2>' + (pend.length ? linhasTarefas(pend, hoje) : U.vazio('Nada pendente.')) + '</section>';
@@ -270,14 +282,14 @@
   PL.acoes.gerarCrono = function () {
     var data = PL.s.perfil.data;
     if (!data) { PL.toast('Coloque a data do casamento no perfil primeiro.'); PL.ir('perfil'); return; }
-    if (PL.s.cronoGerado && !window.confirm('O cronograma já foi gerado. Gerar de novo acrescenta as tarefas outra vez. Continuar?')) return;
+    if (PL.s.cronoGerado && !window.confirm(PL.t('O cronograma já foi gerado. Gerar de novo acrescenta as tarefas outra vez. Continuar?'))) return;
     var base = new Date(data + 'T12:00:00');
     D.cronograma.forEach(function (g, i) {
       var d = new Date(base), m = g[0].match(/^(\d+) m/);
       if (m) d.setMonth(d.getMonth() - Number(m[1]));
       else if (/semana/i.test(g[0])) d.setDate(d.getDate() - 7);
       else d.setDate(d.getDate() - 1);
-      g[1].forEach(function (t) { PL.s.tarefas.push({ id: PL.uid(), t: t, prazo: PL.iso(d), prio: i >= 11 ? 'Alta' : 'Média', grupo: g[0], ok: false }); });
+      g[1].forEach(function (t) { PL.s.tarefas.push({ id: PL.uid(), t: PL.t(t), prazo: PL.iso(d), prio: i >= 11 ? 'Alta' : 'Média', grupo: g[0], ok: false }); });
     });
     PL.s.cronoGerado = true; PL.salvar(); PL.render(true); PL.toast('Cronograma criado.');
   };

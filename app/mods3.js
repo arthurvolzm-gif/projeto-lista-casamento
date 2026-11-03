@@ -13,7 +13,7 @@
       var filtro = PL.temp.filtroConv || 'Todos', lista = filtro === 'Todos' ? c : c.filter(function (x) { return x.status === filtro; });
       var mesas = {}; PL.s.mesas.forEach(function (m) { mesas[m.id] = m.nome; });
       var html = U.cab('Convidados', 'Lista de <i>convidados</i>', 'Quem vai, quem ainda não respondeu e de que lado é cada um. As mesas se montam em Mapa de mesas.', [U.btn('csvConv', 'Planilha', 'tabela'), U.btnPrint()]);
-      html += U.kpis([{ r: 'Total', v: c.length, s: n('Não vai') ? 'sem contar quem não vai: ' + (c.length - n('Não vai')) : '' }, { r: 'Confirmados', v: n('Confirmado'), cls: 'ok' }, { r: 'Pendentes', v: n('Pendente'), cls: 'alerta' }, { r: 'Não vão', v: n('Não vai'), cls: n('Não vai') ? 'erro' : '' },
+      html += U.kpis([{ r: 'Total', v: c.length, s: n('Não vai') ? PL.t('sem contar quem não vai: {n}', { n: c.length - n('Não vai') }) : '' }, { r: 'Confirmados', v: n('Confirmado'), cls: 'ok' }, { r: 'Pendentes', v: n('Pendente'), cls: 'alerta' }, { r: 'Não vão', v: n('Não vai'), cls: n('Não vai') ? 'erro' : '' },
         { r: 'Crianças e bebês', v: c.filter(function (x) { return x.faixa !== 'Adulto'; }).length }]);
       html += '<div class="g2"><section class="card"><h2>Adicionar convidado</h2>' + U.form('conv', [U.f('nome', 'Nome', { req: true }), U.f('grupo', 'Grupo', { opts: D.gruposConvidados }), U.f('faixa', 'Idade', { opts: FX }), U.f('status', 'Presença', { opts: ST }), U.f('tel', 'Telefone')]) + '</section>' +
         '<section class="card"><h2>Colar uma lista</h2><form data-form="lote" data-k="lote" style="display:flex;flex-direction:column;gap:10px"><textarea name="nomes" rows="4" placeholder="Um nome por linha" aria-label="Nomes, um por linha"></textarea><div class="lin"><select name="grupo" aria-label="Grupo" style="flex:1">' +
@@ -33,7 +33,7 @@
     var nomes = (d.nomes || '').split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
     if (!nomes.length) return false;
     nomes.forEach(function (n) { PL.add('convidados', { nome: n, grupo: d.grupo, faixa: 'Adulto', status: 'Pendente', tel: '', mesa: '', convite: false }); });
-    PL.toast(nomes.length + (nomes.length === 1 ? ' convidado adicionado.' : ' convidados adicionados.'));
+    PL.toast(nomes.length === 1 ? PL.t('1 convidado adicionado.') : PL.t('{n} convidados adicionados.', { n: nomes.length }));
   };
   PL.acoes.filtroConv = function (d) { PL.temp.filtroConv = d.f; PL.render(true); };
   PL.acoes.csvConv = function () {
@@ -52,7 +52,7 @@
       if (m.length) html += '<div class="lista-cards">' + m.map(function (mesa) {
         var g = c.filter(function (x) { return x.mesa === mesa.id; }), lot = g.length > PL.num(mesa.lugares);
         return '<section class="card mesa"><div class="cab-card">' + U.inp('mesas', mesa.id, 'nome', mesa.nome, { r: 0, aria: 'Nome da mesa' }) + U.del('mesas', mesa.id) + '</div>' +
-          '<div class="lin" style="margin-top:6px"><span class="chip ' + (lot ? 'erro' : g.length === PL.num(mesa.lugares) ? 'ok' : '') + '">' + g.length + ' de ' + PL.num(mesa.lugares) + ' lugares</span><span class="esp"></span><label class="nota lin" style="gap:6px">Lugares <input type="number" min="1" style="width:70px;padding:5px 8px" value="' + PL.num(mesa.lugares) + '" data-t="n"' + U.attrs('mesas', mesa.id, 'lugares') + '></label></div>' +
+          '<div class="lin" style="margin-top:6px"><span class="chip ' + (lot ? 'erro' : g.length === PL.num(mesa.lugares) ? 'ok' : '') + '">' + PL.esc(PL.t('{a} de {b} lugares', { a: g.length, b: PL.num(mesa.lugares) })) + '</span><span class="esp"></span><label class="nota lin" style="gap:6px">Lugares <input type="number" min="1" style="width:70px;padding:5px 8px" value="' + PL.num(mesa.lugares) + '" data-t="n"' + U.attrs('mesas', mesa.id, 'lugares') + '></label></div>' +
           '<ul>' + g.map(function (x) { return '<li><span>' + e(x.nome) + '</span><button type="button" class="ic" data-act="tirarMesa" data-id="' + x.id + '" aria-label="Tirar da mesa">' + PL.ic('lixo') + '</button></li>'; }).join('') + '</ul>' +
           (sem.length ? '<select data-mesa="' + mesa.id + '" aria-label="Sentar convidado nesta mesa"><option value="">+ Sentar convidado</option>' + sem.map(function (x) { return '<option value="' + x.id + '">' + e(x.nome) + '</option>'; }).join('') + '</select>' : '') + '</section>';
       }).join('') + '</div>';
@@ -111,10 +111,10 @@
     var t = arr[i]; arr[i] = arr[j]; arr[j] = t; PL.salvar(); PL.render(true);
   };
   PL.acoes.copiarPl = function () {
-    var txt = 'Playlist · ' + PL.casal() + '\n';
+    var txt = PL.t('Playlist') + ' · ' + PL.casal() + '\n';
     D.momentos.forEach(function (mo) {
       var g = PL.s.playlist.filter(function (x) { return x.momento === mo; }); if (!g.length) return;
-      txt += '\n' + mo.toUpperCase() + '\n' + g.map(function (x, i) { return (i + 1) + '. ' + x.musica + (x.artista ? ' (' + x.artista + ')' : '') + (x.link ? ' ' + x.link : ''); }).join('\n') + '\n';
+      txt += '\n' + PL.t(mo).toUpperCase() + '\n' + g.map(function (x, i) { return (i + 1) + '. ' + x.musica + (x.artista ? ' (' + x.artista + ')' : '') + (x.link ? ' ' + x.link : ''); }).join('\n') + '\n';
     });
     PL.copiar(txt);
   };
@@ -129,9 +129,9 @@
       en.forEach(function (x) { if (comodos.indexOf(x.comodo) < 0) comodos.push(x.comodo); });
       var html = U.cab('Bônus', 'Enxoval da <i>casa nova</i>', 'O que comprar para cada cômodo, com quantidade. Marque o que já tem ou já ganhou.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Itens', v: en.length }, { r: 'Já tenho', v: ok, cls: 'ok' }, { r: 'Faltam', v: en.length - ok, cls: en.length - ok ? 'alerta' : '' }]);
-      html += '<section class="card"><h2>Adicionar item' + (en.length ? '' : ' <button type="button" class="btn leve peq" data-act="listaEnxoval">Usar a lista pronta (' + D.comodos.reduce(function (n, g) { return n + g[1].length; }, 0) + ' itens)</button>') + '</h2>' +
+      html += '<section class="card"><h2>Adicionar item' + (en.length ? '' : ' <button type="button" class="btn leve peq" data-act="listaEnxoval">' + PL.esc(PL.t('Usar a lista pronta ({n} itens)', { n: D.comodos.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</button>') + '</h2>' +
         U.form('enx', [U.f('comodo', 'Cômodo', { req: true, lista: 'lista-comodos', ph: 'Ex.: Cozinha' }), U.f('t', 'Item', { req: true }), U.f('qtd', 'Quantidade', { tipo: 'number', v: 1 })]) +
-        '<datalist id="lista-comodos">' + D.comodos.map(function (g) { return '<option value="' + e(g[0]) + '">'; }).join('') + '</datalist></section>';
+        '<datalist id="lista-comodos">' + D.comodos.map(function (g) { return '<option value="' + e(PL.t(g[0])) + '">'; }).join('') + '</datalist></section>';
       if (!en.length) return html + '<section class="card">' + U.vazio('Use a lista pronta por cômodo ou monte a sua.') + '</section>';
       html += '<div class="lista-cards">' + comodos.map(function (cm) {
         var g = en.filter(function (x) { return x.comodo === cm; });
@@ -144,7 +144,7 @@
   });
   PL.forms.enx = function (d) { PL.add('enxoval', { comodo: d.comodo, t: d.t, qtd: PL.num(d.qtd) || 1, ok: false }); };
   PL.acoes.listaEnxoval = function () {
-    D.comodos.forEach(function (g) { g[1].forEach(function (t) { PL.s.enxoval.push({ id: PL.uid(), comodo: g[0], t: t, qtd: 1, ok: false }); }); });
+    D.comodos.forEach(function (g) { g[1].forEach(function (t) { PL.s.enxoval.push({ id: PL.uid(), comodo: PL.t(g[0]), t: PL.t(t), qtd: 1, ok: false }); }); });
     PL.salvar(); PL.render(true); PL.toast('Lista pronta adicionada.');
   };
 
@@ -157,7 +157,7 @@
         U.campo('Ida', U.inp('luamel', '', 'ida', l.ida, { tipo: 'date' })) + U.campo('Volta', U.inp('luamel', '', 'volta', l.volta, { tipo: 'date' })) +
         U.campo('Hospedagem', U.inp('luamel', '', 'hospedagem', l.hospedagem)) + U.campo('Voo e reservas', U.inp('luamel', '', 'voo', l.voo)) +
         U.campo('Orçamento (R$)', U.inp('luamel', '', 'orcamento', l.orcamento, { n: 1, ph: '0,00' })) + '</div>' +
-        (l.ida && l.volta ? '<p class="nota" style="margin-top:10px">' + Math.max(0, Math.round((new Date(l.volta) - new Date(l.ida)) / 864e5)) + ' noites de viagem.</p>' : '') + '</section>' +
+        (l.ida && l.volta ? '<p class="nota" style="margin-top:10px">' + PL.esc(PL.t('{n} noites de viagem.', { n: Math.max(0, Math.round((new Date(l.volta) - new Date(l.ida)) / 864e5)) })) + '</p>' : '') + '</section>' +
         '<section class="card"><h2>Observações</h2>' + U.area('luamel', '', 'obs', l.obs, 'Passeios, restaurantes, documentos, dicas...', 9) + '</section></div>';
       html += '<section class="card"><h2>Preparativos <small>' + feitos(l.prep) + '/' + l.prep.length + '</small></h2>' + U.checklist('luamel/prep', l.prep) + '</section>';
       return html;
@@ -174,7 +174,7 @@
     render: function () {
       var ev = PL.s.eventos;
       var html = U.cab('Inspiração', 'Chás e <i>eventos</i>', 'Chá de panela, despedida, ensaio: cada evento com a sua própria lista.');
-      html += '<section class="card"><h2>Novo evento</h2><div class="filtros" style="margin-bottom:12px">' + SUG_EV.map(function (s) { return '<button type="button" data-act="sugEvento" data-nome="' + e(s[0]) + '">' + e(s[0]) + '</button>'; }).join('') + '</div>' +
+      html += '<section class="card"><h2>Novo evento</h2><div class="filtros" style="margin-bottom:12px">' + SUG_EV.map(function (s) { return '<button type="button" data-act="sugEvento" data-nome="' + e(PL.t(s[0])) + '">' + e(s[0]) + '</button>'; }).join('') + '</div>' +
         U.form('evento', [U.f('nome', 'Nome do evento', { req: true }), U.f('data', 'Data', { tipo: 'date' }), U.f('local', 'Local'), U.f('quem', 'Quem organiza')], 'Criar evento') + '</section>';
       if (!ev.length) return html + '<section class="card">' + U.vazio('Escolha uma sugestão acima ou crie o seu. Os chás já vêm com uma lista pronta.') + '</section>';
       html += '<div class="g2">' + ev.map(function (x) {
@@ -188,7 +188,7 @@
   });
   PL.acoes.sugEvento = function (d) { var i = document.querySelector('form[data-form="evento"] input[name="nome"]'); if (i) { i.value = d.nome; i.focus(); } };
   PL.forms.evento = function (d) {
-    var s = SUG_EV.find(function (x) { return x[0] === d.nome; });
+    var s = SUG_EV.find(function (x) { return x[0] === d.nome || PL.t(x[0]) === d.nome; });
     PL.add('eventos', { nome: d.nome, data: d.data, local: d.local, quem: d.quem, tarefas: PL.lista((s && s[1]) || BASE_EV) });
   };
 
@@ -218,7 +218,7 @@
     if (el.id === 'mural-cat') { PL.temp.catMural = el.value; return; }
     if (el.getAttribute('data-arquivo') !== 'mural' || !el.files.length) return;
     var cat = PL.temp.catMural || CATS[0], arqs = Array.prototype.slice.call(el.files), feitas = 0;
-    PL.toast('Preparando ' + arqs.length + (arqs.length === 1 ? ' foto...' : ' fotos...'));
+    PL.toast(arqs.length === 1 ? PL.t('Preparando 1 foto...') : PL.t('Preparando {n} fotos...', { n: arqs.length }));
     arqs.forEach(function (f) {
       reduzir(f, function (src) {
         var fim = function (item) {
@@ -295,7 +295,7 @@
     PL.D.cronograma.forEach(function (gr, i) {
       var dd = new Date(base), mm = gr[0].match(/^(\d+) m/);
       if (mm) dd.setMonth(dd.getMonth() - Number(mm[1])); else if (/semana/i.test(gr[0])) dd.setDate(dd.getDate() - 7); else dd.setDate(dd.getDate() - 1);
-      gr[1].forEach(function (t) { s.tarefas.push({ id: id(), t: t, prazo: PL.iso(dd), prio: i >= 11 ? 'Alta' : 'Média', grupo: gr[0], ok: i < 3 }); });
+      gr[1].forEach(function (t) { s.tarefas.push({ id: id(), t: PL.t(t), prazo: PL.iso(dd), prio: i >= 11 ? 'Alta' : 'Média', grupo: gr[0], ok: i < 3 }); });
     });
     s.cronoGerado = true;
     return s;

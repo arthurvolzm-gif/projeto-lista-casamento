@@ -4,6 +4,8 @@
   var D = window.PL_DADOS;
   var CHAVE = 'checklove_planner_v1';
   var PL = window.PL = { mods: {}, ordem: [], grupos: [], acoes: {}, forms: {}, temp: {}, D: D };
+  var I18N = window.PL_I18N || { t: function (s, v) { return v ? s.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }) : s; }, loc: 'pt-BR', idioma: 'pt' };
+  PL.t = I18N.t; PL.loc = I18N.loc;
 
   /* ---------- utilidades ---------- */
   PL.uid = function () { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); };
@@ -11,30 +13,33 @@
   PL.num = function (v) {
     if (typeof v === 'number') return isFinite(v) ? v : 0;
     v = String(v == null ? '' : v).replace(/[^\d,.-]/g, '');
-    if (v.indexOf(',') >= 0) v = v.replace(/\./g, '').replace(',', '.');
+    var dec = (1.5).toLocaleString(PL.loc).charAt(1);
+    if (dec === ',') { if (v.indexOf(',') >= 0) v = v.replace(/\./g, '').replace(',', '.'); }
+    else v = v.replace(/,/g, '');
     var n = parseFloat(v); return isFinite(n) ? n : 0;
   };
-  PL.brl = function (n) { return (n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); };
-  PL.dec = function (n) { return n ? n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''; };
+  PL.moeda = function () { return (PL.s && PL.s.perfil && PL.s.perfil.moeda) || 'BRL'; };
+  PL.brl = function (n) { return (n || 0).toLocaleString(PL.loc, { style: 'currency', currency: PL.moeda() }); };
+  PL.dec = function (n) { return n ? n.toLocaleString(PL.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''; };
   PL.hoje = function () { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
   PL.iso = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
-  PL.dataBR = function (iso) { if (!iso) return ''; var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; };
-  PL.dataLonga = function (iso) { if (!iso) return ''; return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }); };
+  PL.dataBR = function (iso) { if (!iso) return ''; return new Date(iso + 'T12:00:00').toLocaleDateString(PL.loc, { day: '2-digit', month: '2-digit', year: 'numeric' }); };
+  PL.dataLonga = function (iso) { if (!iso) return ''; return new Date(iso + 'T12:00:00').toLocaleDateString(PL.loc, { day: 'numeric', month: 'long', year: 'numeric' }); };
   PL.pct = function (a, b) { return b ? Math.round(a / b * 100) : 0; };
   PL.casal = function () {
     var p = PL.s.perfil, n = [p.noiva, p.noivo].filter(Boolean);
-    return n.length ? n.join(' & ') : 'Nosso casamento';
+    return n.length ? n.join(' & ') : PL.t('Nosso casamento');
   };
 
   /* ---------- estado ---------- */
   function lista(arr) {
-    return (arr || []).map(function (x) { return Array.isArray(x) ? { id: PL.uid(), t: x[0], s: x[1], ok: false } : { id: PL.uid(), t: x, ok: false }; });
+    return (arr || []).map(function (x) { return Array.isArray(x) ? { id: PL.uid(), t: PL.t(x[0]), s: PL.t(x[1]), ok: false } : { id: PL.uid(), t: PL.t(x), ok: false }; });
   }
   PL.lista = lista;
   PL.novo = function () {
     return {
       v: 1,
-      perfil: { noiva: '', noivo: '', data: '', hora: '', cidade: '', local: '', orcamento: 0, tema: 'roxo' },
+      perfil: { noiva: '', noivo: '', data: '', hora: '', cidade: '', local: '', orcamento: 0, tema: 'roxo', moeda: 'BRL' },
       gastos: [], fornecedores: [], tarefas: [], agenda: [], contratos: [],
       papelaria: { pre: lista(D.papelaria.pre), cer: lista(D.papelaria.cer), festa: lista(D.papelaria.festa) },
       identidade: { cores: [], fontes: [], notas: '' },
@@ -133,7 +138,7 @@
     document.documentElement.setAttribute('data-tema', PL.s.perfil.tema || 'roxo');
     var chave = manterFoco && document.activeElement && document.activeElement.getAttribute('data-k');
     var y = window.scrollY;
-    var html = '<div class="print-cab">' + PL.esc(PL.casal()) + (PL.s.perfil.data ? ' · ' + PL.dataLonga(PL.s.perfil.data) : '') + ' · ' + PL.esc(m.titulo) + '</div>';
+    var html = '<div class="print-cab">' + PL.esc(PL.casal()) + (PL.s.perfil.data ? ' · ' + PL.dataLonga(PL.s.perfil.data) : '') + ' · ' + PL.esc(PL.t(m.titulo)) + '</div>';
     var area = PL.areaDe(id);
     if (area && area.mods.length > 1) html += '<nav class="abas no-print" aria-label="' + PL.esc(area.nome) + '">' + area.mods.map(function (mid) {
       var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '"' + (mid === id ? ' aria-current="page"' : '') + '>' + PL.esc(mm.menu || mm.titulo) + '</a>';
@@ -141,7 +146,7 @@
     main.innerHTML = html + m.render();
     if (m.depois) m.depois(main);
     pintarMenu(id, area);
-    document.title = m.titulo + ' · Planner CheckLove';
+    document.title = PL.t(m.titulo) + ' · Planner CheckLove';
     pintarMini();
     if (manterFoco) {
       window.scrollTo(0, y);
@@ -162,7 +167,7 @@
   }
   function pintarMini() {
     var p = PL.s.perfil, d = PL.dias();
-    miniCasal.innerHTML = '<b>' + PL.esc(PL.casal()) + '</b><span>' + (p.data ? (d > 0 ? 'Faltam ' + d + (d === 1 ? ' dia' : ' dias') : d === 0 ? 'É hoje!' : PL.dataBR(p.data)) : 'Defina a data no perfil') + '</span>';
+    miniCasal.innerHTML = '<b>' + PL.esc(PL.casal()) + '</b><span>' + PL.esc(p.data ? (d > 1 ? PL.t('Faltam {n} dias', { n: d }) : d === 1 ? PL.t('Falta 1 dia') : d === 0 ? PL.t('É hoje!') : PL.dataBR(p.data)) : PL.t('Defina a data no perfil')) + '</span>';
   }
   PL.dias = function () {
     var p = PL.s.perfil; if (!p.data) return null;
@@ -384,7 +389,7 @@
   };
   U.prog = function (feitos, total) {
     var pc = PL.pct(feitos, total);
-    return '<div class="prog"><div class="barra"><i style="width:' + pc + '%"></i></div><span>' + feitos + ' de ' + total + ' · ' + pc + '%</span></div>';
+    return '<div class="prog"><div class="barra"><i style="width:' + pc + '%"></i></div><span>' + PL.esc(PL.t('{a} de {b} · {p}%', { a: feitos, b: total, p: pc })) + '</span></div>';
   };
   /* lista de checagem editável, guardada em p (array de {id,t,s,ok}) */
   U.checklist = function (p, itens, ph) {
