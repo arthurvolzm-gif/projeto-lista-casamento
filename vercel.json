@@ -28,17 +28,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "/planner",
-      "destination": "/app",
-      "permanent": true
-    },
-    {
-      "source": "/planner/:path*",
-      "destination": "/app/:path*",
-      "permanent": true
-    }
   ]
 }
