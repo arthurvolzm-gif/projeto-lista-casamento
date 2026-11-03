@@ -166,7 +166,7 @@
     pintarMini();
     if (manterFoco) {
       window.scrollTo(0, y);
-      if (chave) { var el = main.querySelector('[data-k="' + chave.replace(/"/g, '\\"') + '"]'); if (el) { el.focus(); try { var n = el.value.length; el.setSelectionRange(n, n); } catch (e) {} } }
+      if (chave) { var el = main.querySelector('[data-k="' + chave.replace(/"/g, '\\"') + '"]'); if (el && el.type !== 'checkbox') { el.focus({ preventScroll: true }); try { var n = el.value.length; el.setSelectionRange(n, n); } catch (e) {} } }
     }
     tick();
   };
