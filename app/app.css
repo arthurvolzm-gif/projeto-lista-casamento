@@ -298,3 +298,18 @@ ol.lista-doc{padding-left:22px;display:flex;flex-direction:column;gap:6px}
   .tb td input,.tb td select,input,select,textarea{border:0!important;background:transparent!important;padding:2px 0!important;appearance:none;-webkit-appearance:none}
   .tabela{overflow:visible;border:0}
 }
+
+/* tarefas por mês */
+.meses{display:flex;flex-direction:column;gap:12px}
+.card.mes{padding:0;overflow:hidden}
+.mes-cab{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer}
+.mes-cab:focus-visible{outline:2px solid var(--acc);outline-offset:-2px;border-radius:var(--raio)}
+.mes-nome{font-family:var(--disp);font-size:19px;font-weight:600;color:var(--tinta);flex:1}
+.mes-info{display:flex;align-items:center;gap:10px}
+.mes-seta{display:inline-flex;width:32px;height:32px;border-radius:50%;align-items:center;justify-content:center;background:var(--acc-sua);color:var(--acc);transition:transform .2s}
+.mes-seta svg{width:18px;height:18px}
+.mes.aberto .mes-seta{transform:rotate(180deg)}
+.mes-corpo{display:none;padding:0 16px 16px}
+.mes.aberto .mes-corpo{display:block}
+@media print{.mes-corpo{display:block!important}.mes-seta{display:none}}
+@media (max-width:600px){.mes-cab{padding:14px;gap:8px}.mes-nome{font-size:17px}.mes-info{gap:6px}.mes-corpo{padding:0 10px 12px}}

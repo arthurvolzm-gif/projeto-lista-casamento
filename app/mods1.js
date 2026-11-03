@@ -258,14 +258,37 @@
       html += '<section class="card"><h2>Cronograma de 12 meses</h2><p class="nota" style="margin-bottom:12px">' + PL.esc(PL.t('Cria {n} tarefas, do "12 meses antes" até o grande dia, com o prazo de cada uma calculado a partir da data do casamento. Se faltar menos de um ano, as tarefas que já passaram aparecem como atrasadas para vocês resolverem primeiro.', { n: D.cronograma.reduce(function (n, g) { return n + g[1].length; }, 0) })) + '</p>' +
         U.btn('gerarCrono', PL.s.cronoGerado ? 'Gerar de novo' : 'Gerar tarefas do cronograma', 'cal', 'leve') + (t.length ? '<div style="margin-top:12px">' + U.prog(feitas.length, t.length) + '</div>' : '') + '</section>';
       html += '<section class="card"><h2>Nova tarefa</h2>' + U.form('tarefa', [U.f('t', 'Tarefa', { req: true, cls: 'largo' }), U.f('prazo', 'Prazo', { tipo: 'date' }), U.f('prio', 'Prioridade', { opts: ['Média', 'Alta', 'Baixa'] })]) + '</section>';
-      html += '<section class="card"><h2>Pendentes <small>' + pend.length + '</small></h2>' + (pend.length ? linhasTarefas(pend, hoje) : U.vazio('Nada pendente.')) + '</section>';
-      if (feitas.length) html += '<section class="card"><h2>Concluídas <small>' + feitas.length + '</small></h2>' + linhasTarefas(feitas, hoje) + '</section>';
+      html += t.length ? porMes(t, hoje, ordem) : '<section class="card">' + U.vazio('Nada pendente.') + '</section>';
       var pap = PL.s.papelaria, todos = pap.pre.concat(pap.cer, pap.festa), ok = function (a) { return a.filter(function (x) { return x.ok; }).length; };
       html += '<section class="card"><h2>Papelaria <small>' + ok(todos) + '/' + todos.length + '</small></h2><p class="nota" style="margin-bottom:12px">Do save the date às tags das lembrancinhas, separado por momento.</p><div class="g3">' +
         [['pre', 'Antes do casamento'], ['cer', 'Cerimônia'], ['festa', 'Festa e recepção']].map(function (g) { return '<div><h3 style="font-size:14px;color:var(--tinta);margin-bottom:6px">' + g[1] + ' <span class="nota">' + ok(pap[g[0]]) + '/' + pap[g[0]].length + '</span></h3>' + U.checklist('papelaria/' + g[0], pap[g[0]]) + '</div>'; }).join('') + '</div></section>';
       return html;
     }
   });
+  /* um card por mês (pelo prazo), fechado; a setinha abre as tarefas do mês. A tarefa marcada fica no lugar. */
+  var mesesAbertos = {};
+  function porMes(t, hoje, ordem) {
+    var grupos = {};
+    t.forEach(function (x) { var k = x.prazo ? x.prazo.slice(0, 7) : 'sem'; (grupos[k] = grupos[k] || []).push(x); });
+    return '<div class="meses">' + Object.keys(grupos).sort(function (a, b) { return a === 'sem' ? 1 : b === 'sem' ? -1 : a.localeCompare(b); }).map(function (k) {
+      var arr = grupos[k].sort(function (a, b) { return (a.prazo || '').localeCompare(b.prazo || '') || (ordem[a.prio] - ordem[b.prio]); });
+      var ok = arr.filter(function (x) { return x.ok; }).length, atr = arr.filter(function (x) { return !x.ok && x.prazo && x.prazo < hoje; }).length;
+      var nome = k === 'sem' ? 'Sem prazo' : new Date(k + '-15T12:00:00').toLocaleDateString(PL.loc, { month: 'long', year: 'numeric' });
+      nome = nome.charAt(0).toUpperCase() + nome.slice(1);
+      var aberto = !!mesesAbertos[k];
+      return '<section class="card mes' + (aberto ? ' aberto' : '') + '" data-mes="' + k + '">' +
+        '<button type="button" class="mes-cab" data-act="mes" data-m="' + k + '" aria-expanded="' + aberto + '">' +
+        '<span class="mes-nome">' + e(nome) + '</span>' +
+        '<span class="mes-info">' + (atr ? '<span class="chip erro">' + atr + ' ' + (atr === 1 ? 'atrasada' : 'atrasadas') + '</span>' : ok === arr.length ? '<span class="chip ok">Concluído</span>' : '') +
+        '<span class="nota">' + ok + '/' + arr.length + '</span><span class="mes-seta">' + PL.ic('baixo') + '</span></span></button>' +
+        '<div class="mes-corpo">' + linhasTarefas(arr, hoje) + '</div></section>';
+    }).join('') + '</div>';
+  }
+  PL.acoes.mes = function (d, el) {
+    var card = el.closest('.mes'), abrir = !card.classList.contains('aberto');
+    if (abrir) mesesAbertos[d.m] = 1; else delete mesesAbertos[d.m];
+    card.classList.toggle('aberto', abrir); el.setAttribute('aria-expanded', abrir);
+  };
   function linhasTarefas(arr, hoje) {
     return '<div class="tabela"><table class="tb"><thead><tr><th></th><th>Tarefa</th><th>Prazo</th><th>Prioridade</th><th></th><th></th></tr></thead><tbody>' + arr.map(function (x) {
       var atras = !x.ok && x.prazo && x.prazo < hoje;
