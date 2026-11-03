@@ -46,11 +46,13 @@ nav.menu{display:flex;flex-direction:column;gap:2px}
 .lado-rodape>a svg{width:17px;height:17px;color:var(--suave)}
 .lado-rodape>a:hover{background:var(--bg)}
 .lado-rodape>a.on{background:var(--acc-sua);color:var(--acc-esc);font-weight:600}
-.abas{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px;margin-bottom:-4px}
+.abas{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:5px;margin-bottom:6px;background:var(--card);border:1px solid var(--linha);border-radius:16px;box-shadow:var(--sombra);width:max-content;max-width:100%}
 .abas::-webkit-scrollbar{display:none}
-.abas a{flex:none;padding:7px 14px;border-radius:999px;border:1px solid var(--linha);background:#fff;font-size:13px;font-weight:600;color:var(--suave);text-decoration:none}
-.abas a:hover{border-color:var(--acc-borda);color:var(--acc-esc)}
-.abas a.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.abas a{flex:none;display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:12px;font-size:14px;font-weight:600;color:var(--texto);text-decoration:none;transition:background .15s,color .15s,box-shadow .15s}
+.abas a svg{width:17px;height:17px;color:var(--acc);flex:none}
+.abas a:hover{background:var(--acc-sua);color:var(--acc-esc)}
+.abas a.on{background:linear-gradient(135deg,var(--acc),var(--acc-esc));color:#fff;box-shadow:0 6px 16px -6px var(--acc)}
+.abas a.on svg{color:#fff}
 .abas-baixo{display:none}
 .principal{min-width:0;padding:28px max(20px,env(safe-area-inset-right,0px)) 60px max(20px,env(safe-area-inset-left,0px))}
 .conteudo{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
@@ -430,3 +432,4 @@ html.ob-on,html.ob-on body{overflow:hidden}
 @keyframes bvIn{from{opacity:0}to{opacity:1}}
 @keyframes bvLetra{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 @media (prefers-reduced-motion:reduce){.bv,.bv-1,.bv-2,.ob,.ob-corpo{animation:none}}
+@media (max-width:900px){.abas{width:auto;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}.abas a{padding:9px 14px}}

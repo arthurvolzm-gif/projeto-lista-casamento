@@ -157,10 +157,11 @@
     var html = '<div class="print-cab">' + PL.esc(PL.casal()) + (PL.s.perfil.data ? ' · ' + PL.dataLonga(PL.s.perfil.data) : '') + ' · ' + PL.esc(PL.t(m.titulo)) + '</div>';
     var area = PL.areaDe(id);
     if (area && area.mods.length > 1) html += '<nav class="abas no-print" aria-label="' + PL.esc(area.nome) + '">' + area.mods.map(function (mid) {
-      var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '"' + (mid === id ? ' aria-current="page"' : '') + '>' + PL.esc(mm.menu || mm.titulo) + '</a>';
+      var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '"' + (mid === id ? ' aria-current="page"' : '') + '>' + PL.ic(mm.icone || 'tarefa') + '<span>' + PL.esc(mm.menu || mm.titulo) + '</span></a>';
     }).join('') + '</nav>';
     main.innerHTML = html + m.render();
     if (m.depois) m.depois(main);
+    var abaOn = main.querySelector('.abas a.on'); if (abaOn) { var ab = abaOn.parentNode; ab.scrollLeft = abaOn.offsetLeft - ab.offsetLeft - (ab.clientWidth - abaOn.offsetWidth) / 2; }
     pintarMenu(id, area);
     document.title = PL.t(m.titulo) + ' · Planner CheckLove';
     pintarMini();
