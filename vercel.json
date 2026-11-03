@@ -28,5 +28,22 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/planner",
+      "destination": "/pagina",
+      "permanent": false
+    },
+    {
+      "source": "/página",
+      "destination": "/pagina",
+      "permanent": false
+    },
+    {
+      "source": "/p%C3%A1gina",
+      "destination": "/pagina",
+      "permanent": false
+    }
   ]
 }
