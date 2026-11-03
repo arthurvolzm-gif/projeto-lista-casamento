@@ -276,7 +276,7 @@ ol.lista-doc{padding-left:22px;display:flex;flex-direction:column;gap:6px}
   .topo-movel .ic svg{width:20px;height:20px}
   .topo-movel .ic:hover{background:var(--bg);color:var(--tinta)}
   .topo-movel .ic.on{background:var(--acc-sua);color:var(--acc)}
-  .abas-baixo{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-top:1px solid var(--linha);padding:6px max(6px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
+  .abas-baixo{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-top:1px solid var(--linha);padding:6px max(6px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
   .abas-baixo a,.abas-baixo .menu-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-radius:10px;text-decoration:none;color:var(--suave);font-size:10.5px;font-weight:600}
   .abas-baixo a svg{width:21px;height:21px}
   .abas-baixo a.on{color:var(--acc-esc);background:var(--acc-sua)}
@@ -448,4 +448,12 @@ html.ob-on,html.ob-on body{overflow:hidden}
 @keyframes ladoIn{from{transform:translateX(-100%)}to{transform:none}}
 @keyframes veuIn{from{opacity:0}to{opacity:1}}
 @media (max-width:900px){.abas-baixo{padding-left:max(2px,env(safe-area-inset-left,0px));padding-right:max(2px,env(safe-area-inset-right,0px));gap:0}.abas-baixo a,.abas-baixo .menu-btn{letter-spacing:-.025em}}
-@media (max-width:380px){.abas-baixo a,.abas-baixo .menu-btn{font-size:8.8px}}
+@media (max-width:900px){
+  .topo-movel{display:grid!important;grid-template-columns:44px 1fr 44px;align-items:center}
+  .topo-movel .marca{justify-self:center}
+  .topo-movel .menu-btn{border:0;background:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:0}
+  .topo-movel .menu-btn svg{width:22px;height:22px}
+  .topo-movel #topo-bonus{justify-self:end}
+  body.menu-aberto .topo-movel .menu-btn{background:var(--acc-sua);color:var(--acc)}
+  .abas-baixo a{font-size:10.5px;letter-spacing:0}
+}

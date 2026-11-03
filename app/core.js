@@ -178,7 +178,7 @@
         (on ? '<div class="sub">' + a.mods.map(function (mid) { var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '">' + PL.esc(mm.menu || mm.titulo) + '</a>'; }).join('') + '</div>' : '');
     }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + 'Perfil</a>';
     /* no celular: Bônus fica no ícone do topo e Perfil entra no lugar dele na barra de baixo */
-    baixo.innerHTML = '<button type="button" class="menu-btn" data-act="menu" aria-label="Abrir o menu">' + PL.ic('menu') + '<span>Menu</span></button>' + PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
+    baixo.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a) {
       return '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome) + '</span></a>';
     }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + '<span>Perfil</span></a>';
     var bt = document.getElementById('topo-bonus'); if (bt) bt.classList.toggle('on', !!area && area.mods[0] === 'bonus');
@@ -430,7 +430,7 @@
   /* ---------- casca ---------- */
   PL.iniciar = function () {
     document.body.innerHTML =
-      '<div class="topo-movel"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><b>Check<i>Love</i></b></a><span class="esp"></span>' +
+      '<div class="topo-movel"><button type="button" class="ic menu-btn" data-act="menu" aria-label="Abrir o menu">' + PL.ic('menu') + '</button><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><b>Check<i>Love</i></b></a>' +
       '<a class="ic" id="topo-bonus" href="#bonus" data-act="ir" data-to="bonus" aria-label="Bônus">' + PL.ic('presente') + '</a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
