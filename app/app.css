@@ -631,3 +631,32 @@ html.ob-on,html.ob-on body{overflow:hidden}
 
 .bonus-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:700px){.bonus-grid{gap:10px}.bcard-corpo h3{font-size:15px}.bcard-corpo p{font-size:12px}.bcard-acoes .btn{font-size:12px;padding:8px 8px}.bcard>img,.bcard-topo>img,.bcard-ic,.bcard-topo>.bcard-ic{aspect-ratio:4/3}}
+
+/* ===== movimento: transições suaves entre ações ===== */
+html{scroll-behavior:smooth}
+#main .anim{animation:sobe .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms)}
+@keyframes sobe{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+/* toques e passagens do mouse */
+.btn,.ic,.abas a,.abas-baixo a,.menu a,.sel-btn,.ob-chip,.temas button,.pf-acao,.aviso-item,.bcard,.kpi,.mes-cab{transition:background-color .18s ease,color .18s ease,border-color .18s ease,box-shadow .22s ease,transform .18s ease}
+.btn:active,.ic:active,.abas a:active,.abas-baixo a:active,.ob-chip:active,.temas button:active,.pf-acao:active,.sel-btn:active{transform:scale(.97)}
+.bcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(60,30,120,.35)}
+.kpi:hover{transform:translateY(-2px)}
+.abas-baixo a svg,.menu a svg{transition:transform .25s cubic-bezier(.2,.9,.3,1.4)}
+.abas-baixo a.on svg{transform:translateY(-1px) scale(1.1)}
+/* caixinhas de marcar */
+input[type=checkbox]{transition:transform .15s ease}
+input[type=checkbox].pop{animation:marca .32s cubic-bezier(.2,.9,.3,1.5)}
+@keyframes marca{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.tb tr,.chk li{transition:opacity .3s ease,background-color .2s ease}
+/* cards de mês, listas e menus que abrem */
+.mes.aberto .mes-corpo{animation:abre .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes abre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.mes-seta,.menu .menu-seta{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+/* aviso que aparece embaixo */
+.toast:not([hidden]){animation:toastIn .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes toastOut{to{opacity:0;transform:translate(-50%,10px) scale(.97)}}
+.toast.sai{animation:toastOut .26s ease forwards}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,14px) scale(.96)}to{opacity:1;transform:translate(-50%,0)}}
+/* menu lateral do celular sai suave */
+.veu{transition:opacity .25s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
