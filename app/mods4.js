@@ -72,8 +72,37 @@
           cartao({ img: '/img/bonus2-foto.webp?v=3', alt: 'Noivos sorrindo no dia do casamento', tag: 'Guia em PDF', titulo: 'Guia do Casamento Econômico', texto: 'Tudo para gastar menos em cada parte do casamento: data, horário, convidados, local, comida, decoração, fornecedores, convites e lembrancinhas.', botoes: [ir('guia', 'Abrir o guia')] }),
           cartao({ img: '/img/bonus3-foto.webp?v=2', alt: 'Caixas para convite de padrinhos', tag: 'Site + manual', titulo: 'Kit Padrinhos', texto: 'Monte a caixinha e o convite dos seus padrinhos com 30 modelos prontos e mande o arquivo para a gráfica. Inclui o manual dos padrinhos.', botoes: [site('/caixinha', 'Abrir o site dos padrinhos'), site('/convite-padrinhos', 'Criar o convite dos padrinhos', 'leve'), baixar('manual', 'Baixar o manual', 'sec')] }),
           cartao({ img: '/img/bonus1-casa.webp', alt: 'Casa nova com jardim', pos: 'center 45%', tag: 'No app', titulo: 'Enxoval da casa nova', texto: 'A lista do que comprar para cada cômodo, com quantidade, para marcar o que já tem ou já ganhou.', botoes: [ir('enxoval', 'Abrir o enxoval')] }),
-          cartao({ img: '/img/bonus-luamel.webp', alt: 'Casal caminhando num píer em direção a uma praia', pos: 'center 60%', tag: 'No app', titulo: 'Lua de mel', texto: 'Destino, datas, reservas e a lista do que preparar antes de viajar, tudo em um lugar.', botoes: [ir('luamel', 'Abrir a lua de mel')] })
+          cartao({ img: '/img/bonus-luamel.webp', alt: 'Casal caminhando num píer em direção a uma praia', pos: 'center 60%', tag: 'No app', titulo: 'Lua de mel', texto: 'Destino, datas, reservas e a lista do que preparar antes de viajar, tudo em um lugar.', botoes: [ir('luamel', 'Abrir a lua de mel')] }),
+          cartao({ img: '/img/bonus1-casa.webp', alt: 'Casa nova com jardim', pos: 'center 70%', tag: 'Grupo no WhatsApp', titulo: 'Grupo de promoções para a casa nova', texto: 'Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para quem está montando a casa.', botoes: [ir('promocoes', 'Ver o grupo')] })
         ].join('') + extra('convite') + extra('album') + '</div>';
+    }
+  });
+
+  /* grupo de promoções: cole aqui o link de convite do grupo do WhatsApp quando ele estiver pronto */
+  var LINK_GRUPO_PROMOCOES = '';
+  var ZAP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.1A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.6c.2 2.6 3.3 5.7 5.9 5.9l1.2-1.3-1.9-1-.9.8c-1-.4-2.3-1.7-2.7-2.7l.8-.9-1-1.9z"/></svg>';
+  PL.mod('promocoes', {
+    titulo: 'Grupo de promoções para a casa nova', icone: 'grupo', menu: 'Promoções',
+    render: function () {
+      var pronto = !!LINK_GRUPO_PROMOCOES;
+      var passo = function (n, t, x) { return '<li><span class="pr-n">' + n + '</span><div><b>' + t + '</b><small>' + x + '</small></div></li>'; };
+      return U.cab('Bônus', 'Grupo de <i>promoções</i>', 'Ofertas para montar a casa nova, direto no seu WhatsApp.', [U.btn('ir', 'Ver todos os bônus', '', 'sec', ' data-to="bonus"')]) +
+        '<section class="card pr-topo"><img src="/img/bonus1-casa.webp" alt="Casa nova com jardim" class="pr-img">' +
+        '<div class="pr-corpo"><span class="chip acc">' + ZAP + 'Grupo no WhatsApp</span><h2>Para montar a casa sem pagar mais caro</h2>' +
+        '<p>Um grupo no WhatsApp com promoções selecionadas de itens para a casa nova: eletrodomésticos, panelas e utensílios, cama, mesa, banho e decoração. Vocês recebem as ofertas e decidem com calma o que vale a pena.</p>' +
+        (pronto ? '<a class="btn pr-btn" href="' + e(LINK_GRUPO_PROMOCOES) + '" target="_blank" rel="noopener">' + ZAP + 'Entrar no grupo</a>'
+          : '<button type="button" class="btn pr-btn" disabled>' + ZAP + 'Grupo abrindo em breve</button><p class="nota pr-aviso">O grupo está sendo preparado. Assim que ele abrir, o botão para entrar aparece aqui.</p>') +
+        '</div></section>' +
+        '<div class="g2"><section class="card"><h2>Como funciona</h2><ol class="pr-passos">' +
+          passo(1, 'Entrem no grupo', 'Toquem em "Entrar no grupo" e confirmem no WhatsApp.') +
+          passo(2, 'Recebam as ofertas', 'As promoções chegam no grupo com o link da loja.') +
+          passo(3, 'Comparem com o enxoval', 'Confiram a lista do Enxoval e marquem o que já compraram.') +
+        '</ol></section>' +
+        '<section class="card"><h2>Bom saber</h2><ul class="lista-ok-app">' +
+          '<li>Só a administração envia mensagens, para o grupo ficar organizado e sem conversa paralela.</li>' +
+          '<li>Preço, frete e estoque são das lojas e podem mudar a qualquer momento. Confira antes de comprar.</li>' +
+          '<li>Dá para sair do grupo quando quiser.</li>' +
+        '</ul>' + U.btn('ir', 'Abrir o enxoval', 'sofa', 'leve', ' data-to="enxoval"') + '</section></div>';
     }
   });
 

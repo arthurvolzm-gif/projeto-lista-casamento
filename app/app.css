@@ -601,3 +601,30 @@ html.ob-on,html.ob-on body{overflow:hidden}
 .extra-corpo .lista-ok-app{margin-top:12px}
 .extra-botoes{display:flex;gap:10px;margin-top:18px}
 .extra-botoes .btn{flex:1;justify-content:center}
+
+/* bônus: grupo de promoções */
+.pr-topo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);padding:0;overflow:hidden}
+.pr-img{width:100%;height:100%;min-height:240px;object-fit:cover;display:block}
+.pr-corpo{padding:24px 26px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.pr-corpo .chip{align-self:flex-start}.pr-corpo .chip svg{width:13px;height:13px}
+.pr-corpo h2{font-family:var(--disp);font-size:24px;font-weight:600;color:var(--tinta);line-height:1.2}
+.pr-corpo p{font-size:14px;color:var(--texto);line-height:1.6}
+.pr-btn{align-self:flex-start;margin-top:6px;background:#1f9d55;border-color:#1f9d55;color:#fff}
+.pr-btn:hover{background:#188247}
+.pr-btn svg{width:18px;height:18px}
+.pr-btn[disabled]{background:var(--bg);border-color:var(--linha);color:var(--suave);cursor:default}
+.pr-aviso{font-size:12.5px}
+.pr-passos{list-style:none;display:flex;flex-direction:column;gap:14px;margin:0;padding:0}
+.pr-passos li{display:flex;gap:12px;align-items:flex-start}
+.pr-n{flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc-esc));color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.pr-passos b{display:block;font-size:14.5px;color:var(--tinta)}
+.pr-passos small{font-size:13px;color:var(--suave);line-height:1.45}
+.lista-ok-app+.btn{margin-top:16px}
+@media (max-width:700px){.pr-topo{grid-template-columns:1fr}.pr-img{min-height:0;aspect-ratio:16/9}.pr-corpo{padding:18px}.pr-corpo h2{font-size:21px}.pr-btn{align-self:stretch;justify-content:center}}
+.pr-img{max-height:360px}
+/* produtos bloqueados: imagem borrada e escura, cadeado no centro */
+.bcard.bloq .bcard-topo{overflow:hidden}
+.bcard.bloq .bcard-topo>img,.bcard.bloq .bcard-topo>.bcard-ic{filter:blur(5px) brightness(.55) saturate(.8);transform:scale(1.08)}
+.bcard.bloq .bcard-cad{top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:58px;height:58px;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.55);box-shadow:0 8px 24px -6px rgba(0,0,0,.45)}
+.bcard.bloq .bcard-cad svg{width:26px;height:26px}
+@media (max-width:700px){.bcard.bloq .bcard-cad{top:50%;right:auto;width:42px;height:42px}.bcard.bloq .bcard-cad svg{width:19px;height:19px}}

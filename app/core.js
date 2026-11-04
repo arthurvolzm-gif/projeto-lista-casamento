@@ -142,7 +142,7 @@
     { nome: 'Finanças', icone: 'din', mods: ['financeiro', 'fornecedores'] },
     { nome: 'Convidados', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
     { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'eventos', 'moodboard'] },
-    { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel'] }
+    { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel', 'promocoes'] }
   ];
   PL.areaDe = function (id) { return PL.AREAS.find(function (a) { return a.mods.indexOf(id) >= 0; }); };
   PL.rota = function () { var h = (location.hash || '').replace('#', '').split('/')[0]; return PL.mods[h] ? h : 'inicio'; };
