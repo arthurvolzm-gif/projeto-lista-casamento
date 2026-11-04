@@ -15,7 +15,7 @@
     { titulo: 'Cerimônia', txt: 'Civil, votos, playlist, chás e eventos e o mural de inspiração.', alvo: function () { return area('Cerimônia'); } },
     { titulo: 'Tarefas', txt: 'Gere o cronograma com os prazos calculados pela data do casamento e marque o que já foi feito.', alvo: function () { return visivel(document.querySelector('#main .abas a[data-to="tarefas"]')); } },
     { titulo: 'Avisos', txt: 'O sininho avisa quando uma tarefa ou um pagamento está perto do prazo.', alvo: function () { return visivel(document.querySelector(celular() ? '.sino-topo' : '.sino-lado')); } },
-    { titulo: 'Bônus', txt: 'Seus bônus ficam aqui: o guia do casamento econômico, o kit padrinhos, o enxoval e a lua de mel.', alvo: function () { return visivel(document.querySelector(celular() ? '#topo-bonus' : '#rodape a[data-to="bonus"]')); } },
+    { titulo: 'Bônus', txt: 'Seus bônus ficam aqui: o guia do casamento econômico, o enxoval, a lua de mel e o grupo de promoções.', alvo: function () { return visivel(document.querySelector(celular() ? '#topo-bonus' : '#rodape a[data-to="bonus"]')); } },
     { titulo: 'Perfil', txt: 'Aqui vocês mudam os dados do casamento, a moeda e a cor do planner. Pronto, agora é com vocês!', alvo: function () { return visivel(document.querySelector(celular() ? '#baixo a[data-to="perfil"]' : '#menu a[data-to="perfil"]')); } }
   ];
   var i = 0, capa, luz, balao, ativo = false;

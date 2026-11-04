@@ -628,3 +628,6 @@ html.ob-on,html.ob-on body{overflow:hidden}
 .bcard.bloq .bcard-cad{top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:58px;height:58px;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.55);box-shadow:0 8px 24px -6px rgba(0,0,0,.45)}
 .bcard.bloq .bcard-cad svg{width:26px;height:26px}
 @media (max-width:700px){.bcard.bloq .bcard-cad{top:50%;right:auto;width:42px;height:42px}.bcard.bloq .bcard-cad svg{width:19px;height:19px}}
+
+.bonus-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:700px){.bonus-grid{gap:10px}.bcard-corpo h3{font-size:15px}.bcard-corpo p{font-size:12px}.bcard-acoes .btn{font-size:12px;padding:8px 8px}.bcard>img,.bcard-topo>img,.bcard-ic,.bcard-topo>.bcard-ic{aspect-ratio:4/3}}
