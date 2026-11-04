@@ -91,7 +91,7 @@
       html += '<h2 class="pf-titulo">Seus dados</h2><section class="card pf-grupo">' +
         acao('backup', 'pasta', 'Baixar backup') +
         '<label class="pf-linha pf-acao"><span class="pf-ic">' + PL.ic('mais') + '</span><span class="pf-rot">Importar backup</span><span class="pf-seta">' + PL.ic('baixo') + '</span><input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
-        acao('exemplo', 'foto', 'Ver com dados de exemplo') + '</section>' +
+        acao('tour', 'livro', 'Ver o tour do app') + acao('exemplo', 'foto', 'Ver com dados de exemplo') + '</section>' +
         '<p class="pf-nota">' + (PL.conta ? 'Tudo fica salvo na sua conta e neste aparelho. O backup é uma garantia extra.' : 'Tudo fica salvo neste navegador, neste aparelho. Baixe o backup de vez em quando.') + '</p>';
       html += '<section class="card pf-grupo">' + (PL.conta ? acao('sair', 'user', 'Sair da conta') : '') + acao('zerar', 'lixo', 'Apagar tudo', 'pf-perigo') + '</section>';
       return '<div class="pf">' + html + '</div>';

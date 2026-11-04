@@ -513,3 +513,23 @@ html.ob-on,html.ob-on body{overflow:hidden}
 .avisos-vazio small{font-size:12.5px;color:var(--suave);line-height:1.45}
 @media (max-width:900px){.topo-movel{grid-template-columns:84px 1fr 84px!important}}
 @media print{.sino,.avisos{display:none!important}}
+
+/* mini tutorial */
+.tour-capa{position:fixed;inset:0;z-index:2200}
+.tour-luz{position:fixed;z-index:2201;border-radius:14px;box-shadow:0 0 0 9999px rgba(31,27,46,.58),0 0 0 3px rgba(255,255,255,.9);pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1)}
+.tour-balao{position:fixed;z-index:2202;background:var(--card);border-radius:16px;padding:16px 18px 14px;box-shadow:0 20px 50px -14px rgba(20,10,50,.5)}
+.tour-balao.entra{animation:tourIn .28s ease-out}
+@keyframes tourIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tour-balao::before{content:'';position:absolute;width:14px;height:14px;background:var(--card);transform:rotate(45deg);left:calc(var(--seta,50%) - 7px);display:none}
+.tour-balao[data-lado="baixo"]::before{display:block;top:-6px}
+.tour-balao[data-lado="cima"]::before{display:block;bottom:-6px}
+.tour-balao[data-lado="dir"]::before{display:block;left:-6px;top:calc(50% - 7px)}
+.tour-passo{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.tour-balao h3{font-family:var(--disp);font-size:20px;font-weight:600;color:var(--tinta);margin:4px 0 6px}
+.tour-balao p{font-size:14px;color:var(--texto);line-height:1.5}
+.tour-botoes{display:flex;align-items:center;gap:8px;margin-top:14px}
+.tour-botoes span{flex:1}
+.tour-pular{border:0;background:none;color:var(--suave);font-size:13px;font-weight:600;cursor:pointer;padding:6px 2px}
+.tour-pular:hover{color:var(--acc)}
+@media (prefers-reduced-motion:reduce){.tour-luz{transition:none}.tour-balao.entra{animation:none}}
+@media print{.tour-capa,.tour-luz,.tour-balao{display:none!important}}
