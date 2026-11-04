@@ -18,6 +18,50 @@
   function ir(rota, rotulo, cls) { return '<button type="button" class="btn ' + (cls || '') + '" data-act="ir" data-to="' + rota + '">' + e(rotulo) + '</button>'; }
   function site(url, rotulo, cls) { return '<a class="btn ' + (cls || '') + '" href="' + url + '" target="_blank" rel="noopener">' + PL.ic('link') + e(rotulo) + '</a>'; }
 
+  /* produtos extras (order bumps): aparecem bloqueados; "Liberar" mostra um resumo e leva ao checkout */
+  var CADEADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  var EXTRAS = {
+    convite: {
+      titulo: 'Convite virtual e site do casamento', img: '/convite/temas/rose/aberto.webp', alt: 'Convite digital em envelope com lacre',
+      curto: 'O convite de vocês em um link, com cara de site do casamento e confirmação de presença.',
+      resumo: 'Um convite digital para mandar pelo WhatsApp. Os convidados abrem o envelope, veem tudo sobre o casamento e confirmam a presença pelo próprio link.',
+      itens: ['10 temas com envelope e lacre', 'Fotos do casal, data, local, traje e música', 'Confirmação de presença dos convidados', 'Link pronto para enviar no WhatsApp'],
+      checkout: 'https://app.zuptos.com.br/checkout/5d5d81a311875672'
+    },
+    album: {
+      titulo: 'Álbum digital dos convidados', icone: 'foto',
+      curto: 'Os convidados mandam as fotos e os vídeos da festa pelo celular, num álbum só de vocês.',
+      resumo: 'Os convidados leem o QR Code nas mesas e enviam as fotos e os vídeos da festa direto do celular, sem baixar aplicativo. Tudo fica junto num álbum só de vocês.',
+      itens: ['QR Code e link para os convidados', 'Cards para as mesas, com 3 modelos', 'Fotos e vídeos guardados por 1 ano', 'Baixar tudo de uma vez no painel'],
+      checkout: 'https://app.zuptos.com.br/checkout/5c9410608980b13b'
+    }
+  };
+  function extra(id) {
+    var x = EXTRAS[id];
+    var topo = x.img ? '<img src="' + x.img + '" alt="' + e(x.alt) + '" loading="lazy">' : '<div class="bcard-ic">' + PL.ic(x.icone) + '</div>';
+    return '<article class="bcard bloq">' + '<div class="bcard-topo">' + topo + '<span class="bcard-cad">' + CADEADO + '</span></div>' +
+      '<div class="bcard-corpo"><span class="chip bloq-chip">' + CADEADO + 'Bloqueado</span><h3>' + e(x.titulo) + '</h3><p>' + e(x.curto) + '</p>' +
+      '<div class="bcard-acoes"><button type="button" class="btn" data-act="liberarExtra" data-extra="' + id + '">' + CADEADO + 'Liberar</button></div></div></article>';
+  }
+  PL.acoes.liberarExtra = function (d) {
+    var x = EXTRAS[d.extra]; if (!x) return;
+    var m = document.createElement('div'); m.className = 'extra-m';
+    m.innerHTML = '<div class="extra-caixa" role="dialog" aria-modal="true" aria-labelledby="extra-t">' +
+      (x.img ? '<img src="' + x.img + '" alt="">' : '<div class="extra-ic">' + PL.ic(x.icone) + '</div>') +
+      '<div class="extra-corpo"><span class="chip acc">Produto extra</span><h2 id="extra-t">' + e(x.titulo) + '</h2><p>' + e(x.resumo) + '</p>' +
+      '<ul class="lista-ok-app">' + x.itens.map(function (i) { return '<li>' + e(i) + '</li>'; }).join('') + '</ul>' +
+      '<div class="extra-botoes"><button type="button" class="btn sec" data-extra-fechar>Agora não</button><a class="btn" href="' + x.checkout + '" target="_blank" rel="noopener" data-extra-ir>Liberar agora</a></div></div></div>';
+    document.body.appendChild(m);
+    requestAnimationFrame(function () { m.classList.add('in'); });
+    function fechar() { m.classList.remove('in'); setTimeout(function () { m.remove(); }, 250); document.removeEventListener('keydown', esc); }
+    function esc(ev) { if (ev.key === 'Escape') fechar(); }
+    document.addEventListener('keydown', esc);
+    m.addEventListener('click', function (ev) {
+      if (ev.target === m || ev.target.closest('[data-extra-fechar]')) fechar();
+      else if (ev.target.closest('[data-extra-ir]')) setTimeout(fechar, 300);
+    });
+  };
+
   PL.grupo('Bônus');
 
   PL.mod('bonus', {
@@ -29,7 +73,7 @@
           cartao({ img: '/img/bonus3-foto.webp?v=2', alt: 'Caixas para convite de padrinhos', tag: 'Site + manual', titulo: 'Kit Padrinhos', texto: 'Monte a caixinha e o convite dos seus padrinhos com 30 modelos prontos e mande o arquivo para a gráfica. Inclui o manual dos padrinhos.', botoes: [site('/caixinha', 'Abrir o site dos padrinhos'), site('/convite-padrinhos', 'Criar o convite dos padrinhos', 'leve'), baixar('manual', 'Baixar o manual', 'sec')] }),
           cartao({ img: '/img/bonus1-casa.webp', alt: 'Casa nova com jardim', pos: 'center 45%', tag: 'No app', titulo: 'Enxoval da casa nova', texto: 'A lista do que comprar para cada cômodo, com quantidade, para marcar o que já tem ou já ganhou.', botoes: [ir('enxoval', 'Abrir o enxoval')] }),
           cartao({ img: '/img/bonus-luamel.webp', alt: 'Casal caminhando num píer em direção a uma praia', pos: 'center 60%', tag: 'No app', titulo: 'Lua de mel', texto: 'Destino, datas, reservas e a lista do que preparar antes de viajar, tudo em um lugar.', botoes: [ir('luamel', 'Abrir a lua de mel')] })
-        ].join('') + '</div>';
+        ].join('') + extra('convite') + extra('album') + '</div>';
     }
   });
 
