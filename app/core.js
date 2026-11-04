@@ -156,12 +156,13 @@
     var y = window.scrollY;
     var html = '<div class="print-cab">' + PL.esc(PL.casal()) + (PL.s.perfil.data ? ' · ' + PL.dataLonga(PL.s.perfil.data) : '') + ' · ' + PL.esc(PL.t(m.titulo)) + '</div>';
     var area = PL.areaDe(id);
-    if (area && area.mods.length > 1) html += '<nav class="abas no-print" aria-label="' + PL.esc(area.nome) + '">' + area.mods.map(function (mid) {
+    if (area && area.mods.length > 1) html += '<div class="abas-caixa no-print"><button type="button" class="abas-seta esq" data-act="abasRolar" data-dir="-1" aria-label="Ver abas anteriores" tabindex="-1">' + PL.ic('baixo') + '</button><nav class="abas no-print" aria-label="' + PL.esc(area.nome) + '">' + area.mods.map(function (mid) {
       var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '"' + (mid === id ? ' aria-current="page"' : '') + '>' + PL.ic(mm.icone || 'tarefa') + '<span>' + PL.esc(mm.menu || mm.titulo) + '</span></a>';
-    }).join('') + '</nav>';
+    }).join('') + '</nav><button type="button" class="abas-seta dir" data-act="abasRolar" data-dir="1" aria-label="Ver mais abas" tabindex="-1">' + PL.ic('baixo') + '</button></div>';
     main.innerHTML = html + m.render();
     if (m.depois) m.depois(main);
     var abaOn = main.querySelector('.abas a.on'); if (abaOn) { var ab = abaOn.parentNode; ab.scrollLeft = abaOn.offsetLeft - ab.offsetLeft - (ab.clientWidth - abaOn.offsetWidth) / 2; }
+    var abasNav = main.querySelector('.abas'); if (abasNav) { abasNav.addEventListener('scroll', setasAbas, { passive: true }); setasAbas(); }
     pintarMenu(id, area);
     document.title = PL.t(m.titulo) + ' · Planner CheckLove';
     pintarMini();
@@ -288,6 +289,18 @@
   PL.acoes.area = function (d) {
     menuAberto = menuAberto === d.area ? null : d.area;
     var id = PL.rota(); pintarMenu(id, PL.areaDe(id));
+  };
+  /* setas das abas: aparecem quando há abas escondidas daquele lado */
+  function setasAbas() {
+    var ab = main && main.querySelector('.abas'); if (!ab) return;
+    var cx = ab.parentNode, max = ab.scrollWidth - ab.clientWidth;
+    cx.classList.toggle('tem-esq', ab.scrollLeft > 4);
+    cx.classList.toggle('tem-dir', ab.scrollLeft < max - 4);
+  }
+  window.addEventListener('resize', setasAbas);
+  PL.acoes.abasRolar = function (d) {
+    var ab = main.querySelector('.abas'); if (!ab) return;
+    ab.scrollBy({ left: Number(d.dir) * Math.max(160, ab.clientWidth * 0.7), behavior: 'smooth' });
   };
   PL.acoes.menu = function () { document.body.classList.toggle('menu-aberto'); };
   PL.acoes.fechar = fecharMenu;

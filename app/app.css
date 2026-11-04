@@ -432,7 +432,7 @@ html.ob-on,html.ob-on body{overflow:hidden}
 @keyframes bvIn{from{opacity:0}to{opacity:1}}
 @keyframes bvLetra{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 @media (prefers-reduced-motion:reduce){.bv,.bv-1,.bv-2,.ob,.ob-corpo{animation:none}}
-@media (max-width:900px){.abas{width:auto;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}.abas a{padding:9px 14px}}
+@media (max-width:900px){.abas-caixa{width:auto}.abas{width:auto}.abas a{padding:9px 14px}}
 
 /* menu lateral no celular (3 risquinhos na barra de baixo) */
 @media (max-width:900px){
@@ -462,3 +462,17 @@ html.ob-on,html.ob-on body{overflow:hidden}
 .menu a.aberto .menu-seta{transform:rotate(180deg)}
 .menu .sub{animation:subIn .2s ease-out}
 @keyframes subIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* setas para ver as outras abas */
+.abas-caixa{position:relative;width:max-content;max-width:100%;margin-bottom:6px}
+.abas-caixa .abas{margin-bottom:0;width:auto;max-width:100%}
+.abas-seta{position:absolute;top:50%;z-index:2;width:34px;height:34px;margin-top:-17px;border-radius:50%;border:1px solid var(--linha);background:var(--card);color:var(--acc);display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px -4px rgba(60,30,120,.3);padding:0;transition:transform .15s}
+.abas-seta:hover{transform:scale(1.06);border-color:var(--acc-borda)}
+.abas-seta svg{width:18px;height:18px}
+.abas-seta.dir{right:6px}.abas-seta.dir svg{transform:rotate(-90deg)}
+.abas-seta.esq{left:6px}.abas-seta.esq svg{transform:rotate(90deg)}
+.abas-caixa.tem-dir .abas-seta.dir,.abas-caixa.tem-esq .abas-seta.esq{display:inline-flex}
+.abas-caixa::before,.abas-caixa::after{content:'';position:absolute;top:1px;bottom:1px;width:64px;pointer-events:none;z-index:1;opacity:0;transition:opacity .15s}
+.abas-caixa::before{left:1px;border-radius:15px 0 0 15px;background:linear-gradient(90deg,var(--card) 45%,transparent)}
+.abas-caixa::after{right:1px;border-radius:0 15px 15px 0;background:linear-gradient(270deg,var(--card) 45%,transparent)}
+.abas-caixa.tem-esq::before,.abas-caixa.tem-dir::after{opacity:1}
