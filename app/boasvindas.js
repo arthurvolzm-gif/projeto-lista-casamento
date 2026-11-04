@@ -9,7 +9,7 @@
 
   var passo = 0, r = {}, el = null, aberto = false;
   var PASSOS = [
-    { id: 'nomes', titulo: 'Quem vai casar?', sub: 'Os nomes aparecem no topo do planner e na contagem regressiva.' },
+    { id: 'nomes', titulo: 'Qual seu nome e do seu noivo?', sub: 'Os nomes aparecem no topo do planner e na contagem regressiva.' },
     { id: 'data', titulo: 'Quando é o grande dia?', sub: 'Com a data, o planner calcula os prazos de cada tarefa.' },
     { id: 'local', titulo: 'Onde vai ser?', sub: 'Cidade e local da cerimônia. Pode deixar em branco se ainda não decidiram.' },
     { id: 'orcamento', titulo: 'Quanto vocês querem gastar?', sub: 'Um valor aproximado já ajuda a acompanhar o que sobra.' },
