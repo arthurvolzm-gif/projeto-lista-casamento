@@ -191,8 +191,28 @@
   }
   function pintarMini() {
     var p = PL.s.perfil, d = PL.dias();
+    /* topo do celular: dias que faltam em letra cursiva; sem data, fica o logo */
+    var tc = document.getElementById('topo-centro');
+    if (tc) {
+      var frase = !p.data || d < 0 ? '' : d === 0 ? 'Hoje é o seu casamento!' : d === 1 ? 'Falta 1 dia para o seu casamento' : 'Faltam ' + d + ' dias para o seu casamento';
+      if (tc.getAttribute('data-frase') !== frase) {
+        tc.setAttribute('data-frase', frase);
+        tc.classList.toggle('cursiva', !!frase);
+        tc.innerHTML = frase ? '<span class="topo-faltam">' + PL.esc(frase) + '</span>' : '<b>Check<i>Love</i></b>';
+      }
+      ajustarFaltam();
+    }
     miniCasal.innerHTML = '<b>' + PL.esc(PL.casal()) + '</b><span>' + PL.esc(p.data ? (d > 1 ? PL.t('Faltam {n} dias', { n: d }) : d === 1 ? PL.t('Falta 1 dia') : d === 0 ? PL.t('É hoje!') : PL.dataBR(p.data)) : PL.t('Defina a data no perfil')) + '</span>';
   }
+  /* diminui a letra até a frase caber numa linha só */
+  function ajustarFaltam() {
+    var el = document.querySelector('.topo-faltam'), cx = el && el.parentNode; if (!el || !cx.clientWidth) return;
+    var t = 25; el.style.fontSize = t + 'px'; el.classList.remove('duas');
+    while (el.scrollWidth > cx.clientWidth && t > 16) { t -= 0.5; el.style.fontSize = t + 'px'; }
+    if (el.scrollWidth > cx.clientWidth) { el.style.fontSize = '19px'; el.classList.add('duas'); }
+  }
+  window.addEventListener('resize', ajustarFaltam);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarFaltam);
   PL.dias = function () {
     var p = PL.s.perfil; if (!p.data) return null;
     var alvo = new Date(p.data + 'T00:00:00'), h = new Date(); h.setHours(0, 0, 0, 0);
@@ -450,7 +470,7 @@
   /* ---------- casca ---------- */
   PL.iniciar = function () {
     document.body.innerHTML =
-      '<div class="topo-movel"><button type="button" class="ic menu-btn" data-act="menu" aria-label="Abrir o menu">' + PL.ic('menu') + '</button><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><b>Check<i>Love</i></b></a>' +
+      '<div class="topo-movel"><button type="button" class="ic menu-btn" data-act="menu" aria-label="Abrir o menu">' + PL.ic('menu') + '</button><a class="marca topo-centro" href="#inicio" data-act="ir" data-to="inicio" id="topo-centro"><b>Check<i>Love</i></b></a>' +
       '<a class="ic" id="topo-bonus" href="#bonus" data-act="ir" data-to="bonus" aria-label="Bônus">' + PL.ic('presente') + '</a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
