@@ -78,11 +78,11 @@
       if (!m.parentNode || m.classList.contains('fim')) return;
       m.classList.add('fim');
       /* no meio do sumiço, o convite para o tour já começa a surgir por cima (as duas telas se cruzam) */
-      if (PL.convidarTour && !PL.s.tourVisto) setTimeout(PL.convidarTour, 2300);
-      setTimeout(function () { m.remove(); }, 5100);
+      if (PL.convidarTour && !PL.s.tourVisto) setTimeout(PL.convidarTour, 1100);
+      setTimeout(function () { m.remove(); }, 2500);
     };
     m.addEventListener('click', some);
-    setTimeout(some, 4200);
+    setTimeout(some, 2600);
   }
 
   function abrir() {
