@@ -74,7 +74,13 @@
     m.className = 'bv'; m.setAttribute('role', 'status');
     m.innerHTML = '<div class="bv-txt"><span class="bv-1">' + e(nomes ? 'Bem-vindos, ' + nomes : 'Bem-vindos') + '</span><span class="bv-2">' + e(frase) + '</span></div>';
     document.body.appendChild(m);
-    var some = function () { if (!m.parentNode) return; m.classList.add('fim'); setTimeout(function () { m.remove(); if (PL.tour && !PL.s.tourVisto) PL.tour(); }, 5100); };
+    var some = function () {
+      if (!m.parentNode || m.classList.contains('fim')) return;
+      m.classList.add('fim');
+      /* no meio do sumiço, o convite para o tour já começa a surgir por cima (as duas telas se cruzam) */
+      if (PL.convidarTour && !PL.s.tourVisto) setTimeout(PL.convidarTour, 2300);
+      setTimeout(function () { m.remove(); }, 5100);
+    };
     m.addEventListener('click', some);
     setTimeout(some, 4200);
   }

@@ -533,3 +533,23 @@ html.ob-on,html.ob-on body{overflow:hidden}
 .tour-pular:hover{color:var(--acc)}
 @media (prefers-reduced-motion:reduce){.tour-luz{transition:none}.tour-balao.entra{animation:none}}
 @media print{.tour-capa,.tour-luz,.tour-balao{display:none!important}}
+
+/* convite para o tour */
+.tc{position:fixed;inset:0;z-index:2300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(31,27,46,0);-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0);transition:background .7s ease,backdrop-filter .7s ease,-webkit-backdrop-filter .7s ease}
+.tc.in{background:rgba(31,27,46,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.tc.out{background:rgba(31,27,46,.58);-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0);opacity:0;transition:opacity .6s ease .1s,background .4s ease}
+.tc-caixa{width:100%;max-width:400px;background:var(--card);border-radius:22px;padding:28px 26px 22px;text-align:center;box-shadow:0 30px 70px -20px rgba(30,10,70,.55);opacity:0;transform:translateY(22px) scale(.96);transition:opacity .7s cubic-bezier(.2,.8,.2,1) .1s,transform .8s cubic-bezier(.2,.9,.25,1.15) .1s}
+.tc.in .tc-caixa{opacity:1;transform:none}
+.tc.out .tc-caixa{opacity:0;transform:translateY(-10px) scale(.97);transition:opacity .45s ease,transform .5s ease}
+.tc-ic{width:64px;height:64px;margin:0 auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc-esc));box-shadow:0 10px 26px -8px var(--acc),0 0 0 8px var(--acc-sua);animation:tcFlutua 3.2s ease-in-out infinite}
+.tc-ic svg{width:30px;height:30px}
+@keyframes tcFlutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.tc h2{font-family:var(--disp);font-size:25px;font-weight:600;color:var(--tinta);line-height:1.2}
+.tc p{font-size:14.5px;color:var(--texto);line-height:1.55;margin-top:8px}
+.tc .tc-nota{font-size:13px;color:var(--suave);background:var(--bg);border-radius:12px;padding:10px 12px;margin-top:14px}
+.tc .tc-nota b{color:var(--acc-esc)}
+.tc-botoes{display:flex;gap:10px;margin-top:20px}
+.tc-botoes .btn{flex:1;justify-content:center}
+.tour-luz.suave{animation:luzIn .6s ease-out}
+@keyframes luzIn{from{box-shadow:0 0 0 9999px rgba(31,27,46,.58),0 0 0 3px rgba(255,255,255,0)}to{box-shadow:0 0 0 9999px rgba(31,27,46,.58),0 0 0 3px rgba(255,255,255,.9)}}
+@media (prefers-reduced-motion:reduce){.tc,.tc-caixa,.tc-ic{transition:none;animation:none}}
