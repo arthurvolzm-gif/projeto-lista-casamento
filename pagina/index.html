@@ -331,11 +331,6 @@ footer p+p{margin-top:6px}
       <div class="plano top" id="plano-periodo">
         <span class="selo-top">Mais escolhido</span>
         <h3 id="per-titulo">Plano Anual</h3>
-        <div class="per-data">
-          <label for="per-casamento">Quando é o seu casamento?</label>
-          <input type="month" id="per-casamento">
-          <p class="per-msg" id="per-msg" hidden></p>
-        </div>
         <div class="per-opcoes" role="radiogroup" aria-label="Tempo do plano">
           <button type="button" data-meses="3" role="radio">3 meses</button>
           <button type="button" data-meses="6" role="radio">6 meses</button>
@@ -432,17 +427,6 @@ footer p+p{margin-top:6px}
   }
   document.querySelectorAll('.per-opcoes button').forEach(function(b){
     b.addEventListener('click', function(){ per.meses = +b.getAttribute('data-meses'); pintarPer(); });
-  });
-  var inpData = document.getElementById('per-casamento'), msg = document.getElementById('per-msg');
-  var hoje = new Date(); inpData.min = hoje.getFullYear() + '-' + String(hoje.getMonth() + 1).padStart(2, '0');
-  inpData.addEventListener('change', function(){
-    if (!inpData.value) { msg.hidden = true; return; }
-    var p = inpData.value.split('-'), faltam = (+p[0] - hoje.getFullYear()) * 12 + (+p[1] - 1 - hoje.getMonth());
-    if (faltam < 0) { msg.hidden = true; return; }
-    per.meses = faltam <= 3 ? 3 : faltam <= 6 ? 6 : 12;
-    var txt = faltam === 0 ? 'O seu casamento é neste mês.' : faltam === 1 ? 'Falta 1 mês para o seu casamento.' : 'Faltam ' + faltam + ' meses para o seu casamento.';
-    msg.textContent = txt + (faltam > 12 ? ' O plano anual cobre os próximos 12 meses.' : ' O ' + { 3: 'plano de 3 meses', 6: 'plano de 6 meses', 12: 'plano anual' }[per.meses] + ' cobre até lá.');
-    msg.hidden = false; pintarPer();
   });
   pintarPer();
 })();
