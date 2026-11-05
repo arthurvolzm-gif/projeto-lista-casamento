@@ -151,7 +151,7 @@
     render: function () {
       var s = PL.s, t = totaisGastos(), orc = PL.num(s.perfil.orcamento), disp = orc - t.prev;
       var html = U.cab('Planejamento', 'Controle <i>financeiro</i>', 'Anote cada gasto com o valor total e o que já foi pago. O planner calcula o resto.',
-        [U.btn('csvGastos', 'Planilha', 'tabela'), U.btnPrint()]);
+        [U.btnPrint()]);
       html += U.kpis([
         { r: 'Orçamento', v: PL.brl(orc), s: orc ? '' : 'defina no perfil' },
         { r: 'Previsto', v: PL.brl(t.prev), s: PL.t('{n} itens', { n: s.gastos.length }), cls: 'acc' },
@@ -205,7 +205,7 @@
     render: function () {
       var f = PL.s.fornecedores, n = function (st) { return f.filter(function (x) { return x.status === st; }).length; };
       var html = U.cab('Planejamento', 'Gestão de <i>fornecedores</i>', 'Contatos, valores e o andamento de cada um. Dá para copiar a lista e mandar para quem vai coordenar o dia.',
-        [U.btn('copiarForn', 'Copiar lista', 'copiar'), U.btn('csvForn', 'Planilha', 'tabela'), U.btnPrint()]);
+        [U.btn('copiarForn', 'Copiar lista', 'copiar'), U.btnPrint()]);
       html += U.kpis([{ r: 'Fornecedores', v: f.length }, { r: 'Contratados', v: n('Contratado'), cls: 'ok' }, { r: 'Negociando', v: n('Negociando') + n('Orçamento pedido'), cls: 'alerta' }, { r: 'Pesquisando', v: n('Pesquisando') }]);
       html += '<section class="card"><h2>Adicionar fornecedor</h2>' + U.form('forn', [
         U.f('cat', 'Categoria', { opts: D.fornecedores.concat(['Celebrante', 'Convites e papelaria', 'Transporte', 'Outro']) }), U.f('nome', 'Nome', { req: true }),

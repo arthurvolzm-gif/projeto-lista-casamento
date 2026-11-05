@@ -33,7 +33,7 @@
     titulo: 'Padrinhos', icone: 'duo',
     render: function () {
       var p = PL.s.padrinhos, n = function (t) { return p.filter(function (x) { return x.tipo === t; }).length; };
-      var html = U.cab('Cerimônia', '<i>Padrinhos</i> e madrinhas', 'Casais, padrinhos individuais, daminhas e pajens, com contato, traje e convite.', [U.btn('csvPad', 'Planilha', 'tabela'), U.btnPrint()]);
+      var html = U.cab('Cerimônia', '<i>Padrinhos</i> e madrinhas', 'Casais, padrinhos individuais, daminhas e pajens, com contato, traje e convite.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Casais', v: n('Casal de padrinhos') }, { r: 'Padrinhos', v: n('Padrinho') }, { r: 'Madrinhas', v: n('Madrinha') }, { r: 'Daminhas e pajens', v: n('Daminha') + n('Pajem') }, { r: 'Convite entregue', v: p.filter(function (x) { return x.convite; }).length + '/' + p.length, cls: 'ok' }]);
       html += '<section class="card"><h2>Adicionar</h2>' + U.form('pad', [U.f('tipo', 'Tipo', { opts: TIPOS_PAD }), U.f('nome', 'Nome (ou nomes do casal)', { req: true }), U.f('lado', 'Lado', { opts: ['Noiva', 'Noivo', 'Casal'] }), U.f('contato', 'Telefone'), U.f('traje', 'Traje ou cor')]) + '</section>';
       html += '<section class="card"><h2>Lista</h2>' + (p.length ? '<div class="tabela"><table class="tb"><thead><tr><th>Tipo</th><th>Nome</th><th>Lado</th><th>Telefone</th><th>Traje ou cor</th><th>Convite</th><th></th></tr></thead><tbody>' + p.map(function (x) {

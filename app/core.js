@@ -412,12 +412,12 @@
   var U = PL.ui = {};
   U.cab = function (pre, titulo, sub, acoes) {
     return '<header class="cab"><div><div class="pre">' + PL.esc(pre) + '</div><h1>' + titulo + '</h1>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>' +
-      (acoes && acoes.length ? '<div class="acoes no-print">' + acoes.join('') + '</div>' : '') + '</header>';
+      (acoes && acoes.join('') ? '<div class="acoes no-print">' + acoes.join('') + '</div>' : '') + '</header>';
   };
   U.btn = function (act, rotulo, icone, cls, extra) {
     return '<button type="button" class="btn ' + (cls || 'sec') + '" data-act="' + act + '"' + (extra || '') + '>' + (icone ? PL.ic(icone) : '') + PL.esc(rotulo) + '</button>';
   };
-  U.btnPrint = function () { return U.btn('print', 'Exportar PDF', 'print'); };
+  U.btnPrint = function () { return ''; };   /* exportar PDF e planilha foram tirados do app */
   function attrs(p, id, f) { return ' data-p="' + PL.esc(p) + '"' + (id ? ' data-id="' + id + '"' : '') + ' data-f="' + f + '" data-k="' + PL.esc(p + '|' + (id || '') + '|' + f) + '"'; }
   U.attrs = attrs;
   U.inp = function (p, id, f, v, o) {

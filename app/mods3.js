@@ -12,7 +12,7 @@
       var c = PL.s.convidados, n = function (s) { return c.filter(function (x) { return x.status === s; }).length; };
       var filtro = PL.temp.filtroConv || 'Todos', lista = filtro === 'Todos' ? c : c.filter(function (x) { return x.status === filtro; });
       var mesas = {}; PL.s.mesas.forEach(function (m) { mesas[m.id] = m.nome; });
-      var html = U.cab('Convidados', 'Lista de <i>convidados</i>', 'Quem vai, quem ainda não respondeu e de que lado é cada um. As mesas se montam em Mapa de mesas.', [U.btn('csvConv', 'Planilha', 'tabela'), U.btnPrint()]);
+      var html = U.cab('Convidados', 'Lista de <i>convidados</i>', 'Quem vai, quem ainda não respondeu e de que lado é cada um. As mesas se montam em Mapa de mesas.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Total', v: c.length, s: n('Não vai') ? PL.t('sem contar quem não vai: {n}', { n: c.length - n('Não vai') }) : '' }, { r: 'Confirmados', v: n('Confirmado'), cls: 'ok' }, { r: 'Pendentes', v: n('Pendente'), cls: 'alerta' }, { r: 'Não vão', v: n('Não vai'), cls: n('Não vai') ? 'erro' : '' },
         { r: 'Crianças e bebês', v: c.filter(function (x) { return x.faixa !== 'Adulto'; }).length }]);
       html += '<div class="g2"><section class="card"><h2>Adicionar convidado</h2>' + U.form('conv', [U.f('nome', 'Nome', { req: true }), U.f('grupo', 'Grupo', { opts: D.gruposConvidados }), U.f('faixa', 'Idade', { opts: FX }), U.f('status', 'Presença', { opts: ST }), U.f('tel', 'Telefone')]) + '</section>' +
@@ -73,7 +73,7 @@
     titulo: 'Cortejo', icone: 'fila',
     render: function () {
       var c = PL.s.cortejo;
-      var html = U.cab('Cerimônia', 'Ordem do <i>cortejo</i>', 'Quem entra e em que ordem. Use as setas para reorganizar e exporte para a cerimonialista.', [U.btnPrint()]);
+      var html = U.cab('Cerimônia', 'Ordem do <i>cortejo</i>', 'Quem entra e em que ordem. Use as setas para reorganizar.', [U.btnPrint()]);
       html += '<section class="card"><h2>Adicionar</h2>' + U.form('cortejo', [U.f('nome', 'Nome', { req: true }), U.f('funcao', 'Função', { opts: D.funcoesCortejo }), U.f('contato', 'Telefone')]) + '</section>';
       html += '<section class="card"><h2>Ordem de entrada <small>' + c.length + ' pessoas</small></h2>' + (c.length ? '<div class="tabela"><table class="tb"><thead><tr><th>#</th><th>Nome</th><th>Função</th><th>Telefone</th><th></th></tr></thead><tbody>' + c.map(function (x, i) {
         return '<tr><td style="width:40px;font-weight:700;color:var(--acc)">' + (i + 1) + '</td><td style="min-width:170px">' + U.inp('cortejo', x.id, 'nome', x.nome, { r: 0, aria: 'Nome' }) + '</td><td style="min-width:150px">' + U.sel('cortejo', x.id, 'funcao', x.funcao, D.funcoesCortejo, 'Função') + '</td>' +
