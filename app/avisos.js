@@ -34,6 +34,12 @@
       else if (d <= 14) r.push({ id: 'rsvp-' + prazo + '-' + semResp, tipo: 'alerta', ic: 'grupo', ir: 'convidados', titulo: 'Prazo de confirmação ' + quando(d), sub: plural(semResp, 'convidado ainda não respondeu', 'convidados ainda não responderam') + '.' });
     }
 
+    /* produtos extras: a partir do 3º dia depois do primeiro acesso (até o 30º) */
+    var desde = s.inicioEm ? -dif(s.inicioEm) : 0;
+    if (desde >= 3 && desde <= 30) {
+      r.push({ id: 'extra-convite', tipo: 'acc', ic: 'carta', ir: 'bonus', extra: 'convite', titulo: 'Seu convite virtual está esperando', sub: 'Mande o convite pelo WhatsApp e receba as confirmações de presença num lugar só. Toque para ver.' });
+      r.push({ id: 'extra-album', tipo: 'acc', ic: 'foto', ir: 'bonus', extra: 'album', titulo: 'As fotos da festa num álbum só', sub: 'Os convidados enviam fotos e vídeos pelo QR Code nas mesas. Toque para ver.' });
+    }
     var p = s.perfil;
     if (!p.data) r.push({ id: 'sem-data', tipo: 'info', ic: 'user', ir: 'perfil', titulo: 'Coloque a data do casamento', sub: 'Com ela aparecem a contagem regressiva e os prazos das tarefas.' });
     else {
@@ -61,7 +67,7 @@
     var lista = PL.avisos();
     painel.innerHTML = '<div class="avisos-cab"><b>Avisos</b><button type="button" class="ic" data-avisos="fechar" aria-label="Fechar">' + PL.ic('mais') + '</button></div>' +
       (lista.length ? '<ul>' + lista.map(function (a) {
-        return '<li><button type="button" class="aviso-item ' + a.tipo + '" data-avisos-ir="' + a.ir + '"><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></button></li>';
+        return '<li><button type="button" class="aviso-item ' + a.tipo + '" data-avisos-ir="' + a.ir + '"' + (a.extra ? ' data-avisos-extra="' + a.extra + '"' : '') + '><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></button></li>';
       }).join('') + '</ul>' : '<div class="avisos-vazio"><span>' + SINO + '</span><b>Tudo em dia por aqui</b><small>Quando houver tarefa ou pagamento perto do prazo, o aviso aparece aqui.</small></div>');
   }
   function posicionar(b) {
@@ -87,7 +93,7 @@
     if (b) { ev.preventDefault(); if (painel) fechar(); else abrir(b); return; }
     if (!painel) return;
     var ir = ev.target.closest('[data-avisos-ir]');
-    if (ir) { fechar(); document.body.classList.remove('menu-aberto'); PL.ir(ir.getAttribute('data-avisos-ir')); return; }
+    if (ir) { var ex = ir.getAttribute('data-avisos-extra'); fechar(); document.body.classList.remove('menu-aberto'); PL.ir(ir.getAttribute('data-avisos-ir')); if (ex && PL.acoes.liberarExtra) setTimeout(function () { PL.acoes.liberarExtra({ extra: ex }); }, 350); return; }
     if (ev.target.closest('[data-avisos="fechar"]') || !painel.contains(ev.target)) fechar();
   });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fechar(); });
@@ -98,6 +104,7 @@
   var iniciarOriginal = PL.iniciar;
   PL.iniciar = function () {
     iniciarOriginal.apply(this, arguments);
+    if (PL.s && !PL.s.inicioEm) { PL.s.inicioEm = PL.hoje(); PL.salvar(true); }
     var bonus = document.getElementById('topo-bonus');
     if (bonus) { var dir = document.createElement('span'); dir.className = 'topo-dir'; bonus.parentNode.insertBefore(dir, bonus); dir.insertAdjacentHTML('beforeend', botao('sino-topo')); dir.appendChild(bonus); }
     var marca = document.querySelector('.lado .marca');
