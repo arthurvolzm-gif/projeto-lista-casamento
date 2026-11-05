@@ -399,28 +399,12 @@ footer p+p{margin-top:6px}
 
 <footer><div class="wrap"><p>CheckLove · Planner do casamento · App no navegador</p><p>Este site não faz parte do Facebook nem do Google e não é endossado por eles.</p></div></footer>
 
-<!-- pop-up -->
-<div class="pop" id="pop" role="dialog" aria-modal="true">
-  <div class="pop-box">
-    <button class="pop-x" data-fechar aria-label="Fechar">✕</button>
-    <span class="tag">Espere!</span>
-    <h3>No plano anual sai por <mark>R$ 9,90/mês</mark></h3>
-    <ul>
-      <li>O mesmo app completo, com todos os bônus</li>
-      <li>Planner compartilhado com o noivo ou a cerimonialista</li>
-      <li>Economia de 67% em relação ao mensal</li>
-    </ul>
-    <p class="valor">12 meses por<b>R$ 118,80</b>o mesmo que R$ 9,90 por mês</p>
-    <a class="btn pulsa" href="#" data-checkout="anual-pop">Sim, quero o plano anual</a>
-    <button class="nao" data-checkout="mensal-final">Não, quero o mensal por R$ 29,90/mês</button>
-  </div>
-</div>
 <div class="aviso" id="aviso">Link de checkout ainda não configurado.</div>
 <script>
 (function(){
   var O = window.OFERTA;
   /* checkout com UTMs */
-  var pop = document.getElementById('pop'), aviso = document.getElementById('aviso');
+  var aviso = document.getElementById('aviso');
   function ir(url, valor){
     if (!url) { aviso.style.display = 'block'; setTimeout(function(){ aviso.style.display = 'none'; }, 2500); return; }
     px('InitiateCheckout', { value: valor, currency: 'BRL' });
@@ -431,9 +415,7 @@ footer p+p{margin-top:6px}
     el.addEventListener('click', function(e){
       e.preventDefault(); var t = el.getAttribute('data-checkout');
       if (t === 'periodo') { var m = per.meses; ir(O['CHECKOUT_' + m + 'M'], +(O.PERIODOS[m] * m).toFixed(2)); }
-      else if (t === 'mensal') { pop.classList.add('on'); px('ViewContent', { content_name: 'popup_anual' }); }
-      else if (t === 'anual-pop') ir(O.CHECKOUT_12M, +(O.PERIODOS[12] * 12).toFixed(2));
-      else if (t === 'mensal-final') ir(O.CHECKOUT_MENSAL, O.PRECO_MENSAL);
+      else if (t === 'mensal') ir(O.CHECKOUT_MENSAL, O.PRECO_MENSAL);
     });
   });
   /* plano por período: 3, 6 ou 12 meses, sugerido pela data do casamento */
@@ -463,8 +445,6 @@ footer p+p{margin-top:6px}
     msg.hidden = false; pintarPer();
   });
   pintarPer();
-  pop.addEventListener('click', function(e){ if (e.target === pop || e.target.hasAttribute('data-fechar')) pop.classList.remove('on'); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') pop.classList.remove('on'); });
 })();
 </script>
 <script>
