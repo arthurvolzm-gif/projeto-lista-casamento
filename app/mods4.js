@@ -26,17 +26,34 @@
       curto: 'O convite de vocês em um link, com cara de site do casamento e confirmação de presença.',
       resumo: 'Um convite digital para mandar pelo WhatsApp. Os convidados abrem o envelope, veem tudo sobre o casamento e confirmam a presença pelo próprio link.',
       itens: ['10 temas com envelope e lacre', 'Fotos do casal, data, local, traje e música', 'Confirmação de presença dos convidados', 'Link pronto para enviar no WhatsApp'],
-      checkout: 'https://app.zuptos.com.br/checkout/5d5d81a311875672'
+      checkout: 'https://app.zuptos.com.br/checkout/5d5d81a311875672',
+      abrir: '/convite/editor', abrirRotulo: 'Criar meu convite', liberado: 'Monte o convite, escolha o tema e mande o link para os convidados.'
     },
     album: {
       titulo: 'Álbum digital dos convidados', icone: 'foto',
       curto: 'Os convidados mandam as fotos e os vídeos da festa pelo celular, num álbum só de vocês.',
       resumo: 'Os convidados leem o QR Code nas mesas e enviam as fotos e os vídeos da festa direto do celular, sem baixar aplicativo. Tudo fica junto num álbum só de vocês.',
       itens: ['QR Code e link para os convidados', 'Cards para as mesas, com 3 modelos', 'Fotos e vídeos guardados por 1 ano', 'Baixar tudo de uma vez no painel'],
-      checkout: 'https://app.zuptos.com.br/checkout/5c9410608980b13b'
+      checkout: 'https://app.zuptos.com.br/checkout/5c9410608980b13b',
+      abrir: '/album/painel', abrirRotulo: 'Abrir meu álbum', liberado: 'Pegue o QR Code e os cards das mesas para os convidados mandarem as fotos.'
     }
   };
+  PL.EXTRAS = EXTRAS;
+  PL.temExtra = function (id) { return !!(PL.acessos && PL.acessos[id]); };
+  function extraLiberado(id) {
+    var x = EXTRAS[id];
+    var topo = x.img ? '<img src="' + x.img + '" alt="' + e(x.alt) + '" loading="lazy">' : '<div class="bcard-ic">' + PL.ic(x.icone) + '</div>';
+    return '<article class="bcard">' + '<div class="bcard-topo">' + topo + '</div>' +
+      '<div class="bcard-corpo"><span class="chip ok">Liberado</span><h3>' + e(x.titulo) + '</h3><p>' + e(x.liberado) + '</p>' +
+      '<div class="bcard-acoes"><a class="btn" href="' + x.abrir + '" target="_blank" rel="noopener" data-extra-abrir="' + id + '">' + PL.ic('link') + e(x.abrirRotulo) + '</a></div></div></article>';
+  }
+  /* marca que a pessoa já abriu o produto (para o aviso do sininho sair) */
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest('[data-extra-abrir]'); if (!a || !PL.s) return;
+    PL.s.extrasAbertos = PL.s.extrasAbertos || {}; PL.s.extrasAbertos[a.getAttribute('data-extra-abrir')] = true; PL.salvar();
+  });
   function extra(id) {
+    if (PL.temExtra(id)) return extraLiberado(id);
     var x = EXTRAS[id];
     var topo = x.img ? '<img src="' + x.img + '" alt="' + e(x.alt) + '" loading="lazy">' : '<div class="bcard-ic">' + PL.ic(x.icone) + '</div>';
     return '<article class="bcard bloq">' + '<div class="bcard-topo">' + topo + '<span class="bcard-cad">' + CADEADO + '</span></div>' +

@@ -92,6 +92,61 @@
     if (meu && meu.dados && meu.dados.perfil && PL.temDados(PL.normalizar(meu.dados))) return meu;
     return outro || meu || null;
   }
+  /* ---------- acesso: só entra quem comprou (compras vindas do webhook da Zuptos) ---------- */
+  var LOJA = 'https://meuchecklove.vercel.app/', tAcesso = null;
+  async function buscarAcessos() {
+    var cache = 'checklove_acesso_' + usuario.id;
+    var r = await sb.rpc('meus_acessos');
+    if (r.error) {
+      /* função ainda não criada no Supabase: o app segue liberado até rodar o app/acessos.sql */
+      if (/PGRST202|42883|could not find the function/i.test((r.error.code || '') + ' ' + (r.error.message || ''))) return { livre: true, lista: [] };
+      try { var c = JSON.parse(localStorage.getItem(cache) || 'null'); if (c) return { lista: c, offline: true }; } catch (x) {}
+      throw r.error;
+    }
+    var lista = (r.data || []).map(function (x) { return typeof x === 'string' ? x : (x && (x.meus_acessos || Object.values(x)[0])) || ''; });
+    try { localStorage.setItem(cache, JSON.stringify(lista)); } catch (x) {}
+    return { lista: lista };
+  }
+  function telaPendente(email, erro) {
+    clearTimeout(tAcesso);
+    document.body.innerHTML = '<main class="entrada"><div class="entrada-card acesso-pend">' +
+      '<div class="marca"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></div>' +
+      '<div class="acesso-ic"><span></span></div>' +
+      '<h1>Estamos confirmando sua compra</h1>' +
+      '<p class="nota">Ainda não encontramos uma compra aprovada para <b>' + e(email) + '</b>.</p>' +
+      '<ul class="acesso-dicas"><li>Se você acabou de pagar, a liberação costuma levar alguns minutos. Pix e cartão são mais rápidos; boleto pode levar até 3 dias úteis.</li>' +
+      '<li>Entre com o <b>mesmo e-mail</b> que você usou na compra.</li></ul>' +
+      (erro ? '<div class="aviso erro" role="alert">' + e(erro) + '</div>' : '') +
+      '<button type="button" class="btn" data-acesso="verificar">Verificar de novo</button>' +
+      '<button type="button" class="btn sec" data-acesso="sair">Entrar com outro e-mail</button>' +
+      '<p class="nota acesso-loja">Ainda não comprou? <a href="' + LOJA + '">Conheça o CheckLove</a></p></div></main>';
+    /* confere sozinho de tempos em tempos enquanto a pessoa espera */
+    tAcesso = setTimeout(function () { verificarDeNovo(true); }, 20000);
+  }
+  async function verificarDeNovo(silencioso) {
+    var s = await sb.auth.getSession(); var sessao = s.data.session;
+    if (!sessao) { tela('entrar'); return; }
+    var b = document.querySelector('[data-acesso="verificar"]'); if (b && !silencioso) { b.disabled = true; b.textContent = 'Verificando...'; }
+    usuario = null; abrindo = false; iniciado = false;
+    abrir(sessao);
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-acesso]'); if (!b) return;
+    if (b.getAttribute('data-acesso') === 'verificar') verificarDeNovo(false);
+    else { clearTimeout(tAcesso); sb.auth.signOut().then(function () { location.hash = ''; location.reload(); }); }
+  });
+  /* mensagem de login aprovado: aparece uma vez por conta */
+  function avisoAprovado() {
+    if (PL.s.acessoAprovado) return;
+    PL.s.acessoAprovado = new Date().toISOString(); PL.salvar();
+    var m = document.createElement('div'); m.className = 'aprovado'; m.setAttribute('role', 'status');
+    m.innerHTML = '<span class="aprovado-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>' +
+      '<span><b>Login aprovado!</b><small>Sua compra foi confirmada e o seu planner está liberado.</small></span>';
+    document.body.appendChild(m);
+    requestAnimationFrame(function () { m.classList.add('in'); });
+    setTimeout(function () { m.classList.remove('in'); setTimeout(function () { m.remove(); }, 500); }, 5000);
+  }
+
   async function abrir(sessao, msg) {
     if (!sessao) { tela('entrar'); return; }
     if (abrindo || (iniciado && usuario && usuario.id === sessao.user.id)) return;
@@ -102,6 +157,12 @@
     donoId = usuario.id;
     PL.usarChave(ANTIGA + '_' + usuario.id);
     document.body.innerHTML = '<main class="entrada"><div class="entrada-card"><p class="nota">Carregando seu planner...</p></div></main>';
+    var acesso;
+    try { acesso = await buscarAcessos(); }
+    catch (x) { abrindo = false; usuario = null; telaPendente(email, 'Não deu para confirmar a compra agora. Confira a internet e toque em "Verificar de novo".'); return; }
+    if (!acesso.livre && acesso.lista.indexOf('planner') < 0) { abrindo = false; usuario = null; telaPendente(email); return; }
+    clearTimeout(tAcesso);
+    PL.acessos = { livre: !!acesso.livre, convite: acesso.lista.indexOf('convite') >= 0, album: acesso.lista.indexOf('album') >= 0 };
     try {
       var linha = await escolherLinha();
       if (linha && linha.dados && linha.dados.perfil) {
@@ -125,6 +186,7 @@
     if (/access_token|type=/.test(location.hash)) history.replaceState(null, '', location.pathname + '#inicio');
     abrindo = false;
     PL.iniciar();
+    if (!PL.acessos.livre) avisoAprovado();
     if (msg) PL.toast(msg);
     subirFotosAntigas();
   }

@@ -36,10 +36,18 @@
 
     /* produtos extras: a partir do 3º dia depois do primeiro acesso (até o 30º) */
     var desde = s.inicioEm ? -dif(s.inicioEm) : 0;
-    if (desde >= 3 && desde <= 30) {
-      r.push({ id: 'extra-convite', tipo: 'acc', ic: 'carta', ir: 'bonus', extra: 'convite', titulo: 'Seu convite virtual está esperando', sub: 'Mande o convite pelo WhatsApp e receba as confirmações de presença num lugar só. Toque para ver.' });
-      r.push({ id: 'extra-album', tipo: 'acc', ic: 'foto', ir: 'bonus', extra: 'album', titulo: 'As fotos da festa num álbum só', sub: 'Os convidados enviam fotos e vídeos pelo QR Code nas mesas. Toque para ver.' });
-    }
+    var EX = PL.EXTRAS || {}, abertos = s.extrasAbertos || {};
+    ['convite', 'album'].forEach(function (id) {
+      var x = EX[id]; if (!x) return;
+      if (PL.temExtra && PL.temExtra(id)) {
+        /* comprou: avisa que está liberado até a pessoa abrir o produto pela primeira vez */
+        if (!abertos[id]) r.push({ id: 'liberado-' + id, tipo: 'ok', ic: id === 'convite' ? 'carta' : 'foto', url: x.abrir, extraAbrir: id, titulo: id === 'convite' ? 'Seu convite virtual foi liberado' : 'Seu álbum digital foi liberado', sub: x.liberado + ' Toque para começar.' });
+      } else if (desde >= 3 && desde <= 30) {
+        r.push(id === 'convite'
+          ? { id: 'extra-convite', tipo: 'acc', ic: 'carta', ir: 'bonus', extra: 'convite', titulo: 'Seu convite virtual está esperando', sub: 'Mande o convite pelo WhatsApp e receba as confirmações de presença num lugar só. Toque para ver.' }
+          : { id: 'extra-album', tipo: 'acc', ic: 'foto', ir: 'bonus', extra: 'album', titulo: 'As fotos da festa num álbum só', sub: 'Os convidados enviam fotos e vídeos pelo QR Code nas mesas. Toque para ver.' });
+      }
+    });
     var p = s.perfil;
     if (!p.data) r.push({ id: 'sem-data', tipo: 'info', ic: 'user', ir: 'perfil', titulo: 'Coloque a data do casamento', sub: 'Com ela aparecem a contagem regressiva e os prazos das tarefas.' });
     else {
@@ -67,6 +75,7 @@
     var lista = PL.avisos();
     painel.innerHTML = '<div class="avisos-cab"><b>Avisos</b><button type="button" class="ic" data-avisos="fechar" aria-label="Fechar">' + PL.ic('mais') + '</button></div>' +
       (lista.length ? '<ul>' + lista.map(function (a) {
+        if (a.url) return '<li><a class="aviso-item ' + a.tipo + '" href="' + a.url + '" target="_blank" rel="noopener" data-extra-abrir="' + a.extraAbrir + '"><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></a></li>';
         return '<li><button type="button" class="aviso-item ' + a.tipo + '" data-avisos-ir="' + a.ir + '"' + (a.extra ? ' data-avisos-extra="' + a.extra + '"' : '') + '><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></button></li>';
       }).join('') + '</ul>' : '<div class="avisos-vazio"><span>' + SINO + '</span><b>Tudo em dia por aqui</b><small>Quando houver tarefa ou pagamento perto do prazo, o aviso aparece aqui.</small></div>');
   }
