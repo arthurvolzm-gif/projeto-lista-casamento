@@ -13,10 +13,12 @@
    ========================================================= */
 window.OFERTA = {
   PIXEL_ID: '1753350862393212',   // ID do Pixel do Meta (vazio = desligado)
-  CHECKOUT_BASICO: '',            // Plano Básico do app · R$ 19,90 (cole o link do checkout)
-  CHECKOUT_PRO: '',               // Plano Pro do app · R$ 29,90 (cole o link do checkout)
-  CHECKOUT_UPGRADE: '',           // Pop-up · Plano Pro por R$ 24,90 (cole o link do checkout)
-  PRECO_BASICO: 19.9, PRECO_PRO: 29.9, PRECO_UPGRADE: 24.9
+  CHECKOUT_MENSAL: '',            // Plano mensal · R$ 29,90 por mês (assinatura)
+  CHECKOUT_3M: '',                // Plano 3 meses · R$ 19,90/mês = R$ 59,70
+  CHECKOUT_6M: '',                // Plano 6 meses · R$ 14,90/mês = R$ 89,40
+  CHECKOUT_12M: '',               // Plano anual · R$ 9,90/mês = R$ 118,80
+  PRECO_MENSAL: 29.9,
+  PERIODOS: { 3: 19.9, 6: 14.9, 12: 9.9 }
 };
 </script>
 <script>
@@ -152,6 +154,19 @@ header a.mini{white-space:nowrap;font-size:13px;font-weight:600;color:var(--tint
 .plano .preco b{display:block;font-size:46px;font-weight:800;color:var(--tinta);line-height:1.1}
 .plano .preco span{font-size:13.5px;color:var(--suave)}
 .plano .preco span.parc{color:var(--roxo-esc);font-weight:600}
+.per-data{margin-top:16px;background:var(--roxo-sua,#f3edfd);border-radius:14px;padding:12px 14px}
+.per-data label{display:block;font-size:13.5px;font-weight:600;color:var(--tinta)}
+.per-data input{width:100%;margin-top:6px;padding:11px 12px;border:1px solid var(--linha);border-radius:10px;font:500 15px 'Poppins',sans-serif;color:var(--tinta);background:#fff}
+.per-msg{font-size:13.5px;color:var(--roxo-esc);font-weight:600;margin-top:8px}
+.per-opcoes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px;background:#f1f0f5;border-radius:12px;padding:4px}
+.per-opcoes button{border:0;background:none;padding:10px 4px;border-radius:9px;font:600 14px 'Poppins',sans-serif;color:var(--suave);cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+.per-opcoes button.on{background:#fff;color:var(--roxo-esc);box-shadow:0 4px 12px -6px rgba(60,30,120,.45)}
+.plano .preco b .per-rs{font-size:22px;vertical-align:14px;font-weight:700}
+.plano .preco b .per-sufixo{font-size:18px;font-weight:600;color:var(--suave)}
+.per-eco{display:inline-block;margin-top:8px;font-size:12.5px!important;font-weight:700;color:var(--verde)!important;background:var(--verde-sua);border-radius:999px;padding:3px 10px}
+#per-total{display:block}
+.plano .preco b #per-mes{font-size:inherit;color:inherit;font-weight:inherit}
+.per-eco{line-height:1.4}
 .btn{display:block;width:100%;margin-top:18px;padding:16px;border:0;border-radius:12px;background:var(--roxo);color:#fff;font:700 17px 'Poppins',sans-serif;text-align:center;text-decoration:none;cursor:pointer;box-shadow:0 10px 22px -10px rgba(122,63,214,.8)}
 .btn:active{transform:translateY(2px)}
 .btn.claro{background:#fff;color:var(--roxo-esc);border:2px solid var(--roxo-borda);box-shadow:none;font-size:15.5px}
@@ -304,44 +319,55 @@ footer p+p{margin-top:6px}
         <p>Monte o convite e a caixinha dos seus padrinhos, em um site simples com 30 modelos prontos. Inclui o manual dos padrinhos, para entregar a eles com tudo o que precisam saber.</p>
       </div>
     </div>
-    <p class="nota-bonus">Os bônus estão incluídos apenas no Plano Pro.</p>
+    <p class="nota-bonus">Os bônus estão incluídos nos dois planos.</p>
   </div>
 </section>
 
 <section id="planos">
   <div class="wrap">
     <h2>Escolha o seu <em>plano</em></h2>
-    <p class="sub">Pagamento único. Você recebe o acesso no e-mail logo após a compra.</p>
+    <p class="sub">Você recebe o acesso no e-mail logo após a compra.</p>
     <div class="planos">
-      <div class="plano top">
+      <div class="plano top" id="plano-periodo">
         <span class="selo-top">Mais escolhido</span>
-        <h3>Plano Pro</h3>
-        <p class="desc">O app completo + 2 bônus</p>
+        <h3 id="per-titulo">Plano Anual</h3>
+        <p class="desc">Pague menos por mês escolhendo o tempo até o casamento</p>
+        <div class="per-data">
+          <label for="per-casamento">Quando é o seu casamento?</label>
+          <input type="month" id="per-casamento">
+          <p class="per-msg" id="per-msg" hidden></p>
+        </div>
+        <div class="per-opcoes" role="radiogroup" aria-label="Tempo do plano">
+          <button type="button" data-meses="3" role="radio">3 meses</button>
+          <button type="button" data-meses="6" role="radio">6 meses</button>
+          <button type="button" data-meses="12" role="radio" class="on">12 meses</button>
+        </div>
+        <div class="preco"><small>por apenas</small><b><span class="per-rs">R$</span> <span id="per-mes">9,90</span><span class="per-sufixo">/mês</span></b>
+          <span id="per-total">Total de R$ 118,80 por 12 meses</span><span class="per-eco" id="per-eco">Economia de 67% em relação ao mensal</span></div>
         <p class="rec">O que você recebe:</p>
         <ul>
           <li>Planner CheckLove, o app do casamento</li>
           <li>Financeiro, fornecedores, convidados, mesas e tarefas</li>
           <li>Planner compartilhado com o noivo ou a cerimonialista</li>
           <li>Guia do Casamento Econômico <span class="gratis">BÔNUS</span></li>
-          <li>Kit Padrinhos: convite e caixinha personalizados <span class="gratis">BÔNUS</span></li>
+          <li>Enxoval da casa nova e lua de mel <span class="gratis">BÔNUS</span></li>
         </ul>
-        <div class="preco"><small>por apenas</small><b>R$ 29,90</b><span>pagamento único</span></div>
-        <a class="btn pulsa" href="#" data-checkout="pro">Quero o Plano Pro</a>
+        <a class="btn pulsa" href="#" data-checkout="periodo" id="per-btn">Quero o Plano Anual</a>
         <div class="selos"><span>Compra segura</span><span>*</span><span>Acesso imediato</span><span>*</span><span>7 dias de garantia</span></div>
       </div>
       <div class="plano">
-        <h3>Plano Básico</h3>
-        <p class="desc">Só o app</p>
+        <h3>Plano Mensal</h3>
+        <p class="desc">Para quem prefere pagar mês a mês</p>
+        <div class="preco"><small>por apenas</small><b><span class="per-rs">R$</span> 29,90<span class="per-sufixo">/mês</span></b><span>cobrança mensal</span></div>
         <p class="rec">O que você recebe:</p>
         <ul>
           <li>Planner CheckLove, o app do casamento</li>
           <li>Financeiro, fornecedores, convidados, mesas e tarefas</li>
           <li>Planner compartilhado com o noivo ou a cerimonialista</li>
-          <li class="x">Guia do Casamento Econômico</li>
-          <li class="x">Kit Padrinhos</li>
+          <li>Guia do Casamento Econômico <span class="gratis">BÔNUS</span></li>
+          <li>Enxoval da casa nova e lua de mel <span class="gratis">BÔNUS</span></li>
         </ul>
-        <div class="preco"><small>por apenas</small><b>R$ 19,90</b><span>pagamento único</span></div>
-        <a class="btn claro" href="#" data-checkout="basico">Quero o Plano Básico</a>
+        <a class="btn claro" href="#" data-checkout="mensal">Quero o Plano Mensal</a>
       </div>
     </div>
   </div>
@@ -382,7 +408,7 @@ footer p+p{margin-top:6px}
       <details><summary>O noivo pode usar junto?</summary><p>Pode. No perfil, você coloca o e-mail do noivo, da noiva ou da cerimonialista, e a pessoa passa a ver e editar o mesmo planner com a conta dela.</p></details>
       <details><summary>Dá para imprimir?</summary><p>Dá. Cada tela tem o botão "Exportar PDF", e as listas de gastos, fornecedores e convidados também saem em planilha.</p></details>
       <details><summary>Serve para mini wedding ou só casamento no civil?</summary><p>Serve. Vocês usam só as partes que fazem sentido para o casamento de vocês, e o app tem uma área só para o civil.</p></details>
-      <details><summary>Qual a diferença entre os planos?</summary><p>O Plano Básico tem o app completo. O Plano Pro tem o app completo e os 2 bônus: Guia do Casamento Econômico e Kit Padrinhos.</p></details>
+      <details><summary>Qual a diferença entre os planos?</summary><p>Os dois têm o app completo e os bônus. No mensal você paga R$ 29,90 todo mês. No plano por período você paga de uma vez pelo tempo que escolher (3, 6 ou 12 meses) e o mês sai mais barato: R$ 19,90, R$ 14,90 ou R$ 9,90.</p></details>
       <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia. É só pedir e devolvemos 100% do valor.</p></details>
     </div>
     <a class="btn" href="#planos" style="margin-top:22px">Quero meu app agora</a>
@@ -396,15 +422,15 @@ footer p+p{margin-top:6px}
   <div class="pop-box">
     <button class="pop-x" data-fechar aria-label="Fechar">✕</button>
     <span class="tag">Espere!</span>
-    <h3>Leve o Plano Pro por só <mark>R$ 5 a mais</mark></h3>
+    <h3>No plano anual sai por <mark>R$ 9,90/mês</mark></h3>
     <ul>
-      <li>Planner CheckLove, o app do casamento</li>
-      <li>Bônus 1: Guia do Casamento Econômico</li>
-      <li>Bônus 2: Kit Padrinhos (convite e caixinha personalizados)</li>
+      <li>O mesmo app completo, com todos os bônus</li>
+      <li>Planner compartilhado com o noivo ou a cerimonialista</li>
+      <li>Economia de 67% em relação ao mensal</li>
     </ul>
-    <p class="valor">Tudo isso por<b>R$ 24,90</b>pagamento único</p>
-    <a class="btn pulsa" href="#" data-checkout="upgrade">Sim, quero o Plano Pro</a>
-    <button class="nao" data-checkout="basico-final">Não, quero só o app por R$ 19,90</button>
+    <p class="valor">12 meses por<b>R$ 118,80</b>o mesmo que R$ 9,90 por mês</p>
+    <a class="btn pulsa" href="#" data-checkout="anual-pop">Sim, quero o plano anual</a>
+    <button class="nao" data-checkout="mensal-final">Não, quero o mensal por R$ 29,90/mês</button>
   </div>
 </div>
 <div class="aviso" id="aviso">Link de checkout ainda não configurado.</div>
@@ -422,12 +448,39 @@ footer p+p{margin-top:6px}
   document.querySelectorAll('[data-checkout]').forEach(function(el){
     el.addEventListener('click', function(e){
       e.preventDefault(); var t = el.getAttribute('data-checkout');
-      if (t === 'pro') ir(O.CHECKOUT_PRO, O.PRECO_PRO);
-      else if (t === 'basico') { pop.classList.add('on'); px('ViewContent', { content_name: 'popup_upgrade' }); }
-      else if (t === 'upgrade') ir(O.CHECKOUT_UPGRADE, O.PRECO_UPGRADE);
-      else if (t === 'basico-final') ir(O.CHECKOUT_BASICO, O.PRECO_BASICO);
+      if (t === 'periodo') { var m = per.meses; ir(O['CHECKOUT_' + m + 'M'], +(O.PERIODOS[m] * m).toFixed(2)); }
+      else if (t === 'mensal') { pop.classList.add('on'); px('ViewContent', { content_name: 'popup_anual' }); }
+      else if (t === 'anual-pop') ir(O.CHECKOUT_12M, +(O.PERIODOS[12] * 12).toFixed(2));
+      else if (t === 'mensal-final') ir(O.CHECKOUT_MENSAL, O.PRECO_MENSAL);
     });
   });
+  /* plano por período: 3, 6 ou 12 meses, sugerido pela data do casamento */
+  var per = { meses: 12 }, NOMES = { 3: 'Plano 3 meses', 6: 'Plano 6 meses', 12: 'Plano Anual' };
+  function rs(v){ return v.toFixed(2).replace('.', ','); }
+  function pintarPer(){
+    var m = per.meses, pm = O.PERIODOS[m], tot = pm * m;
+    document.querySelectorAll('.per-opcoes button').forEach(function(b){ var on = +b.getAttribute('data-meses') === m; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+    document.getElementById('per-titulo').textContent = NOMES[m];
+    document.getElementById('per-mes').textContent = rs(pm);
+    document.getElementById('per-total').textContent = 'Total de R$ ' + rs(tot) + ' por ' + m + ' meses';
+    document.getElementById('per-eco').textContent = 'Economia de ' + Math.round((1 - pm / O.PRECO_MENSAL) * 100) + '% em relação ao mensal';
+    document.getElementById('per-btn').textContent = 'Quero o ' + NOMES[m];
+  }
+  document.querySelectorAll('.per-opcoes button').forEach(function(b){
+    b.addEventListener('click', function(){ per.meses = +b.getAttribute('data-meses'); pintarPer(); });
+  });
+  var inpData = document.getElementById('per-casamento'), msg = document.getElementById('per-msg');
+  var hoje = new Date(); inpData.min = hoje.getFullYear() + '-' + String(hoje.getMonth() + 1).padStart(2, '0');
+  inpData.addEventListener('change', function(){
+    if (!inpData.value) { msg.hidden = true; return; }
+    var p = inpData.value.split('-'), faltam = (+p[0] - hoje.getFullYear()) * 12 + (+p[1] - 1 - hoje.getMonth());
+    if (faltam < 0) { msg.hidden = true; return; }
+    per.meses = faltam <= 3 ? 3 : faltam <= 6 ? 6 : 12;
+    var txt = faltam === 0 ? 'O seu casamento é neste mês.' : faltam === 1 ? 'Falta 1 mês para o seu casamento.' : 'Faltam ' + faltam + ' meses para o seu casamento.';
+    msg.textContent = txt + (faltam > 12 ? ' O plano anual cobre os próximos 12 meses.' : ' O ' + { 3: 'plano de 3 meses', 6: 'plano de 6 meses', 12: 'plano anual' }[per.meses] + ' cobre até lá.');
+    msg.hidden = false; pintarPer();
+  });
+  pintarPer();
   pop.addEventListener('click', function(e){ if (e.target === pop || e.target.hasAttribute('data-fechar')) pop.classList.remove('on'); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') pop.classList.remove('on'); });
 })();
