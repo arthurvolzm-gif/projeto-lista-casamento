@@ -30,7 +30,7 @@
       abrir: '/convite/editor', abrirRotulo: 'Criar meu convite', liberado: 'Monte o convite, escolha o tema e mande o link para os convidados.'
     },
     album: {
-      titulo: 'Álbum digital dos convidados', icone: 'foto', img: '/img/bonus-album.webp', alt: 'Álbum de fotos de casamento com QR Code numa mesa decorada',
+      titulo: 'Álbum digital dos convidados', icone: 'foto', img: '/img/bonus-album.webp?v=2', alt: 'Álbum de fotos de casamento com QR Code numa mesa decorada',
       curto: 'Os convidados enviam as fotos e os vídeos da festa pelo QR Code nas mesas, sem baixar aplicativo.',
       resumo: 'Os convidados leem o QR Code nas mesas e enviam as fotos e os vídeos da festa direto do celular, sem baixar aplicativo. Tudo fica junto num álbum só de vocês.',
       itens: ['QR Code e link para os convidados', 'Cards para as mesas, com 3 modelos', 'Fotos e vídeos guardados por 1 ano', 'Baixar tudo de uma vez no painel'],
