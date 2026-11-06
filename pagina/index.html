@@ -293,7 +293,7 @@ header{position:sticky;top:0;z-index:40}
 .passos3 .k{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--roxo)}
 .passos3 h3{font-size:clamp(20px,4.6vw,27px);font-weight:800;margin-top:4px}
 .passos3 p{font-size:14.5px;color:var(--suave);margin-top:4px}
-.c3 .fone{margin:0;flex:none;width:min(320px,60vw,calc((100svh - 110px) * .49))}
+.c3 .fone{margin:0;flex:none;width:min(320px,60vw,calc((100svh - 170px) * .49))}
 .c3 .fone img{opacity:0;transition:opacity .45s}
 .c3 .fone img.on{opacity:1}
 @media (max-width:760px){
@@ -307,7 +307,7 @@ header{position:sticky;top:0;z-index:40}
   .passos3 li{position:absolute;inset:0;transform:translateY(8px)}
   .passos3 li.on{transform:none}
   .passos3 li:not(.on){opacity:0}
-  .c3 .fone{width:min(290px,66vw,calc((100svh - 220px) * .49))}
+  .c3 .fone{width:min(290px,66vw,calc((100svh - 270px) * .49))}
   .emo.m-esconde{display:none}
 }
 /* celular realista: a moldura já vem na imagem */
@@ -336,6 +336,15 @@ body{background:#f8f7fc}
 #planos{padding-top:30px}
 #planos+section{padding-top:0}
 section[style*="padding-top:0"]{padding-bottom:34px}
+/* barra de passos (cena 3) */
+.c3{flex-direction:column;gap:18px}
+.passos-bar{display:flex;align-items:center;justify-content:center;width:100%;max-width:420px;margin:0 auto}
+.pb-bola{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--roxo-esc);background:#fff;border:2px solid var(--roxo-borda);transition:background .35s,color .35s,border-color .35s,transform .35s}
+.pb-bola.on{background:var(--roxo);border-color:var(--roxo);color:#fff;transform:scale(1.08);box-shadow:0 6px 14px -6px rgba(122,63,214,.8)}
+.pb-linha{flex:1;height:4px;margin:0 6px;border-radius:99px;background:var(--roxo-borda);overflow:hidden}
+.pb-linha i{display:block;height:100%;width:0;background:var(--roxo);border-radius:99px}
+@media (max-width:760px){.c3{gap:10px;justify-content:flex-start;padding-top:76px}.passos-bar{max-width:330px}.pb-bola{width:26px;height:26px;font-size:12px}}
+.sem-anim .passos-bar{display:none}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -381,16 +390,19 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 </section>
 
 <section class="cena c3" id="cena3">
+  <div class="passos-bar" aria-hidden="true"><span class="pb-bola" data-b="0">1</span><span class="pb-linha" data-b="0"><i></i></span><span class="pb-bola" data-b="1">2</span><span class="pb-linha" data-b="1"><i></i></span><span class="pb-bola" data-b="2">3</span><span class="pb-linha" data-b="2"><i></i></span><span class="pb-bola" data-b="3">4</span><span class="pb-linha" data-b="3"><i></i></span></div>
   <div class="c3-grid">
     <ul class="passos3">
       <li data-p="0"><span class="k">Finanças</span><h3>Controle cada gasto</h3><p>O valor de cada coisa, o que já foi pago e quanto ainda sobra do orçamento.</p></li>
       <li data-p="1"><span class="k">Convidados</span><h3>Controle os convidados</h3><p>Quem confirmou, quem falta responder e de que lado é cada um.</p></li>
       <li data-p="2"><span class="k">Tarefas</span><h3>Não perca nenhum prazo</h3><p>Um toque e o app monta o cronograma pela data do casamento.</p></li>
+      <li data-p="3"><span class="k">Cerimônia</span><h3>Cuide de cada detalhe da cerimônia</h3><p>Civil, votos, playlist, chás e o mural de inspiração, tudo na mesma aba.</p></li>
     </ul>
     <div class="fone" id="fone3">
       <img data-p="0" src="/img/pagina/fone-financeiro.webp" alt="Tela do financeiro" loading="lazy" width="560" height="1146">
       <img data-p="1" src="/img/pagina/fone-convidados.webp" alt="Tela da lista de convidados" loading="lazy" width="560" height="1146">
       <img data-p="2" src="/img/pagina/fone-tarefas.webp" alt="Tela das tarefas por mês" loading="lazy" width="560" height="1146">
+      <img data-p="3" src="/img/pagina/fone-cerimonia.webp" alt="Tela da playlist na aba Cerimônia" loading="lazy" width="560" height="1146">
     </div>
   </div>
 </section>
@@ -538,6 +550,8 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 window.addEventListener('DOMContentLoaded', function () {
   var calma = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var p3 = document.querySelectorAll('.passos3 li'), t3 = document.querySelectorAll('#fone3 img'), r2 = document.querySelectorAll('.rotulos li');
+  var pbB = document.querySelectorAll('.pb-bola'), pbL = document.querySelectorAll('.pb-linha i');
+  function barra(prog) { var t = prog * 4; pbB.forEach(function (b, k) { b.classList.toggle('on', t >= k); }); pbL.forEach(function (l, k) { l.style.width = Math.max(0, Math.min(1, t - k)) * 100 + '%'; }); }
   function passo(n) { p3.forEach(function (x) { x.classList.toggle('on', +x.dataset.p === n); }); t3.forEach(function (x) { x.classList.toggle('on', +x.dataset.p === n); }); }
   passo(0);
   if (calma || !window.gsap || !window.ScrollTrigger) { document.body.classList.add('sem-anim'); r2.forEach(function (x) { x.classList.add('on'); }); return; }
@@ -628,8 +642,9 @@ window.addEventListener('DOMContentLoaded', function () {
   tl2.to('.pilha', { x: 0, y: 0, ease: 'power2.in', duration: .45 }, '<');
 
   /* cena 3: a tela do celular troca a cada passo */
-  ScrollTrigger.create({ trigger: '#cena3', start: 'top top', end: '+=140%', pin: true, scrub: true,
-    onUpdate: function (st) { passo(Math.min(2, Math.floor(st.progress * 3))); } });
+  ScrollTrigger.create({ trigger: '#cena3', start: 'top top', end: '+=190%', pin: true, scrub: true,
+    onUpdate: function (st) { passo(Math.min(3, Math.floor(st.progress * 4))); barra(st.progress); } });
+  barra(0);
   gsap.fromTo('#fone3', { y: 120, opacity: 0, scale: .55, rotateY: 22 }, { y: 0, opacity: 1, scale: 1, rotateY: 0, ease: 'none',
     scrollTrigger: { trigger: '#cena3', start: 'top 100%', end: 'top 25%', scrub: 1 } });
   gsap.fromTo('.passos3', { opacity: 0, x: cel ? 0 : -40, y: cel ? 30 : 0 }, { opacity: 1, x: 0, y: 0, ease: 'none',
