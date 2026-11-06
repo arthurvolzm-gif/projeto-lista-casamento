@@ -276,6 +276,7 @@ header{position:sticky;top:0;z-index:40}
 .pilha-in{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-34deg)}
 .camada{position:absolute;left:0;right:0;top:50%;margin:0 auto;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 30px 40px -24px rgba(40,10,90,.55);background:#fff;transform:translate3d(0,-50%,0);will-change:transform}
 .camada img{width:100%;display:block}
+.pilha-in .camada{transform-origin:50% 50%}
 .rotulos{list-style:none;display:flex;flex-direction:column;gap:12px;text-align:left;max-width:300px}
 .rotulos li{display:flex;gap:10px;align-items:flex-start;opacity:.25;transition:opacity .3s}
 .rotulos li.on{opacity:1}
@@ -525,10 +526,29 @@ window.addEventListener('DOMContentLoaded', function () {
 
   /* cena 2: o app se abre em camadas, com o nome de cada parte */
   var gap = cel ? 30 : 50, cams = gsap.utils.toArray('.camada');
-  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=140%', scrub: .6, pin: true,
-    onUpdate: function (st) { var k = Math.min(3, Math.floor(st.progress * 4.2)); r2.forEach(function (li) { li.classList.toggle('on', 3 - +li.dataset.r <= k); }); } } });
+  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=230%', scrub: .6, pin: true, invalidateOnRefresh: true,
+    onUpdate: function (st) { var k = Math.min(3, Math.floor(st.progress * 7)); r2.forEach(function (li) { li.classList.toggle('on', 3 - +li.dataset.r <= k); }); } } });
   tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .82 : .9, ease: 'none', duration: .7 }, .25);
   cams.forEach(function (c) { var i = +c.dataset.i; tl2.to(c, { z: (i - 1.5) * gap * 2, y: '-50%', ease: 'none', duration: .7 }, .25); });
+  /* final: as camadas se separam e ficam deitadas na tela, 2 por linha, dando para ler cada uma */
+  var ordem = { 3: 0, 2: 1, 1: 2, 0: 3 };   /* contagem, financeiro, convidados, tarefas */
+  function grade(c) {
+    var W = c.offsetWidth, larg = Math.min(innerWidth - 24, cel ? 560 : 560), cel1 = larg / 2 - 6, k = cel1 / W;
+    var pos = ordem[+c.dataset.i], col = pos % 2, lin = pos > 1 ? 1 : 0;
+    var alt = cams.map(function (x) { return x.offsetHeight * k; }), l0 = Math.max(alt[3], alt[2]), l1 = Math.max(alt[1], alt[0]);
+    var y = lin ? (l0 + 12 + l1 / 2) - (l0 + l1 + 12) / 2 : l0 / 2 - (l0 + l1 + 12) / 2;
+    return { k: k, x: (col ? 1 : -1) * (cel1 / 2 + 6), y: y };
+  }
+  /* no computador a grade vai para o centro e a lista de nomes sai */
+  function centro() { var a = document.querySelector('.pilha-area').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (a.left + a.width / 2) - (p.left + p.width / 2); }
+  if (!cel) tl2.to('.rotulos', { opacity: 0, x: 40, ease: 'power2.inOut', duration: .4 }, 1.0);
+  tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : centro(); }, y: cel ? 0 : 20, ease: 'power2.inOut', duration: .55 }, 1.05)
+     .to('.pilha-in', { rotateX: 0, rotateZ: 0, ease: 'power2.inOut', duration: .55 }, 1.05);
+  cams.forEach(function (c) {
+    tl2.to(c, { z: 0, scale: function () { return grade(c).k; }, x: function () { return grade(c).x; }, y: function () { return grade(c).y; }, yPercent: -50,
+      boxShadow: '0 14px 28px -16px rgba(40,10,90,.45)', ease: 'power2.inOut', duration: .55 }, 1.05);
+  });
+  tl2.to({}, { duration: .45 });
 
   /* cena 3: a tela do celular troca a cada passo */
   ScrollTrigger.create({ trigger: '#cena3', start: 'top top', end: '+=200%', pin: true, scrub: true,
