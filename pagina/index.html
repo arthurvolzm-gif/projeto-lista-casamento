@@ -306,6 +306,9 @@ header{position:sticky;top:0;z-index:40}
   .c3 .fone{width:min(220px,52vw,calc((100svh - 260px) * .46))}
   .emo.m-esconde{display:none}
 }
+/* celular realista: a moldura já vem na imagem */
+.fone{aspect-ratio:560/1146;border:0;border-radius:0;background:none;overflow:visible;box-shadow:none;filter:drop-shadow(0 34px 34px rgba(40,10,90,.32)) drop-shadow(0 6px 10px rgba(40,10,90,.12))}
+.fone img{object-fit:contain;object-position:center}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -327,7 +330,7 @@ header{position:sticky;top:0;z-index:40}
     <p class="lead">Orçamento, fornecedores, convidados, mesas e tarefas com prazo, salvos na sua conta.</p>
     <a class="c1-cta" href="#planos">Quero meu app agora</a>
   </div>
-  <div class="fone" id="fone1"><img src="/img/pagina/tela-inicio.webp" alt="Tela inicial do app com a contagem regressiva, o orçamento e as tarefas" width="540" height="1169" fetchpriority="high"></div>
+  <div class="fone" id="fone1"><img src="/img/pagina/fone-inicio.webp" alt="Tela inicial do app com a contagem regressiva, o orçamento e as tarefas" width="560" height="1146" fetchpriority="high"></div>
   <div class="c1-frase" id="frase1"><p><span>Orçamento, convidados, tarefas e fornecedores.</span>Tudo do casamento <em>num lugar só.</em></p></div>
 </section>
 
@@ -358,9 +361,9 @@ header{position:sticky;top:0;z-index:40}
       <li data-p="2"><span class="k">Tarefas</span><h3>Não perca nenhum prazo</h3><p>Um toque e o app monta o cronograma pela data do casamento.</p></li>
     </ul>
     <div class="fone" id="fone3">
-      <img data-p="0" src="/img/pagina/tela-financeiro.webp" alt="Tela do financeiro" loading="lazy" width="540" height="1169">
-      <img data-p="1" src="/img/pagina/tela-mesas.webp" alt="Tela do mapa de mesas" loading="lazy" width="540" height="1169">
-      <img data-p="2" src="/img/pagina/tela-tarefas.webp" alt="Tela das tarefas por mês" loading="lazy" width="540" height="1169">
+      <img data-p="0" src="/img/pagina/fone-financeiro.webp" alt="Tela do financeiro" loading="lazy" width="560" height="1146">
+      <img data-p="1" src="/img/pagina/fone-mesas.webp" alt="Tela do mapa de mesas" loading="lazy" width="560" height="1146">
+      <img data-p="2" src="/img/pagina/fone-tarefas.webp" alt="Tela das tarefas por mês" loading="lazy" width="560" height="1146">
     </div>
   </div>
 </section>
