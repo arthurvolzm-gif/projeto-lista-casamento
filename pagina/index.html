@@ -426,6 +426,7 @@ section[style*="padding-top:0"]{padding-bottom:34px}
   <div class="wrap">
     <span class="bonus-pill">Bônus exclusivos</span>
     <h2>Bônus Exclusivos Para Quem Garantir <em id="bonus-dias">nos Dias de Hoje</em></h2>
+    <p class="sub">Além do aplicativo completo, você leva 3 bônus para economizar e deixar cada detalhe mais especial.</p>
     <div class="bonus-lista">
       <div class="bn-item"><div class="bn-img"><img src="/img/bonus-calendario.webp?v=2" alt="" width="240" height="240" loading="lazy"></div>
         <div><span class="bn-n">Bônus 1</span><h3>Cronograma de tarefas para o casamento</h3><p>O que fazer a cada mês, personalizado com base nos dias que faltam para o seu casamento.</p></div></div>
@@ -667,7 +668,7 @@ window.addEventListener('DOMContentLoaded', function () {
   /* ligação 3 → planos: o celular sobe e some enquanto os planos aparecem */
   gsap.to('#cena3 .c3-grid', { opacity: 0, y: -80, scale: .94, ease: 'none',
     scrollTrigger: { trigger: '#depoimentos', start: 'top 95%', end: 'top 35%', scrub: 1 } });
-  gsap.utils.toArray('.depos h2, .depos-lista img, .bonus-app .bonus-pill, .bonus-app h2, .bn-item, #planos h2, #planos .sub, .plano').forEach(function (el, i) {
+  gsap.utils.toArray('.depos h2, .depos-lista img, .bonus-app .bonus-pill, .bonus-app h2, .bonus-app .sub, .bn-item, #planos h2, #planos .sub, .plano').forEach(function (el, i) {
     gsap.fromTo(el, { opacity: 0, y: 60, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
       scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 70%', scrub: 1 } });
   });
