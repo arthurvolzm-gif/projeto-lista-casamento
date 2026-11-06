@@ -734,3 +734,12 @@ a.aviso-item{text-decoration:none}
 .vip .bcard{margin-bottom:14px}
 @media (max-width:380px){.vip-itens li{flex-direction:column;text-align:center;gap:4px}}
 #main:has(.vip) .abas-caixa{display:none}
+/* card do grupo: fundo branco e botão verde do WhatsApp */
+.vip-grupo{background:#fff;color:var(--tinta);border:1px solid var(--linha);box-shadow:0 22px 46px -26px rgba(90,47,176,.45)}
+.vip-grupo::after{background:radial-gradient(45% 30% at 85% 8%,rgba(226,189,108,.14),transparent 70%),radial-gradient(40% 30% at 10% 92%,rgba(122,69,216,.08),transparent 70%)}
+.vip-grupo h2{color:#2a1650}
+.vip-grupo h2 i{color:var(--acc)}
+.vip-grupo>p{color:var(--suave)}
+.vip-ilustra{filter:drop-shadow(0 14px 16px rgba(90,47,176,.22))}
+.vip-btn{background:#25D366;color:#fff;box-shadow:0 12px 24px -12px rgba(37,211,102,.75)}
+.vip-btn:hover{background:#1ebe5b}
