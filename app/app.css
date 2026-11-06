@@ -697,7 +697,7 @@ a.aviso-item{text-decoration:none}
 .vip-selo::before,.vip-selo::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#e6c47c)}
 .vip-selo::after{background:linear-gradient(270deg,transparent,#e6c47c)}
 .vip-selo span{background:linear-gradient(180deg,#f6dc98,#e2bd6c);color:#4a2c0c;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;border-radius:999px;box-shadow:0 4px 12px -4px rgba(120,80,10,.5)}
-.vip-ilustra{display:block;width:min(100%,360px);margin:8px auto 0;-webkit-mask-image:radial-gradient(70% 72% at 50% 50%,#000 60%,transparent 100%);mask-image:radial-gradient(70% 72% at 50% 50%,#000 60%,transparent 100%)}
+.vip-ilustra{display:block;width:min(100%,380px);margin:10px auto 0;filter:drop-shadow(0 14px 18px rgba(30,10,70,.35))}
 .vip-grupo h2{font-family:var(--disp);font-size:clamp(25px,7vw,32px);font-weight:600;font-style:italic;line-height:1.12;color:#fff;margin-top:4px}
 .vip-grupo h2 i{display:block}
 .vip-grupo>p{font-size:14.5px;line-height:1.45;color:rgba(255,255,255,.92);margin:10px auto 0;max-width:420px}
