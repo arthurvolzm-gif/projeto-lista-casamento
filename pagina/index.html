@@ -277,8 +277,6 @@ header{position:sticky;top:0;z-index:40}
 .camada{position:absolute;left:0;right:0;top:50%;margin:0 auto;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 30px 40px -24px rgba(40,10,90,.55);background:#fff;transform:translate3d(0,-50%,0);will-change:transform}
 .camada img{width:100%;display:block}
 .pilha-in .camada{transform-origin:50% 50%}
-.cam-nome{position:absolute;left:8px;top:8px;z-index:2;opacity:0;background:rgba(122,63,214,.92);color:#fff;font-size:20px;font-weight:700;padding:4px 12px;border-radius:999px;box-shadow:0 6px 14px -6px rgba(60,20,120,.6)}
-.sem-anim .cam-nome{opacity:1}
 .rotulos{list-style:none;display:flex;flex-direction:column;gap:9px;overflow:hidden;text-align:left;max-width:300px}
 .rotulos li{display:flex;gap:10px;align-items:flex-start;opacity:.25;transition:opacity .3s}
 .rotulos li.on{opacity:1}
@@ -379,10 +377,10 @@ section[style*="padding-top:0"]{padding-bottom:34px}
   <p class="sub">Cada parte do casamento numa camada do app.</p>
   <div class="pilha-area">
     <div class="pilha"><div class="pilha-in">
-      <div class="camada" data-i="0" data-o="3"><span class="cam-nome">Mural de inspiração</span><img src="/img/pagina/camada-mural.webp" alt="Mural com fotos de inspiração" loading="lazy" width="460" height="369"></div>
-      <div class="camada" data-i="1" data-o="2"><span class="cam-nome">Mapa de mesas</span><img src="/img/pagina/camada-mesas.webp" alt="Mapa de mesas com convidados" loading="lazy" width="460" height="333"></div>
-      <div class="camada" data-i="2" data-o="1"><span class="cam-nome">Fornecedores</span><img src="/img/pagina/camada-fornecedores.webp" alt="Lista de fornecedores" loading="lazy" width="460" height="349"></div>
-      <div class="camada" data-i="3" data-o="0"><span class="cam-nome">Contagem regressiva</span><img src="/img/pagina/camada-contagem.webp?v=2" alt="Contagem regressiva do casamento" loading="lazy" width="460" height="323"></div>
+      <div class="camada" data-i="0" data-o="3"><img src="/img/pagina/camada-mural.webp" alt="Mural com fotos de inspiração" loading="lazy" width="460" height="369"></div>
+      <div class="camada" data-i="1" data-o="2"><img src="/img/pagina/camada-mesas.webp" alt="Mapa de mesas com convidados" loading="lazy" width="460" height="333"></div>
+      <div class="camada" data-i="2" data-o="1"><img src="/img/pagina/camada-fornecedores.webp" alt="Lista de fornecedores" loading="lazy" width="460" height="349"></div>
+      <div class="camada" data-i="3" data-o="0"><img src="/img/pagina/camada-contagem.webp?v=2" alt="Contagem regressiva do casamento" loading="lazy" width="460" height="323"></div>
     </div></div>
     <ul class="rotulos">
       <li data-o="0"><i></i><span><b>Contagem regressiva</b><small>Quanto falta para o grande dia</small></span></li>
@@ -644,8 +642,16 @@ window.addEventListener('DOMContentLoaded', function () {
   }
   /* no computador a grade vai para o centro e a lista de nomes sai */
   function centro() { var a = document.querySelector('.pilha-area').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (a.left + a.width / 2) - (p.left + p.width / 2); }
-  tl2.to('.rotulos', { opacity: 0, x: cel ? 0 : 40, ease: 'power2.inOut', duration: .4 }, 1.0).to('.cam-nome', { opacity: 1, ease: 'none', duration: .3 }, 1.4);
-  tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : centro(); }, y: function () { return espaco().dy; }, ease: 'power2.inOut', duration: .55 }, 1.05)
+  /* no celular a lista de nomes sai para a grade caber; no computador ela fica à direita */
+  if (cel) tl2.to('.rotulos', { opacity: 0, ease: 'power2.inOut', duration: .4 }, 1.0);
+  else tl2.add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, 1.0);
+  /* no computador a grade fica à esquerda da lista, sem cobrir os nomes */
+  function aEsquerda() {
+    var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect();
+    var larg = Math.min(innerWidth - 24, 560);
+    return (r.left - 36 - larg / 2) - (p.left + p.width / 2);
+  }
+  tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : aEsquerda(); }, y: function () { if (cel) return espaco().dy; var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (r.top + r.height / 2) - (p.top + p.height / 2); }, ease: 'power2.inOut', duration: .55 }, 1.05)
      .to('.pilha-in', { rotateX: 0, rotateZ: 0, ease: 'power2.inOut', duration: .55 }, 1.05);
   cams.forEach(function (c) {
     tl2.to(c, { z: 0, scale: function () { return grade(c).k; }, x: function () { return grade(c).x; }, y: function () { return grade(c).y; }, yPercent: -50,
