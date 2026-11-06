@@ -555,7 +555,7 @@ window.addEventListener('DOMContentLoaded', function () {
   ScrollTrigger.config({ ignoreMobileResize: true });
 
   /* cena 1: os objetos se afastam, o app gira e some, e a frase aparece */
-  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=85%' : '+=100%', scrub: 1, pin: true } });
+  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=85%' : '+=100%', scrub: 1, pin: true, invalidateOnRefresh: true } });
   tl1.to('.c1-txt', { y: -50, opacity: 0, filter: 'blur(8px)', ease: 'none', duration: .45 }, 0)
      .to('#fone1', { rotateX: 16, rotateY: -14, scale: .82, y: -30, ease: 'none', duration: .55 }, 0)
      .to('#fone1', { opacity: 0, y: -90, scale: .7, filter: 'blur(6px)', ease: 'none', duration: .35 }, .5);
@@ -569,7 +569,13 @@ window.addEventListener('DOMContentLoaded', function () {
   gsap.set(voa, { opacity: 0, scale: .55 });
   voa.forEach(function (c, i) {
     var lado = i % 2 ? 1 : -1, baixo = i > 1 ? 1 : 0;
-    tl1.to(c, { opacity: 1, scale: cel ? 1.3 : 1.55, xPercent: lado * (cel ? 88 : 118) + lado * baixo * 12, yPercent: baixo ? 40 : -50, rotation: lado * (baixo ? 6 : -5), ease: 'power1.out', duration: .3 }, i * .025);
+    var esc = cel ? 1.18 : 1.55;
+    /* no celular os cards encostam nas laterais da tela, sem cortar */
+    var xCel = function () {
+      var f = document.getElementById('fone1').getBoundingClientRect(), L = f.left + c.offsetLeft, w = c.offsetWidth, m = 8;
+      return lado < 0 ? m - L + (esc - 1) * w / 2 : innerWidth - m - (L + w) - (esc - 1) * w / 2;
+    };
+    tl1.to(c, { opacity: 1, scale: esc, x: cel ? xCel : 0, xPercent: cel ? 0 : lado * 118 + lado * baixo * 12, yPercent: baixo ? (cel ? 20 : 40) : (cel ? -30 : -50), rotation: lado * (baixo ? 4 : -3), ease: 'power1.out', duration: .3 }, i * .025);
   });
   tl1.to(voa, { opacity: 0, y: -40, ease: 'none', duration: .2 }, .55);
   tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .4 }, .55);
