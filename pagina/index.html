@@ -315,6 +315,9 @@ header{position:sticky;top:0;z-index:40}
 .fone img{object-fit:contain;object-position:center}
 .kpi-voa{position:absolute;width:42.5%;z-index:3;will-change:transform}
 .kpi-voa img{width:100%;height:auto;position:static;border-radius:10px;box-shadow:0 18px 30px -14px rgba(40,10,90,.45)}
+.c2,.c3{background:#f8f7fc}
+.c1{background:radial-gradient(120% 80% at 50% 0%,#f6efff 0%,#f8f7fc 70%)}
+body{background:#f8f7fc}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -496,6 +499,7 @@ header{position:sticky;top:0;z-index:40}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script>
 /* Cenas animadas pela rolagem. Sem GSAP ou com "reduzir movimento", a página fica parada e completa. */
 window.addEventListener('DOMContentLoaded', function () {
@@ -506,9 +510,19 @@ window.addEventListener('DOMContentLoaded', function () {
   if (calma || !window.gsap || !window.ScrollTrigger) { document.body.classList.add('sem-anim'); r2.forEach(function (x) { x.classList.add('on'); }); return; }
   gsap.registerPlugin(ScrollTrigger);
   var cel = innerWidth < 760;
+  /* rolagem suave (Lenis) ligada ao GSAP: o movimento fica contínuo entre as cenas */
+  if (window.Lenis) {
+    var lenis = new Lenis({ duration: 1.15, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) { var alvo = document.querySelector(a.getAttribute('href')); if (!alvo) return; e.preventDefault(); lenis.scrollTo(alvo, { offset: -70, duration: 1.6 }); });
+    });
+  }
+  ScrollTrigger.config({ ignoreMobileResize: true });
 
   /* cena 1: os objetos se afastam, o app gira e some, e a frase aparece */
-  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=110%' : '+=130%', scrub: .6, pin: true } });
+  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=120%' : '+=140%', scrub: 1, pin: true } });
   tl1.to('.c1-txt', { y: -50, opacity: 0, filter: 'blur(8px)', ease: 'none', duration: .45 }, 0)
      .to('#fone1', { rotateX: 16, rotateY: -14, scale: .82, y: -30, ease: 'none', duration: .55 }, 0)
      .to('#fone1', { opacity: 0, y: -90, scale: .7, filter: 'blur(6px)', ease: 'none', duration: .35 }, .5);
@@ -527,9 +541,17 @@ window.addEventListener('DOMContentLoaded', function () {
   tl1.to(voa, { opacity: 0, y: -40, ease: 'none', duration: .2 }, .55);
   tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .4 }, .55);
 
+  /* ligação 1 → 2: a frase cresce e se desfaz enquanto o título da cena 2 entra saindo do desfoque */
+  tl1.to('#frase1', { opacity: 0, scale: 1.12, filter: 'blur(12px)', ease: 'none', duration: .25 }, 1.0);
+  tl1.to('.c1 .emo', { opacity: 0, scale: .6, ease: 'none', duration: .25 }, 1.0);
+  gsap.fromTo('#cena2 h2, #cena2 .sub', { opacity: 0, y: 40, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none', stagger: .08,
+    scrollTrigger: { trigger: '#cena2', start: 'top 85%', end: 'top 15%', scrub: 1 } });
+  gsap.fromTo('.pilha', { opacity: 0, y: 70, scale: .85 }, { opacity: 1, y: 0, scale: 1, ease: 'none',
+    scrollTrigger: { trigger: '#cena2', start: 'top 70%', end: 'top top', scrub: 1 } });
+
   /* cena 2: o app se abre em camadas, com o nome de cada parte */
   var gap = cel ? 16 : 26, cams = gsap.utils.toArray('.camada'), NC = cams.length;
-  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=230%', scrub: .6, pin: true, invalidateOnRefresh: true,
+  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=230%', scrub: 1, pin: true, invalidateOnRefresh: true,
     onUpdate: function (st) { var k = Math.floor(st.progress * 3.6 * NC); r2.forEach(function (li) { li.classList.toggle('on', +li.dataset.o <= k); }); } } });
   tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .82 : .9, ease: 'none', duration: .7 }, .25);
   cams.forEach(function (c) { var i = +c.dataset.i; tl2.to(c, { z: (i - (NC - 1) / 2) * gap * 2, y: '-50%', ease: 'none', duration: .7 }, .25); });
@@ -560,12 +582,26 @@ window.addEventListener('DOMContentLoaded', function () {
     tl2.to(c, { z: 0, scale: function () { return grade(c).k; }, x: function () { return grade(c).x; }, y: function () { return grade(c).y; }, yPercent: -50,
       boxShadow: '0 14px 28px -16px rgba(40,10,90,.45)', ease: 'power2.inOut', duration: .55 }, 1.05);
   });
-  tl2.to({}, { duration: .45 });
+  tl2.to({}, { duration: .3 });
+  /* ligação 2 → 3: a grade se junta no centro e encolhe, virando o celular da próxima cena */
+  tl2.to(cams, { x: 0, y: 0, scale: .25, opacity: 0, rotation: function (i) { return (i % 2 ? 6 : -6); }, ease: 'power2.in', duration: .45 }, '>')
+     .to('#cena2 h2, #cena2 .sub', { opacity: 0, y: -30, filter: 'blur(8px)', ease: 'none', duration: .35 }, '<');
+  tl2.to('.pilha', { x: 0, y: 0, ease: 'power2.in', duration: .45 }, '<');
 
   /* cena 3: a tela do celular troca a cada passo */
   ScrollTrigger.create({ trigger: '#cena3', start: 'top top', end: '+=200%', pin: true, scrub: true,
     onUpdate: function (st) { passo(Math.min(2, Math.floor(st.progress * 3))); } });
-  gsap.from('#fone3', { y: 60, opacity: 0, rotateY: 18, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '#cena3', start: 'top 80%' } });
+  gsap.fromTo('#fone3', { y: 120, opacity: 0, scale: .55, rotateY: 22 }, { y: 0, opacity: 1, scale: 1, rotateY: 0, ease: 'none',
+    scrollTrigger: { trigger: '#cena3', start: 'top 90%', end: 'top top', scrub: 1 } });
+  gsap.fromTo('.passos3', { opacity: 0, x: cel ? 0 : -40, y: cel ? 30 : 0 }, { opacity: 1, x: 0, y: 0, ease: 'none',
+    scrollTrigger: { trigger: '#cena3', start: 'top 60%', end: 'top top', scrub: 1 } });
+  /* ligação 3 → planos: o celular sobe e some enquanto os planos aparecem */
+  gsap.to('#cena3 .c3-grid', { opacity: 0, y: -80, scale: .94, ease: 'none',
+    scrollTrigger: { trigger: '#planos', start: 'top 95%', end: 'top 35%', scrub: 1 } });
+  gsap.utils.toArray('#planos h2, #planos .sub, .plano').forEach(function (el, i) {
+    gsap.fromTo(el, { opacity: 0, y: 60, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 70%', scrub: 1 } });
+  });
 });
 </script>
 </body>
