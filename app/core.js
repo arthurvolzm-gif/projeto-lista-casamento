@@ -472,10 +472,13 @@
     if (!itens.length) html = U.vazio('Nenhum item ainda.');
     return html + '<form class="add-linha" data-form="chk" data-k="chk-' + PL.esc(p) + '"><input type="hidden" name="p" value="' + PL.esc(p) + '"><input name="t" placeholder="' + PL.esc(ph || 'Adicionar item') + '" aria-label="Novo item"><button class="btn leve" type="submit">' + PL.ic('mais') + 'Adicionar</button></form>';
   };
+  /* foto de fundo do cartão da contagem: a do casal (perfil.fotoCapa) ou a padrão */
+  U.heroFoto = function () { var f = PL.s.perfil.fotoCapa; return f ? ' style="--hero-foto:url(\'' + PL.esc(f).replace(/'/g, '%27') + '\')"' : ''; };
+  U.heroBtn = function () { return '<label class="hero-foto-btn" title="Trocar a foto do cartão" aria-label="Trocar a foto do cartão">' + PL.ic('foto') + '<input type="file" accept="image/*" data-arquivo="capa" hidden></label>'; };
   U.contagem = function () {
     var p = PL.s.perfil;
-    if (!p.data) return '<section class="hero"><div class="pre">Contagem regressiva</div><h2>' + PL.esc(PL.casal()) + '</h2><p>Coloque a data do casamento no seu perfil para ver quanto tempo falta.</p><div style="margin-top:16px"><button type="button" class="btn leve" data-act="ir" data-to="perfil">Preencher o perfil</button></div></section>';
-    return '<section class="hero"><div class="pre">Contagem regressiva</div><h2>' + PL.esc(PL.casal()) + '</h2><p>' + PL.dataLonga(p.data) + (p.hora ? ' · ' + p.hora : '') + (p.local ? ' · ' + PL.esc(p.local) : '') + '</p>' +
+    if (!p.data) return '<section class="hero"' + U.heroFoto() + '>' + U.heroBtn() + '<div class="pre">Contagem regressiva</div><h2>' + PL.esc(PL.casal()) + '</h2><p>Coloque a data do casamento no seu perfil para ver quanto tempo falta.</p><div style="margin-top:16px"><button type="button" class="btn leve" data-act="ir" data-to="perfil">Preencher o perfil</button></div></section>';
+    return '<section class="hero"' + U.heroFoto() + '>' + U.heroBtn() + '<div class="pre">Contagem regressiva</div><h2>' + PL.esc(PL.casal()) + '</h2><p>' + PL.dataLonga(p.data) + (p.hora ? ' · ' + p.hora : '') + (p.local ? ' · ' + PL.esc(p.local) : '') + '</p>' +
       '<div class="relogio"><div><b data-cd="d">0</b><span>dias</span></div><div><b data-cd="h">00</b><span>horas</span></div><div><b data-cd="m">00</b><span>min</span></div><div><b data-cd="s">00</b><span>seg</span></div></div></section>';
   };
 

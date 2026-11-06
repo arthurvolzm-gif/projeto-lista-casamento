@@ -231,10 +231,10 @@
       });
     });
   });
-  function reduzir(arquivo, cb) {
+  function reduzir(arquivo, cb, max) {
     var url = URL.createObjectURL(arquivo), img = new Image();
     img.onload = function () {
-      var m = 900, k = Math.min(1, m / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+      var m = max || 900, k = Math.min(1, m / Math.max(img.width, img.height)), cv = document.createElement('canvas');
       cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
       cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url);
       cb(cv.toDataURL('image/jpeg', 0.72));
@@ -242,6 +242,28 @@
     img.onerror = function () { URL.revokeObjectURL(url); cb(null); };
     img.src = url;
   }
+  PL.reduzirImagem = reduzir;
+  /* foto do cartão da contagem (botão no próprio cartão e no perfil) */
+  document.addEventListener('change', function (ev) {
+    var el = ev.target; if (el.getAttribute('data-arquivo') !== 'capa' || !el.files[0]) return;
+    var antigo = PL.s.perfil.fotoCapaPath;
+    PL.toast('Preparando a foto...');
+    reduzir(el.files[0], function (src) {
+      if (!src) { PL.toast('Não deu para abrir essa foto. Tente outra.'); return; }
+      var pronto = function (url, path) {
+        PL.s.perfil.fotoCapa = url; PL.s.perfil.fotoCapaPath = path || ''; PL.salvar(); PL.render(true); PL.toast('Foto do cartão atualizada.');
+        if (antigo && PL.apagarFoto) PL.apagarFoto(antigo);
+      };
+      if (PL.nuvemFoto) PL.nuvemFoto(src).then(function (r) { pronto(r.url, r.path); }, function () { pronto(src, ''); });
+      else pronto(src, '');
+    }, 1400);
+    el.value = '';
+  });
+  PL.acoes.capaPadrao = function () {
+    var antigo = PL.s.perfil.fotoCapaPath;
+    PL.s.perfil.fotoCapa = ''; PL.s.perfil.fotoCapaPath = ''; PL.salvar(); PL.render(true); PL.toast('Voltou para a foto padrão.');
+    if (antigo && PL.apagarFoto) PL.apagarFoto(antigo);
+  };
   PL.forms.muralUrl = function (d) {
     if (!/^https?:\/\//i.test(d.url || '')) { PL.toast('Cole um endereço que comece com https://'); return false; }
     PL.add('moodboard', { cat: PL.temp.catMural || CATS[0], src: d.url });

@@ -239,6 +239,7 @@
       return { url: sb.storage.from(BUCKET).getPublicUrl(caminho).data.publicUrl, path: caminho };
     });
   };
+  PL.apagarFoto = function (path) { if (usuario && path) sb.storage.from(BUCKET).remove([path]).catch(function () {}); };
   PL.aoRemover = function (p, item) {
     if (p !== 'moodboard' || !item.path || !usuario) return;
     /* espera o tempo do "desfazer" antes de apagar o arquivo */
