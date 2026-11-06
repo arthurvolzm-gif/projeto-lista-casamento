@@ -111,9 +111,8 @@
         '<section class="vip-grupo">' +
           '<div class="vip-selo"><span>Exclusivo para clientes</span></div>' +
           '<img class="vip-ilustra" src="/img/bonus-grupo-ilustra.webp" alt="Ilustração de uma casa nova com uma sacola de compras e um coração">' +
-          '<h2>Grupo de promoções <i>para a casa nova</i></h2>' +
-          '<p>Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para montar a casa.</p>' +
-          '<ul class="vip-itens"><li>' + ZAP_B + '<span>Ofertas no WhatsApp</span></li><li>' + ESCUDO + '<span>Só a administração envia</span></li><li>' + SAIR + '<span>Saia quando quiser</span></li></ul>' +
+          '<h2>Grupo de promoções <i>para casa nova</i></h2>' +
+          '<p>Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para montar sua casa.</p>' +
           grupo +
         '</section>' +
         '<div class="vip-sub"><h2>Libere mais para <i>o seu casamento</i></h2><span>Produtos extras</span></div>' +
