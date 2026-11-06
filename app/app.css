@@ -743,3 +743,8 @@ a.aviso-item{text-decoration:none}
 .vip-ilustra{filter:drop-shadow(0 14px 16px rgba(90,47,176,.22))}
 .vip-btn{background:#25D366;color:#fff;box-shadow:0 12px 24px -12px rgba(37,211,102,.75)}
 .vip-btn:hover{background:#1ebe5b}
+/* banner da contagem com foto do casal ao fundo */
+#main .hero{background:linear-gradient(90deg,color-mix(in srgb,var(--acc-esc) 94%,transparent) 0%,color-mix(in srgb,var(--acc) 80%,transparent) 42%,color-mix(in srgb,var(--acc) 22%,transparent) 100%),url(/img/hero-casal.webp) 62% 22%/cover no-repeat,linear-gradient(135deg,var(--acc),var(--acc-esc))}
+#main .hero::after{border-color:rgba(255,255,255,.12)}
+#main .hero h2,#main .hero p,#main .hero .pre{text-shadow:0 1px 10px rgba(30,10,60,.35)}
+@media (max-width:600px){#main .hero{background:linear-gradient(180deg,color-mix(in srgb,var(--acc-esc) 88%,transparent) 0%,color-mix(in srgb,var(--acc) 70%,transparent) 55%,color-mix(in srgb,var(--acc-esc) 82%,transparent) 100%),url(/img/hero-casal.webp) 45% 25%/cover no-repeat,linear-gradient(135deg,var(--acc),var(--acc-esc))}}
