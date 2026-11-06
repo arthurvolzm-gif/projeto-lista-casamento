@@ -30,8 +30,8 @@
       abrir: '/convite/editor', abrirRotulo: 'Criar meu convite', liberado: 'Monte o convite, escolha o tema e mande o link para os convidados.'
     },
     album: {
-      titulo: 'Álbum digital dos convidados', icone: 'foto',
-      curto: 'Os convidados mandam as fotos e os vídeos da festa pelo celular, num álbum só de vocês.',
+      titulo: 'Álbum digital dos convidados', icone: 'foto', img: '/img/bonus-album.webp', alt: 'Álbum de fotos de casamento com QR Code numa mesa decorada',
+      curto: 'Os convidados enviam as fotos e os vídeos da festa pelo QR Code nas mesas, sem baixar aplicativo.',
       resumo: 'Os convidados leem o QR Code nas mesas e enviam as fotos e os vídeos da festa direto do celular, sem baixar aplicativo. Tudo fica junto num álbum só de vocês.',
       itens: ['QR Code e link para os convidados', 'Cards para as mesas, com 3 modelos', 'Fotos e vídeos guardados por 1 ano', 'Baixar tudo de uma vez no painel'],
       checkout: 'https://app.zuptos.com.br/checkout/5c9410608980b13b',
@@ -81,21 +81,52 @@
 
   PL.grupo('Bônus');
 
+  /* grupo de promoções: cole aqui o link de convite do grupo do WhatsApp quando ele estiver pronto */
+  var LINK_GRUPO_PROMOCOES = '';
+  var ZAP_B = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.1A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.6c.2 2.6 3.3 5.7 5.9 5.9l1.2-1.3-1.9-1-.9.8c-1-.4-2.3-1.7-2.7-2.7l.8-.9-1-1.9z"/></svg>';
+  var ESCUDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>';
+  var SAIR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"/><path d="M17 8l4 4-4 4M21 12H10"/></svg>';
+  /* produto extra bloqueado no visual exclusivo */
+  function extraVip(id) {
+    if (PL.temExtra(id)) return extraLiberado(id);
+    var x = EXTRAS[id];
+    var topo = x.img ? '<img src="' + x.img + '" alt="' + e(x.alt) + '" loading="lazy">' : '<div class="bcard-ic">' + PL.ic(x.icone) + '</div>';
+    return '<article class="vip-extra"><div class="vip-extra-img">' + topo + '<span class="vip-cad">' + CADEADO + '</span></div>' +
+      '<div class="vip-extra-corpo"><span class="vip-bloq">' + CADEADO + 'Bloqueado</span><h3>' + e(x.titulo) + '</h3><p>' + e(x.curto) + '</p>' +
+      '<button type="button" class="btn vip-liberar" data-act="liberarExtra" data-extra="' + id + '">' + CADEADO + 'Liberar</button></div></article>';
+  }
   PL.mod('bonus', {
     titulo: 'Bônus', icone: 'presente', menu: 'Todos os bônus',
     render: function () {
-      return U.cab('Bônus', 'Seus <i>bônus</i>', 'Escolha o bônus que você quer abrir. Os materiais em PDF baixam direto no seu aparelho.') +
-        '<div class="bonus-grid">' + [
-          cartao({ img: '/img/bonus2-foto.webp?v=3', alt: 'Noivos sorrindo no dia do casamento', tag: 'Guia em PDF', titulo: 'Guia do Casamento Econômico', texto: 'Tudo para gastar menos em cada parte do casamento: data, horário, convidados, local, comida, decoração, fornecedores, convites e lembrancinhas.', botoes: [ir('guia', 'Abrir o guia')] }),
-          cartao({ img: '/img/bonus1-casa.webp', alt: 'Casa nova com jardim', pos: 'center 45%', tag: 'No app', titulo: 'Enxoval da casa nova', texto: 'A lista do que comprar para cada cômodo, com quantidade, para marcar o que já tem ou já ganhou.', botoes: [ir('enxoval', 'Abrir o enxoval')] }),
-          cartao({ img: '/img/bonus-luamel.webp', alt: 'Casal caminhando num píer em direção a uma praia', pos: 'center 60%', tag: 'No app', titulo: 'Lua de mel', texto: 'Destino, datas, reservas e a lista do que preparar antes de viajar, tudo em um lugar.', botoes: [ir('luamel', 'Abrir a lua de mel')] }),
-          cartao({ img: '/img/bonus1-casa.webp', alt: 'Casa nova com jardim', pos: 'center 70%', tag: 'Grupo no WhatsApp', titulo: 'Grupo de promoções para a casa nova', texto: 'Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para quem está montando a casa.', botoes: [ir('promocoes', 'Ver o grupo')] })
-        ].join('') + extra('convite') + extra('album') + '</div>';
+      var grupo = LINK_GRUPO_PROMOCOES
+        ? '<a class="vip-btn" href="' + e(LINK_GRUPO_PROMOCOES) + '" target="_blank" rel="noopener">' + ZAP_B + 'Entrar no grupo</a>'
+        : '<button type="button" class="vip-btn" data-act="grupoEmBreve">' + ZAP_B + 'Entrar no grupo</button>';
+      var outros = [
+        ['/img/bonus2-foto.webp?v=3', 'Guia do Casamento Econômico', 'Guia em PDF', 'guia'],
+        ['/img/bonus1-casa.webp', 'Enxoval da casa nova', 'No app', 'enxoval'],
+        ['/img/bonus-luamel.webp', 'Lua de mel', 'No app', 'luamel']
+      ];
+      return '<div class="vip">' +
+        '<header class="vip-cab"><span class="vip-pill">Área exclusiva</span><h1>Seus <i>bônus</i></h1><p>Presentes feitos para quem está organizando o casamento com a gente.</p></header>' +
+        '<section class="vip-grupo">' +
+          '<div class="vip-selo"><span>Exclusivo para clientes</span></div>' +
+          '<img class="vip-ilustra" src="/img/bonus-grupo-ilustra.webp" alt="Ilustração de uma casa nova com uma sacola de compras e um coração">' +
+          '<h2>Grupo de promoções <i>para a casa nova</i></h2>' +
+          '<p>Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para montar a casa.</p>' +
+          '<ul class="vip-itens"><li>' + ZAP_B + '<span>Ofertas no WhatsApp</span></li><li>' + ESCUDO + '<span>Só a administração envia</span></li><li>' + SAIR + '<span>Saia quando quiser</span></li></ul>' +
+          grupo +
+        '</section>' +
+        '<div class="vip-sub"><h2>Libere mais para <i>o seu casamento</i></h2><span>Produtos extras</span></div>' +
+        extraVip('album') + extraVip('convite') +
+        '<div class="vip-sub vip-sub2"><h2>Também <i>incluídos</i></h2></div>' +
+        '<div class="vip-outros">' + outros.map(function (o) {
+          return '<button type="button" class="vip-outro" data-act="ir" data-to="' + o[3] + '"><img src="' + o[0] + '" alt="" loading="lazy"><span><small>' + e(o[2]) + '</small><b>' + e(o[1]) + '</b></span>' + PL.ic('baixo') + '</button>';
+        }).join('') + '</div>' +
+      '</div>';
     }
   });
+  PL.acoes.grupoEmBreve = function () { PL.toast('O grupo está sendo preparado. Assim que abrir, o botão leva direto para ele.'); };
 
-  /* grupo de promoções: cole aqui o link de convite do grupo do WhatsApp quando ele estiver pronto */
-  var LINK_GRUPO_PROMOCOES = '';
   var ZAP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.1A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.6c.2 2.6 3.3 5.7 5.9 5.9l1.2-1.3-1.9-1-.9.8c-1-.4-2.3-1.7-2.7-2.7l.8-.9-1-1.9z"/></svg>';
   PL.mod('promocoes', {
     titulo: 'Grupo de promoções para a casa nova', icone: 'grupo', menu: 'Promoções',
