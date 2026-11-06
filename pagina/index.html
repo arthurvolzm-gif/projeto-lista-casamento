@@ -318,6 +318,18 @@ header{position:sticky;top:0;z-index:40}
 .c2,.c3{background:#f8f7fc}
 .c1{background:radial-gradient(120% 80% at 50% 0%,#f6efff 0%,#f8f7fc 70%)}
 body{background:#f8f7fc}
+/* bônus antes dos planos */
+.bonus-app{background:#f8f7fc;padding:40px 0 10px;text-align:center}
+.bonus-pill{display:inline-block;border:1.5px solid var(--roxo-borda);color:var(--roxo-esc);font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:5px 14px;border-radius:999px;background:#fff}
+.bonus-app h2{margin-top:10px}
+.bonus-lista{display:flex;flex-direction:column;gap:10px;margin:20px auto 0;max-width:520px;text-align:left}
+.bn-item{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--linha);border-radius:16px;padding:10px 14px 10px 10px;box-shadow:0 10px 24px -20px rgba(70,30,140,.5)}
+.bn-img{flex:none;width:76px;height:76px;border-radius:12px;overflow:hidden;background:var(--roxo-sua);display:flex;align-items:center;justify-content:center}
+.bn-img img{width:100%;height:100%;object-fit:cover}
+.bn-ic img{width:76%;height:auto;object-fit:contain}
+.bn-n{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--roxo)}
+.bn-item h3{font-size:15.5px;font-weight:700;line-height:1.25;margin-top:1px}
+.bn-item p{font-size:13px;color:var(--suave);line-height:1.4;margin-top:3px}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -373,6 +385,21 @@ body{background:#f8f7fc}
       <img data-p="0" src="/img/pagina/fone-financeiro.webp" alt="Tela do financeiro" loading="lazy" width="560" height="1146">
       <img data-p="1" src="/img/pagina/fone-convidados.webp" alt="Tela da lista de convidados" loading="lazy" width="560" height="1146">
       <img data-p="2" src="/img/pagina/fone-tarefas.webp" alt="Tela das tarefas por mês" loading="lazy" width="560" height="1146">
+    </div>
+  </div>
+</section>
+
+<section class="bonus-app" id="bonus">
+  <div class="wrap">
+    <span class="bonus-pill">Bônus exclusivos</span>
+    <h2>Você também <em>ganha</em></h2>
+    <div class="bonus-lista">
+      <div class="bn-item"><div class="bn-img bn-ic"><img src="/img/emoji/spiral_calendar.webp" alt="" width="180" height="180" loading="lazy"></div>
+        <div><span class="bn-n">Bônus 1</span><h3>Cronograma de tarefas para o casamento</h3><p>O que fazer a cada mês, personalizado com base nos dias que faltam para o seu casamento.</p></div></div>
+      <div class="bn-item"><div class="bn-img"><img src="/img/bonus2-foto.webp?v=3" alt="" loading="lazy"></div>
+        <div><span class="bn-n">Bônus 2</span><h3>Guia do Casamento Econômico</h3><p>Como economizar até 30% sem abrir mão do sonho.</p></div></div>
+      <div class="bn-item"><div class="bn-img bn-ic"><img src="/img/bonus-grupo-ilustra.webp?v=2" alt="" loading="lazy" style="width:118%"></div>
+        <div><span class="bn-n">Bônus 3</span><h3>2 Grupos de Promoções</h3><p>Ofertas para casamento + descontos para enxoval da casa nova.</p></div></div>
     </div>
   </div>
 </section>
@@ -597,8 +624,8 @@ window.addEventListener('DOMContentLoaded', function () {
     scrollTrigger: { trigger: '#cena3', start: 'top 60%', end: 'top top', scrub: 1 } });
   /* ligação 3 → planos: o celular sobe e some enquanto os planos aparecem */
   gsap.to('#cena3 .c3-grid', { opacity: 0, y: -80, scale: .94, ease: 'none',
-    scrollTrigger: { trigger: '#planos', start: 'top 95%', end: 'top 35%', scrub: 1 } });
-  gsap.utils.toArray('#planos h2, #planos .sub, .plano').forEach(function (el, i) {
+    scrollTrigger: { trigger: '#bonus', start: 'top 95%', end: 'top 35%', scrub: 1 } });
+  gsap.utils.toArray('.bonus-app .bonus-pill, .bonus-app h2, .bn-item, #planos h2, #planos .sub, .plano').forEach(function (el, i) {
     gsap.fromTo(el, { opacity: 0, y: 60, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
       scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 70%', scrub: 1 } });
   });
