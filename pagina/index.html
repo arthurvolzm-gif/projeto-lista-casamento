@@ -345,6 +345,10 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 .pb-linha i{display:block;height:100%;width:0;background:var(--roxo);border-radius:99px}
 @media (max-width:760px){.c3{gap:10px;justify-content:flex-start;padding-top:76px}.passos-bar{max-width:330px}.pb-bola{width:26px;height:26px;font-size:12px}}
 .sem-anim .passos-bar{display:none}
+/* depoimentos */
+.depos{background:#f8f7fc;padding:26px 0 6px}
+.depos-lista{display:flex;flex-direction:column;gap:12px;max-width:440px;margin:18px auto 0}
+.depos-lista img{width:100%;border-radius:18px;box-shadow:0 14px 30px -20px rgba(40,20,80,.45);border:1px solid var(--linha)}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -403,6 +407,17 @@ section[style*="padding-top:0"]{padding-bottom:34px}
       <img data-p="1" src="/img/pagina/fone-convidados.webp" alt="Tela da lista de convidados" loading="lazy" width="560" height="1146">
       <img data-p="2" src="/img/pagina/fone-tarefas.webp" alt="Tela das tarefas por mês" loading="lazy" width="560" height="1146">
       <img data-p="3" src="/img/pagina/fone-cerimonia.webp" alt="Tela da playlist na aba Cerimônia" loading="lazy" width="560" height="1146">
+    </div>
+  </div>
+</section>
+
+<section class="depos" id="depoimentos">
+  <div class="wrap">
+    <h2>Quem já usou <em>aprovou</em></h2>
+    <div class="depos-lista">
+      <img src="/img/pagina/depo1.webp" alt="Mensagem: Consegui sim, muito obrigada, amei o LoveCheck" width="720" height="409" loading="lazy">
+      <img src="/img/pagina/depo2.webp" alt="Mensagens: Esse aplicativo me ajudou muito, já tenho tudo organizado até o dia" width="720" height="750" loading="lazy">
+      <img src="/img/pagina/depo3.webp" alt="Mensagens: Que aplicativo maravilhoso, parabéns e obrigada pela ajuda" width="720" height="401" loading="lazy">
     </div>
   </div>
 </section>
@@ -651,8 +666,8 @@ window.addEventListener('DOMContentLoaded', function () {
     scrollTrigger: { trigger: '#cena3', start: 'top 85%', end: 'top 25%', scrub: 1 } });
   /* ligação 3 → planos: o celular sobe e some enquanto os planos aparecem */
   gsap.to('#cena3 .c3-grid', { opacity: 0, y: -80, scale: .94, ease: 'none',
-    scrollTrigger: { trigger: '#bonus', start: 'top 95%', end: 'top 35%', scrub: 1 } });
-  gsap.utils.toArray('.bonus-app .bonus-pill, .bonus-app h2, .bn-item, #planos h2, #planos .sub, .plano').forEach(function (el, i) {
+    scrollTrigger: { trigger: '#depoimentos', start: 'top 95%', end: 'top 35%', scrub: 1 } });
+  gsap.utils.toArray('.depos h2, .depos-lista img, .bonus-app .bonus-pill, .bonus-app h2, .bn-item, #planos h2, #planos .sub, .plano').forEach(function (el, i) {
     gsap.fromTo(el, { opacity: 0, y: 60, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
       scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 70%', scrub: 1 } });
   });
