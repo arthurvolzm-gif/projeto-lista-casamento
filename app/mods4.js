@@ -22,7 +22,7 @@
   var CADEADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   var EXTRAS = {
     convite: {
-      titulo: 'Convite virtual e site do casamento', img: '/convite/temas/rose/aberto.webp', alt: 'Convite digital em envelope com lacre',
+      titulo: 'Convite virtual e site do casamento', img: '/img/bonus-convite.webp', pos: '50% 57%', alt: 'Convite digital do casamento aberto no celular',
       curto: 'O convite de vocês em um link, com cara de site do casamento e confirmação de presença.',
       resumo: 'Um convite digital para mandar pelo WhatsApp. Os convidados abrem o envelope, veem tudo sobre o casamento e confirmam a presença pelo próprio link.',
       itens: ['10 temas com envelope e lacre', 'Fotos do casal, data, local, traje e música', 'Confirmação de presença dos convidados', 'Link pronto para enviar no WhatsApp'],
@@ -64,7 +64,7 @@
     var x = EXTRAS[d.extra]; if (!x) return;
     var m = document.createElement('div'); m.className = 'extra-m';
     m.innerHTML = '<div class="extra-caixa" role="dialog" aria-modal="true" aria-labelledby="extra-t">' +
-      (x.img ? '<img src="' + x.img + '" alt="">' : '<div class="extra-ic">' + PL.ic(x.icone) + '</div>') +
+      (x.img ? '<img src="' + x.img + '" alt=""' + (x.pos ? ' style="object-position:' + x.pos + '"' : '') + '>' : '<div class="extra-ic">' + PL.ic(x.icone) + '</div>') +
       '<div class="extra-corpo"><span class="chip acc">Produto extra</span><h2 id="extra-t">' + e(x.titulo) + '</h2><p>' + e(x.resumo) + '</p>' +
       '<ul class="lista-ok-app">' + x.itens.map(function (i) { return '<li>' + e(i) + '</li>'; }).join('') + '</ul>' +
       '<div class="extra-botoes"><button type="button" class="btn sec" data-extra-fechar>Agora não</button><a class="btn" href="' + x.checkout + '" target="_blank" rel="noopener" data-extra-ir>Liberar agora</a></div></div></div>';
@@ -90,7 +90,7 @@
   function extraVip(id) {
     if (PL.temExtra(id)) return extraLiberado(id);
     var x = EXTRAS[id];
-    var topo = x.img ? '<img src="' + x.img + '" alt="' + e(x.alt) + '" loading="lazy">' : '<div class="bcard-ic">' + PL.ic(x.icone) + '</div>';
+    var topo = x.img ? '<img src="' + x.img + '" alt="' + e(x.alt) + '" loading="lazy"' + (x.pos ? ' style="object-position:' + x.pos + '"' : '') + '>' : '<div class="bcard-ic">' + PL.ic(x.icone) + '</div>';
     return '<article class="vip-extra"><div class="vip-extra-img">' + topo + '<span class="vip-cad">' + CADEADO + '</span></div>' +
       '<div class="vip-extra-corpo"><span class="vip-bloq">' + CADEADO + 'Bloqueado</span><h3>' + e(x.titulo) + '</h3><p>' + e(x.curto) + '</p>' +
       '<button type="button" class="btn vip-liberar" data-act="liberarExtra" data-extra="' + id + '">' + CADEADO + 'Liberar</button></div></article>';
