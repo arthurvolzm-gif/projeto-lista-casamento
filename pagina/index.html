@@ -628,9 +628,11 @@ window.addEventListener('DOMContentLoaded', function () {
   /* espaço livre abaixo do título da cena, e o deslocamento para centralizar a grade nele */
   function espaco() {
     var sec = document.getElementById('cena2').getBoundingClientRect(), sub = document.querySelector('#cena2 .sub').getBoundingClientRect(), pl = document.querySelector('.pilha').getBoundingClientRect();
-    var ini = sub.bottom - sec.top + 14, fim = innerHeight - 14;
-    return { h: fim - ini, dy: (ini + fim) / 2 - (pl.top + pl.height / 2 - sec.top) };
+    var rot = document.querySelector('.rotulos'), reserva = cel ? rot.offsetHeight + 28 : 0;
+    var ini = sub.bottom - sec.top + 14, fim = innerHeight - 14 - reserva;
+    return { h: fim - ini, ini: ini, dy: (ini + fim) / 2 - (pl.top + pl.height / 2 - sec.top) };
   }
+  var alturaGrade = 0;
   function grade(c) {
     var W = c.offsetWidth, g = 10, linhas = Math.ceil(NC / 2), larg = Math.min(innerWidth - 24, 560), k = (larg / 2 - 6) / W;
     var bruto = function (l) { return Math.max.apply(null, cams.filter(function (x) { return Math.floor(+x.dataset.o / 2) === l; }).map(function (x) { return x.offsetHeight; })); };
@@ -640,12 +642,15 @@ window.addEventListener('DOMContentLoaded', function () {
     for (var l = 0; l < linhas; l++) alt.push(bruto(l) * k);
     var total = alt.reduce(function (s, v) { return s + v; }, 0) + g * (linhas - 1), topo = -total / 2;
     for (var m = 0; m < lin; m++) topo += alt[m] + g;
+    alturaGrade = total;
     return { k: k, x: (col ? 1 : -1) * (cel1 / 2 + 5), y: topo + alt[lin] / 2 };
   }
   /* no computador a grade vai para o centro e a lista de nomes sai */
   function centro() { var a = document.querySelector('.pilha-area').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (a.left + a.width / 2) - (p.left + p.width / 2); }
   /* no celular a lista de nomes sai para a grade caber; no computador ela fica à direita */
-  if (cel) tl2.to('.rotulos', { opacity: 0, ease: 'power2.inOut', duration: .4 }, 1.0);
+  /* no celular a lista de nomes desce para baixo da grade e continua visível */
+  if (cel) tl2.to('.rotulos', { y: function () { var r = document.querySelector('.rotulos'), sec = document.getElementById('cena2').getBoundingClientRect(); grade(cams[0]); var e = espaco(), H = innerHeight - 14 - e.ini, G = alturaGrade + 14 + r.offsetHeight, alvo = e.ini + (H - G) / 2 + alturaGrade + 14; return alvo - (r.getBoundingClientRect().top - sec.top) + (gsap.getProperty(r, 'y') || 0); }, ease: 'power2.inOut', duration: .55 }, 1.05)
+    .add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, 1.0);
   else tl2.add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, 1.0);
   /* no computador a grade fica à esquerda da lista, sem cobrir os nomes */
   function aEsquerda() {
@@ -654,16 +659,16 @@ window.addEventListener('DOMContentLoaded', function () {
     if (r.left < larg + 60) return centro();
     return (r.left - 36 - larg / 2) - (p.left + p.width / 2);
   }
-  tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : aEsquerda(); }, y: function () { if (cel) return espaco().dy; var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (r.top + r.height / 2) - (p.top + p.height / 2); }, ease: 'power2.inOut', duration: .55 }, 1.05)
+  tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : aEsquerda(); }, y: function () { if (cel) { return espaco().dy + 7; } var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (r.top + r.height / 2) - (p.top + p.height / 2); }, ease: 'power2.inOut', duration: .55 }, 1.05)
      .to('.pilha-in', { rotateX: 0, rotateZ: 0, ease: 'power2.inOut', duration: .55 }, 1.05);
   cams.forEach(function (c) {
     tl2.to(c, { z: 0, scale: function () { return grade(c).k; }, x: function () { return grade(c).x; }, y: function () { return grade(c).y; }, yPercent: -50,
       boxShadow: '0 14px 28px -16px rgba(40,10,90,.45)', ease: 'power2.inOut', duration: .55 }, 1.05);
   });
-  tl2.to({}, { duration: .3 });
+  tl2.to({}, { duration: .45 });
   /* ligação 2 → 3: a grade se junta no centro e encolhe, virando o celular da próxima cena */
   tl2.to(cams, { x: 0, y: 0, scale: .25, opacity: 0, rotation: function (i) { return (i % 2 ? 6 : -6); }, ease: 'power2.in', duration: .45 }, '>')
-     .to('#cena2 h2, #cena2 .sub', { opacity: 0, y: -30, filter: 'blur(8px)', ease: 'none', duration: .35 }, '<');
+     .to('#cena2 h2, #cena2 .sub, .rotulos', { opacity: 0, y: '-=30', filter: 'blur(8px)', ease: 'none', duration: .25 }, '<0.3');
   tl2.to('.pilha', { x: 0, y: 0, ease: 'power2.in', duration: .45 }, '<');
 
   /* cena 3: a tela do celular troca a cada passo */
