@@ -347,7 +347,7 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 .depos{background:#f8f7fc;padding:26px 0 6px}
 .depos-lista{display:flex;flex-direction:column;gap:12px;max-width:440px;margin:18px auto 0}
 .depos-lista img{width:100%;border-radius:18px;box-shadow:0 14px 30px -20px rgba(40,20,80,.45);border:1px solid var(--linha)}
-@media (max-width:760px){.pilha-area{margin-top:9vh}.pilha{height:min(250px,34vh)}}
+@media (max-width:760px){.pilha-area{margin-top:3vh;gap:6px}.pilha{width:min(250px,60vw);height:min(330px,46vh)}.pilha-in{top:4%}.rotulos{margin-top:4px}}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -628,10 +628,10 @@ window.addEventListener('DOMContentLoaded', function () {
     scrollTrigger: { trigger: '#cena2', start: 'top 90%', end: 'top 20%', scrub: 1 } });
 
   /* cena 2: o app se abre em camadas, com o nome de cada parte */
-  var gap = cel ? 9 : 16, cams = gsap.utils.toArray('.camada'), NC = cams.length;
+  var gap = cel ? 8 : 16, cams = gsap.utils.toArray('.camada'), NC = cams.length;
   var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=200%', scrub: 1, pin: true, invalidateOnRefresh: true,
     onUpdate: function (st) { var k = Math.floor(st.progress * 2.4 * NC); r2.forEach(function (li) { li.classList.toggle('on', +li.dataset.o <= k); }); } } });
-  tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .82 : .9, ease: 'none', duration: .7 }, .25);
+  tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .8 : .9, y: cel ? function () { return Math.min(26, innerHeight * .035); } : 0, ease: 'none', duration: .7 }, .25);
   cams.forEach(function (c) { var i = +c.dataset.i; tl2.to(c, { z: (i - (NC - 1) / 2) * gap * 2, y: '-50%', ease: 'none', duration: .7 }, .25); });
   /* final: os títulos e os tópicos somem e as camadas se espalham em grade, 2 por linha, ocupando a tela */
   function espaco() {
