@@ -22,7 +22,7 @@
   var CADEADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   var EXTRAS = {
     convite: {
-      titulo: 'Convite virtual e site do casamento', img: '/img/bonus-convite.webp', pos: '50% 57%', alt: 'Convite digital do casamento aberto no celular',
+      titulo: 'Convite virtual e site do casamento', img: '/img/bonus-convite.webp?v=2', pos: '40% 52%', alt: 'Convite digital do casamento aberto no celular',
       curto: 'O convite de vocês em um link, com cara de site do casamento e confirmação de presença.',
       resumo: 'Um convite digital para mandar pelo WhatsApp. Os convidados abrem o envelope, veem tudo sobre o casamento e confirmam a presença pelo próprio link.',
       itens: ['10 temas com envelope e lacre', 'Fotos do casal, data, local, traje e música', 'Confirmação de presença dos convidados', 'Link pronto para enviar no WhatsApp'],
