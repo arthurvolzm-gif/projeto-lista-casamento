@@ -570,7 +570,7 @@ window.addEventListener('DOMContentLoaded', function () {
   passo(0);
   if (calma || !window.gsap || !window.ScrollTrigger) { document.body.classList.add('sem-anim'); r2.forEach(function (x) { x.classList.add('on'); }); return; }
   gsap.registerPlugin(ScrollTrigger);
-  var cel = innerWidth < 760;
+  /* o layout (celular ou computador) é decidido pela largura e refeito se a janela mudar */
   /* rolagem suave (Lenis) ligada ao GSAP: o movimento fica contínuo entre as cenas */
   if (window.Lenis) {
     var lenis = new Lenis({ duration: 1.15, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true });
@@ -582,6 +582,8 @@ window.addEventListener('DOMContentLoaded', function () {
   }
   ScrollTrigger.config({ ignoreMobileResize: true });
 
+  gsap.matchMedia().add({ cel: '(max-width: 759px)', pc: '(min-width: 760px)' }, function (ctx) {
+  var cel = ctx.conditions.cel;
   /* cena 1: os objetos se afastam, o app gira e some, e a frase aparece */
   var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=85%' : '+=100%', scrub: 1, pin: true, invalidateOnRefresh: true } });
   tl1.to('.c1-txt', { y: -50, opacity: 0, filter: 'blur(8px)', ease: 'none', duration: .45 }, 0)
@@ -649,6 +651,7 @@ window.addEventListener('DOMContentLoaded', function () {
   function aEsquerda() {
     var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect();
     var larg = Math.min(innerWidth - 24, 560);
+    if (r.left < larg + 60) return centro();
     return (r.left - 36 - larg / 2) - (p.left + p.width / 2);
   }
   tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : aEsquerda(); }, y: function () { if (cel) return espaco().dy; var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (r.top + r.height / 2) - (p.top + p.height / 2); }, ease: 'power2.inOut', duration: .55 }, 1.05)
@@ -677,6 +680,8 @@ window.addEventListener('DOMContentLoaded', function () {
   gsap.utils.toArray('.depos h2, .depos-lista img, .bonus-app .bonus-pill, .bonus-app h2, .bonus-app .sub, .bn-item, #planos h2, #planos .sub, .plano').forEach(function (el, i) {
     gsap.fromTo(el, { opacity: 0, y: 60, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
       scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 70%', scrub: 1 } });
+  });
+  passo(0); barra(0);
   });
 });
 </script>
