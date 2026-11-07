@@ -347,6 +347,7 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 .depos{background:#f8f7fc;padding:26px 0 6px}
 .depos-lista{display:flex;flex-direction:column;gap:12px;max-width:440px;margin:18px auto 0}
 .depos-lista img{width:100%;border-radius:18px;box-shadow:0 14px 30px -20px rgba(40,20,80,.45);border:1px solid var(--linha)}
+@media (max-width:760px){.pilha-area{margin-top:9vh}.pilha{height:min(250px,34vh)}}
 /* sem animação: tudo parado e visível */
 .sem-anim .c1-frase{position:static;opacity:1;padding:24px 22px 40px}
 .sem-anim .c1{height:auto;padding-bottom:20px}
@@ -377,16 +378,24 @@ section[style*="padding-top:0"]{padding-bottom:34px}
   <p class="sub">Cada parte do casamento numa camada do app.</p>
   <div class="pilha-area">
     <div class="pilha"><div class="pilha-in">
-      <div class="camada" data-i="0" data-o="3"><img src="/img/pagina/camada-mural.webp?v=2" alt="Mural com fotos de inspiração" loading="lazy" width="460" height="369"></div>
-      <div class="camada" data-i="1" data-o="2"><img src="/img/pagina/camada-mesas.webp" alt="Mapa de mesas com convidados" loading="lazy" width="460" height="333"></div>
-      <div class="camada" data-i="2" data-o="1"><img src="/img/pagina/camada-fornecedores.webp" alt="Lista de fornecedores" loading="lazy" width="460" height="349"></div>
-      <div class="camada" data-i="3" data-o="0"><img src="/img/pagina/camada-contagem.webp?v=2" alt="Contagem regressiva do casamento" loading="lazy" width="460" height="323"></div>
+      <div class="camada" data-i="0" data-o="7"><img src="/img/pagina/camada-enxoval.webp" alt="Enxoval da casa nova no app" loading="lazy" width="460" height="418"></div>
+      <div class="camada" data-i="1" data-o="6"><img src="/img/pagina/camada-votos.webp" alt="Votos dos noivos" loading="lazy" width="460" height="489"></div>
+      <div class="camada" data-i="2" data-o="5"><img src="/img/pagina/camada-cortejo.webp" alt="Ordem de entrada do cortejo" loading="lazy" width="460" height="545"></div>
+      <div class="camada" data-i="3" data-o="4"><img src="/img/pagina/camada-luamel.webp" alt="Lua de mel no app" loading="lazy" width="460" height="418"></div>
+      <div class="camada" data-i="4" data-o="3"><img src="/img/pagina/camada-mural.webp?v=2" alt="Mural com fotos de inspiração" loading="lazy" width="460" height="369"></div>
+      <div class="camada" data-i="5" data-o="2"><img src="/img/pagina/camada-mesas.webp" alt="Mapa de mesas com convidados" loading="lazy" width="460" height="333"></div>
+      <div class="camada" data-i="6" data-o="1"><img src="/img/pagina/camada-fornecedores.webp" alt="Lista de fornecedores" loading="lazy" width="460" height="349"></div>
+      <div class="camada" data-i="7" data-o="0"><img src="/img/pagina/camada-contagem.webp?v=2" alt="Contagem regressiva do casamento" loading="lazy" width="460" height="323"></div>
     </div></div>
     <ul class="rotulos">
       <li data-o="0"><i></i><span><b>Contagem regressiva</b><small>Quanto falta para o grande dia</small></span></li>
       <li data-o="1"><i></i><span><b>Fornecedores</b><small>Contato, valor e situação de cada um</small></span></li>
       <li data-o="2"><i></i><span><b>Mapa de mesas</b><small>Quem senta em cada mesa</small></span></li>
       <li data-o="3"><i></i><span><b>Mural de inspiração</b><small>As referências de cada parte do casamento</small></span></li>
+      <li data-o="4"><i></i><span><b>Lua de mel</b><small>Destino, datas, reservas e o que preparar antes de viajar</small></span></li>
+      <li data-o="5"><i></i><span><b>Ordem de entrada</b><small>Quem entra e em que ordem na cerimônia</small></span></li>
+      <li data-o="6"><i></i><span><b>Votos</b><small>Um espaço só seu para guardar pensamentos, emoções e lembranças desta fase tão especial.</small></span></li>
+      <li data-o="7"><i></i><span><b>Enxoval da casa nova</b><small>O que comprar para cada cômodo da casa nova</small></span></li>
     </ul>
   </div>
 </section>
@@ -615,26 +624,25 @@ window.addEventListener('DOMContentLoaded', function () {
   tl1.to('.c1 .emo', { opacity: 0, scale: .6, ease: 'none', duration: .25 }, 1.0);
   gsap.fromTo('#cena2 h2, #cena2 .sub', { opacity: 0, y: 40, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none', stagger: .08,
     scrollTrigger: { trigger: '#cena2', start: 'top 100%', end: 'top 30%', scrub: 1 } });
-  gsap.fromTo('.pilha', { opacity: 0, y: 70, scale: .85 }, { opacity: 1, y: 0, scale: 1, ease: 'none',
+  gsap.fromTo('.pilha-area', { opacity: 0, y: 70, scale: .85 }, { opacity: 1, y: 0, scale: 1, ease: 'none',
     scrollTrigger: { trigger: '#cena2', start: 'top 90%', end: 'top 20%', scrub: 1 } });
 
   /* cena 2: o app se abre em camadas, com o nome de cada parte */
-  var gap = cel ? 16 : 26, cams = gsap.utils.toArray('.camada'), NC = cams.length;
-  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=170%', scrub: 1, pin: true, invalidateOnRefresh: true,
-    onUpdate: function (st) { var k = Math.floor(st.progress * 3.6 * NC); r2.forEach(function (li) { li.classList.toggle('on', +li.dataset.o <= k); }); } } });
+  var gap = cel ? 9 : 16, cams = gsap.utils.toArray('.camada'), NC = cams.length;
+  var tl2 = gsap.timeline({ scrollTrigger: { trigger: '#cena2', start: 'top top', end: '+=200%', scrub: 1, pin: true, invalidateOnRefresh: true,
+    onUpdate: function (st) { var k = Math.floor(st.progress * 2.4 * NC); r2.forEach(function (li) { li.classList.toggle('on', +li.dataset.o <= k); }); } } });
   tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .82 : .9, ease: 'none', duration: .7 }, .25);
   cams.forEach(function (c) { var i = +c.dataset.i; tl2.to(c, { z: (i - (NC - 1) / 2) * gap * 2, y: '-50%', ease: 'none', duration: .7 }, .25); });
-  /* final: as camadas se separam e ficam deitadas na tela, 2 por linha, dando para ler cada uma */
-  /* espaço livre abaixo do título da cena, e o deslocamento para centralizar a grade nele */
+  /* final: os títulos e os tópicos somem e as camadas se espalham em grade, 2 por linha, ocupando a tela */
   function espaco() {
-    var sec = document.getElementById('cena2').getBoundingClientRect(), sub = document.querySelector('#cena2 .sub').getBoundingClientRect(), pl = document.querySelector('.pilha').getBoundingClientRect();
-    var rot = document.querySelector('.rotulos'), reserva = cel ? rot.offsetHeight + 28 : 0;
-    var ini = sub.bottom - sec.top + 14, fim = innerHeight - 14 - reserva;
+    var sec = document.getElementById('cena2').getBoundingClientRect(), pl = document.querySelector('.pilha').getBoundingClientRect();
+    var topo = (document.querySelector('header') || { offsetHeight: 60 }).offsetHeight;
+    var ini = topo + 10, fim = innerHeight - 10;
     return { h: fim - ini, ini: ini, dy: (ini + fim) / 2 - (pl.top + pl.height / 2 - sec.top) };
   }
   var alturaGrade = 0;
   function grade(c) {
-    var W = c.offsetWidth, g = 10, linhas = Math.ceil(NC / 2), larg = Math.min(innerWidth - 24, 560), k = (larg / 2 - 6) / W;
+    var W = c.offsetWidth, g = cel ? 8 : 12, linhas = Math.ceil(NC / 2), larg = Math.min(innerWidth - (cel ? 16 : 40), 1000), k = (larg / 2 - g / 2) / W;
     var bruto = function (l) { return Math.max.apply(null, cams.filter(function (x) { return Math.floor(+x.dataset.o / 2) === l; }).map(function (x) { return x.offsetHeight; })); };
     var soma = 0; for (var q = 0; q < linhas; q++) soma += bruto(q);
     k = Math.min(k, (espaco().h - g * (linhas - 1)) / soma);
@@ -643,32 +651,20 @@ window.addEventListener('DOMContentLoaded', function () {
     var total = alt.reduce(function (s, v) { return s + v; }, 0) + g * (linhas - 1), topo = -total / 2;
     for (var m = 0; m < lin; m++) topo += alt[m] + g;
     alturaGrade = total;
-    return { k: k, x: (col ? 1 : -1) * (cel1 / 2 + 5), y: topo + alt[lin] / 2 };
+    return { k: k, x: (col ? 1 : -1) * (cel1 / 2 + g / 2), y: topo + alt[lin] / 2 };
   }
-  /* no computador a grade vai para o centro e a lista de nomes sai */
-  function centro() { var a = document.querySelector('.pilha-area').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (a.left + a.width / 2) - (p.left + p.width / 2); }
-  /* no celular a lista de nomes sai para a grade caber; no computador ela fica à direita */
-  /* no celular a lista de nomes desce para baixo da grade e continua visível */
-  if (cel) tl2.to('.rotulos', { y: function () { var r = document.querySelector('.rotulos'), sec = document.getElementById('cena2').getBoundingClientRect(); grade(cams[0]); var e = espaco(), H = innerHeight - 14 - e.ini, G = alturaGrade + 14 + r.offsetHeight, alvo = e.ini + (H - G) / 2 + alturaGrade + 14; return alvo - (r.getBoundingClientRect().top - sec.top) + (gsap.getProperty(r, 'y') || 0); }, ease: 'power2.inOut', duration: .55 }, 1.05)
-    .add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, 1.0);
-  else tl2.add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, 1.0);
-  /* no computador a grade fica à esquerda da lista, sem cobrir os nomes */
-  function aEsquerda() {
-    var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect();
-    var larg = Math.min(innerWidth - 24, 560);
-    if (r.left < larg + 60) return centro();
-    return (r.left - 36 - larg / 2) - (p.left + p.width / 2);
-  }
-  tl2.to('.pilha', { scale: 1, x: function () { return cel ? 0 : aEsquerda(); }, y: function () { if (cel) { return espaco().dy + 7; } var r = document.querySelector('.rotulos').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (r.top + r.height / 2) - (p.top + p.height / 2); }, ease: 'power2.inOut', duration: .55 }, 1.05)
-     .to('.pilha-in', { rotateX: 0, rotateZ: 0, ease: 'power2.inOut', duration: .55 }, 1.05);
+  function centro() { var a = document.getElementById('cena2').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (a.left + a.width / 2) - (p.left + p.width / 2); }
+  tl2.add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, .95)
+     .to('#cena2 h2, #cena2 .sub, .rotulos', { opacity: 0, y: -24, filter: 'blur(8px)', ease: 'power2.in', duration: .35 }, 1.0);
+  tl2.to('.pilha', { scale: 1, x: centro, y: function () { return espaco().dy; }, ease: 'power2.inOut', duration: .6 }, 1.1)
+     .to('.pilha-in', { rotateX: 0, rotateZ: 0, ease: 'power2.inOut', duration: .6 }, 1.1);
   cams.forEach(function (c) {
     tl2.to(c, { z: 0, scale: function () { return grade(c).k; }, x: function () { return grade(c).x; }, y: function () { return grade(c).y; }, yPercent: -50,
-      boxShadow: '0 14px 28px -16px rgba(40,10,90,.45)', ease: 'power2.inOut', duration: .55 }, 1.05);
+      boxShadow: '0 14px 28px -16px rgba(40,10,90,.45)', ease: 'power2.inOut', duration: .6 }, 1.1);
   });
   tl2.to({}, { duration: .45 });
   /* ligação 2 → 3: a grade se junta no centro e encolhe, virando o celular da próxima cena */
   tl2.to(cams, { x: 0, y: 0, scale: .25, opacity: 0, rotation: function (i) { return (i % 2 ? 6 : -6); }, ease: 'power2.in', duration: .45 }, '>')
-     .to('#cena2 h2, #cena2 .sub, .rotulos', { opacity: 0, y: '-=30', filter: 'blur(8px)', ease: 'none', duration: .25 }, '<0.3');
   tl2.to('.pilha', { x: 0, y: 0, ease: 'power2.in', duration: .45 }, '<');
 
   /* cena 3: a tela do celular troca a cada passo */
