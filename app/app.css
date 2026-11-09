@@ -774,3 +774,13 @@ a.aviso-item{text-decoration:none}
 .entrada .entrada-card h1{color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.4)}
 .entrada .entrada-links,.entrada .entrada-links span{color:rgba(255,255,255,.92);text-shadow:0 1px 6px rgba(0,0,0,.45)}
 .entrada .entrada-links button{color:#fff;text-decoration:underline;text-underline-offset:3px;text-shadow:0 1px 6px rgba(0,0,0,.45)}
+/* telas de acesso (confirmando compra / plano vencido) sobre o card transparente */
+.entrada .acesso-loja,.entrada .acesso-loja a,.entrada .acesso-loja button{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.45)}
+.entrada .acesso-loja a,.entrada .acesso-loja button{font-weight:600;text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:2px;font-size:13px;cursor:pointer}
+.entrada .acesso-dicas{background:rgba(255,255,255,.88)}
+.acesso-ic.fim{color:#fff}
+.acesso-ic.fim svg{width:52px;height:52px;padding:12px;border-radius:50%;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4)}
+.acesso-plano{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.92);border-radius:12px;padding:12px 14px;color:var(--tinta)}
+.acesso-plano span{font-weight:600;font-size:14px}
+.acesso-plano b{font-size:20px;color:var(--acc-esc)}.acesso-plano small{font-size:12px;color:var(--suave);font-weight:500;margin-left:2px}
+.acesso-fim a.btn{display:block;width:100%;text-align:center;text-decoration:none}

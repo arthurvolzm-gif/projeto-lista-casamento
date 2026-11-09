@@ -10,6 +10,15 @@ const BUMPS: Record<string, string[]> = {
   album: ["5c9410608980b13b"],
 };
 const PLANNER = ["458aef8196ec5da7", "50c688ffb3869bba", "a3faf364c198ad36"];
+// Planos do app (página /pagina): duração em meses de cada checkout. Sem plano reconhecido = acesso sem prazo.
+const PLANOS: Record<string, number> = {
+  "721ed651c9903949": 1,   // Mensal (assinatura: cada cobrança aprovada renova por mais 1 mês)
+  "53f1e7f37d3718e7": 3,   // Trimestral
+  "ab981fecc2be343c": 6,   // Semestral
+  "43e409b9b4e4d4a0": 12,  // Anual
+  "5282de95bfa5e7bd": 12,  // Anual (checkout antigo)
+};
+// (a folga de 3 dias para a renovação do mensal cair fica na função meus_acessos, no banco)
 
 const APROVADO = /(approved|aprovad|paid|pago|complete|conclu|confirm|autoriz|authoriz|success)/i;
 const ESTORNO = /(refund|reembols|chargeback|estorn|dispute|contesta|devolv)/i;
@@ -54,7 +63,7 @@ function lerProdutos(corpo: unknown): string[] {
   const bruto = JSON.stringify(corpo).toLowerCase();
   const achados = new Set<string>();
   for (const [p, codigos] of Object.entries(BUMPS)) if (codigos.some((c) => bruto.includes(c))) achados.add(p);
-  if (PLANNER.some((c) => bruto.includes(c))) achados.add("planner");
+  if (PLANNER.some((c) => bruto.includes(c)) || Object.keys(PLANOS).some((c) => bruto.includes(c))) achados.add("planner");
   // pelos nomes dos produtos/ofertas
   andar(corpo, (k, v) => {
     if (typeof v !== "string" || !/(name|nome|title|titulo|product|produto|offer|oferta|plan|plano|item)/i.test(k)) return;
@@ -62,11 +71,32 @@ function lerProdutos(corpo: unknown): string[] {
     if (n.length < 3 || /^[0-9a-f-]{8,}$/.test(n)) return;
     if (/[áa]lbum/.test(n)) achados.add("album");
     else if (/convite|site do casamento/.test(n)) achados.add("convite");
-    else if (/checklove|check love|checklist|planner|casamento|noiva/.test(n)) achados.add("planner");
+    else if (/checklove|check love|lovecheck|love check|checklist|planner|casamento|noiva/.test(n)) achados.add("planner");
   });
   // compra sem produto reconhecido nesta conta: libera o planner
   if (!achados.size) achados.add("planner");
   return [...achados];
+}
+
+// quantos meses o plano comprado dá (0 = sem prazo)
+function lerMeses(corpo: unknown): number {
+  const bruto = JSON.stringify(corpo).toLowerCase();
+  for (const [c, m] of Object.entries(PLANOS)) if (bruto.includes(c)) return m;
+  let meses = 0;
+  andar(corpo, (k, v) => {
+    if (meses || typeof v !== "string" || !/(name|nome|title|titulo|product|produto|offer|oferta|plan|plano|item)/i.test(k)) return;
+    const n = v.toLowerCase();
+    if (/anual/.test(n)) meses = 12;
+    else if (/semestral|6 meses/.test(n)) meses = 6;
+    else if (/trimestral|3 meses/.test(n)) meses = 3;
+    else if (/mensal/.test(n)) meses = 1;
+  });
+  return meses;
+}
+
+function somarMeses(d: Date, meses: number): Date {
+  const r = new Date(d.getTime()); r.setUTCMonth(r.getUTCMonth() + meses);
+  return r;
 }
 
 function lerPedido(corpo: unknown): string {
@@ -92,20 +122,43 @@ Deno.serve(async (req) => {
   if (!esperado || recebido !== esperado) return new Response("token inválido", { status: 401 });
 
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-  const email = lerEmail(corpo), situacao = lerSituacao(corpo), produtos = lerProdutos(corpo), pedido = lerPedido(corpo);
-  let resultado = `${situacao} ${email || "(sem e-mail)"} ${produtos.join(",")}`;
+  const email = lerEmail(corpo), situacao = lerSituacao(corpo), produtos = lerProdutos(corpo), pedido = lerPedido(corpo), meses = lerMeses(corpo);
+  let resultado = `${situacao} ${email || "(sem e-mail)"} ${produtos.join(",")}${meses ? " " + meses + "m" : ""}`;
+  const agora = new Date();
+  const atuais = email ? ((await sb.from("compras").select("produto,status,pedido,expira_em,plano_meses").eq("email", email)).data || []) : [];
+  const atual = (p: string) => atuais.find((x) => x.produto === p);
 
   if (email && situacao === "aprovado") {
-    const linhas = produtos.map((p) => ({ email, produto: p, status: "aprovado", pedido, atualizado_em: new Date().toISOString() }));
+    const linhas = produtos.map((p) => {
+      const linha: Record<string, unknown> = { email, produto: p, status: "aprovado", pedido, atualizado_em: agora.toISOString() };
+      const a = atual(p);
+      if (p === "planner" && meses) {
+        // plano com prazo: conta a partir de hoje; se ainda tem dias de um pedido anterior, soma em cima deles
+        const fimAtual = a && a.status === "aprovado" && a.expira_em ? new Date(a.expira_em) : null;
+        const mesmoPedido = !!(a && pedido && a.pedido === pedido);
+        let fim = somarMeses(agora, meses);
+        if (fimAtual && fimAtual > agora && !mesmoPedido) fim = somarMeses(fimAtual, meses);
+        else if (fimAtual && fimAtual > fim) fim = fimAtual; // evento repetido do mesmo pedido não encurta nem estende
+        linha.plano_meses = meses; linha.expira_em = fim.toISOString();
+        resultado += " até " + fim.toISOString().slice(0, 10);
+      }
+      // sem plano reconhecido no evento: não mexe no prazo que já existe (só um plano com prazo define o vencimento)
+      return linha;
+    });
     const r = await sb.from("compras").upsert(linhas, { onConflict: "email,produto" });
     if (r.error) resultado += " ERRO " + r.error.message;
   } else if (email && (situacao === "estornado" || situacao === "cancelado")) {
-    // estorno/chargeback tira o acesso; "cancelado" só tira se for o mesmo pedido que liberou
-    // (um Pix ou boleto cancelado de outra tentativa não derruba uma compra paga)
-    let q = sb.from("compras").update({ status: "cancelado", atualizado_em: new Date().toISOString() }).eq("email", email).in("produto", produtos);
-    if (situacao === "cancelado") q = q.eq("pedido", pedido || "-");
-    const r = await q;
-    if (r.error) resultado += " ERRO " + r.error.message;
+    // estorno/chargeback tira o acesso na hora.
+    // "cancelado" só tira se for o mesmo pedido que liberou (um Pix ou boleto cancelado de outra tentativa não
+    // derruba uma compra paga) e nunca num plano com prazo: assinatura cancelada vale até o fim do período já pago.
+    let alvo = produtos;
+    if (situacao === "cancelado") alvo = produtos.filter((p) => { const a = atual(p); return !(a && a.expira_em); });
+    if (alvo.length) {
+      let q = sb.from("compras").update({ status: "cancelado", atualizado_em: agora.toISOString() }).eq("email", email).in("produto", alvo);
+      if (situacao === "cancelado") q = q.eq("pedido", pedido || "-");
+      const r = await q;
+      if (r.error) resultado += " ERRO " + r.error.message;
+    } else resultado += " (plano com prazo: segue até o vencimento)";
   }
   await sb.from("webhook_eventos").insert({ corpo, resultado });
   return new Response(JSON.stringify({ ok: true, resultado }), { status: 200, headers: { "content-type": "application/json" } });

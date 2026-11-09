@@ -94,6 +94,8 @@
   }
   /* ---------- acesso: só entra quem comprou (compras vindas do webhook da Zuptos) ---------- */
   var LOJA = 'https://meuchecklove.vercel.app/', tAcesso = null;
+  /* renovação quando o plano vence: plano mensal (e a página com todos os planos) */
+  var CHECKOUT_MENSAL = 'https://app.zuptos.com.br/checkout/721ed651c9903949', PLANOS = 'https://meuchecklove.vercel.app/pagina/#planos';
   async function buscarAcessos() {
     var cache = 'checklove_acesso_' + usuario.id;
     var r = await sb.rpc('meus_acessos');
@@ -122,6 +124,22 @@
       '<p class="nota acesso-loja">Ainda não comprou? <a href="' + LOJA + '">Conheça o CheckLove</a></p></div></main>';
     /* confere sozinho de tempos em tempos enquanto a pessoa espera */
     tAcesso = setTimeout(function () { verificarDeNovo(true); }, 20000);
+  }
+  /* plano vencido: os dados continuam na conta; a pessoa renova pelo plano mensal */
+  function telaExpirou(email, fim) {
+    clearTimeout(tAcesso);
+    var data = /^\d{4}-\d{2}-\d{2}$/.test(fim || '') ? fim.split('-').reverse().join('/') : '';
+    document.body.innerHTML = '<main class="entrada"><div class="entrada-card acesso-pend acesso-fim">' +
+      '<div class="marca"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></div>' +
+      '<div class="acesso-ic fim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>' +
+      '<h1>Seu acesso terminou</h1>' +
+      '<p class="nota">O plano da conta <b>' + e(email) + '</b> venceu' + (data ? ' em <b>' + data + '</b>' : '') + '.</p>' +
+      '<ul class="acesso-dicas"><li>Seus dados continuam salvos: tarefas, gastos, convidados e tudo o que vocês já fizeram.</li>' +
+      '<li>Assim que renovar, o planner volta exatamente de onde parou.</li></ul>' +
+      '<div class="acesso-plano"><span>Plano Mensal</span><b>R$ 29,90<small>/mês</small></b></div>' +
+      '<a class="btn" href="' + CHECKOUT_MENSAL + '">Continuar com o Plano Mensal</a>' +
+      '<button type="button" class="btn sec" data-acesso="verificar">Já renovei, verificar</button>' +
+      '<p class="nota acesso-loja"><a href="' + PLANOS + '">Ver os outros planos</a> · <button type="button" data-acesso="sair">Entrar com outro e-mail</button></p></div></main>';
   }
   async function verificarDeNovo(silencioso) {
     var s = await sb.auth.getSession(); var sessao = s.data.session;
@@ -160,7 +178,12 @@
     var acesso;
     try { acesso = await buscarAcessos(); }
     catch (x) { abrindo = false; usuario = null; telaPendente(email, 'Não deu para confirmar a compra agora. Confira a internet e toque em "Verificar de novo".'); return; }
-    if (!acesso.livre && acesso.lista.indexOf('planner') < 0) { abrindo = false; usuario = null; telaPendente(email); return; }
+    if (!acesso.livre && acesso.lista.indexOf('planner') < 0) {
+      abrindo = false; usuario = null;
+      var venc = acesso.lista.filter(function (x) { return x.indexOf('planner_expirou:') === 0; })[0];
+      if (venc) telaExpirou(email, venc.split(':')[1]); else telaPendente(email);
+      return;
+    }
     clearTimeout(tAcesso);
     PL.acessos = { livre: !!acesso.livre, convite: acesso.lista.indexOf('convite') >= 0, album: acesso.lista.indexOf('album') >= 0 };
     try {
