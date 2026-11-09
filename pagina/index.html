@@ -275,7 +275,9 @@ header{position:sticky;top:0;z-index:40}
 .pilha{position:relative;width:min(300px,62vw);height:min(360px,48vh);perspective:1400px}
 .pilha-in{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-34deg)}
 .camada{position:absolute;left:0;right:0;top:50%;margin:0 auto;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 30px 40px -24px rgba(40,10,90,.55);background:#fff;transform:translate3d(0,-50%,0);will-change:transform}
-.camada img{width:100%;display:block}
+.camada{aspect-ratio:460/323}
+.camada img{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 0}
+.camada img.base{object-position:50% 100%}.camada img.meio{object-position:50% 50%}
 .pilha-in .camada{transform-origin:50% 50%}
 .rotulos{list-style:none;display:flex;flex-direction:column;gap:9px;overflow:hidden;text-align:left;max-width:300px}
 .rotulos li{display:flex;gap:10px;align-items:flex-start;opacity:.25;transition:opacity .3s}
@@ -378,11 +380,11 @@ section[style*="padding-top:0"]{padding-bottom:34px}
   <p class="sub">Cada parte do casamento numa camada do app.</p>
   <div class="pilha-area">
     <div class="pilha"><div class="pilha-in">
-      <div class="camada" data-i="0" data-o="7"><img src="/img/pagina/camada-enxoval.webp" alt="Enxoval da casa nova no app" loading="lazy" width="460" height="418"></div>
-      <div class="camada" data-i="1" data-o="6"><img src="/img/pagina/camada-votos.webp" alt="Votos dos noivos" loading="lazy" width="460" height="489"></div>
+      <div class="camada" data-i="0" data-o="7"><img class="base" src="/img/pagina/camada-enxoval.webp" alt="Enxoval da casa nova no app" loading="lazy" width="460" height="418"></div>
+      <div class="camada" data-i="1" data-o="6"><img src="/img/pagina/camada-votos.webp?v=2" alt="Votos dos noivos" loading="lazy" width="460" height="570"></div>
       <div class="camada" data-i="2" data-o="5"><img src="/img/pagina/camada-cortejo.webp" alt="Ordem de entrada do cortejo" loading="lazy" width="460" height="545"></div>
-      <div class="camada" data-i="3" data-o="4"><img src="/img/pagina/camada-luamel.webp" alt="Lua de mel no app" loading="lazy" width="460" height="418"></div>
-      <div class="camada" data-i="4" data-o="3"><img src="/img/pagina/camada-mural.webp?v=2" alt="Mural com fotos de inspiração" loading="lazy" width="460" height="369"></div>
+      <div class="camada" data-i="3" data-o="4"><img class="base" src="/img/pagina/camada-luamel.webp" alt="Lua de mel no app" loading="lazy" width="460" height="418"></div>
+      <div class="camada" data-i="4" data-o="3"><img class="meio" src="/img/pagina/camada-mural.webp?v=2" alt="Mural com fotos de inspiração" loading="lazy" width="460" height="369"></div>
       <div class="camada" data-i="5" data-o="2"><img src="/img/pagina/camada-mesas.webp" alt="Mapa de mesas com convidados" loading="lazy" width="460" height="333"></div>
       <div class="camada" data-i="6" data-o="1"><img src="/img/pagina/camada-fornecedores.webp" alt="Lista de fornecedores" loading="lazy" width="460" height="349"></div>
       <div class="camada" data-i="7" data-o="0"><img src="/img/pagina/camada-contagem.webp?v=2" alt="Contagem regressiva do casamento" loading="lazy" width="460" height="323"></div>
@@ -594,7 +596,7 @@ window.addEventListener('DOMContentLoaded', function () {
   gsap.matchMedia().add({ cel: '(max-width: 759px)', pc: '(min-width: 760px)' }, function (ctx) {
   var cel = ctx.conditions.cel;
   /* cena 1: os objetos se afastam, o app gira e some, e a frase aparece */
-  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=85%' : '+=100%', scrub: 1, pin: true, invalidateOnRefresh: true } });
+  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=115%' : '+=130%', scrub: 1, pin: true, invalidateOnRefresh: true } });
   tl1.to('.c1-txt', { y: -50, opacity: 0, filter: 'blur(8px)', ease: 'none', duration: .45 }, 0)
      .to('#fone1', { rotateX: 16, rotateY: -14, scale: .82, y: -30, ease: 'none', duration: .55 }, 0)
      .to('#fone1', { opacity: 0, y: -90, scale: .7, filter: 'blur(6px)', ease: 'none', duration: .35 }, .5);
@@ -617,11 +619,12 @@ window.addEventListener('DOMContentLoaded', function () {
     tl1.to(c, { opacity: 1, scale: esc, x: cel ? xCel : 0, xPercent: cel ? 0 : lado * 118 + lado * baixo * 12, yPercent: baixo ? (cel ? 20 : 40) : (cel ? -30 : -50), rotation: lado * (baixo ? 4 : -3), ease: 'power1.out', duration: .3 }, i * .025);
   });
   tl1.to(voa, { opacity: 0, y: -40, ease: 'none', duration: .2 }, .55);
-  tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .4 }, .55);
+  tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .3 }, .55);
 
+  /* a frase fica parada e nítida por um trecho do scroll, para dar tempo de ler */
   /* ligação 1 → 2: a frase cresce e se desfaz enquanto o título da cena 2 entra saindo do desfoque */
-  tl1.to('#frase1', { opacity: 0, scale: 1.12, filter: 'blur(12px)', ease: 'none', duration: .25 }, 1.0);
-  tl1.to('.c1 .emo', { opacity: 0, scale: .6, ease: 'none', duration: .25 }, 1.0);
+  tl1.to('#frase1', { opacity: 0, scale: 1.12, filter: 'blur(12px)', ease: 'none', duration: .25 }, 1.4);
+  tl1.to('.c1 .emo', { opacity: 0, scale: .6, ease: 'none', duration: .25 }, 1.4);
   gsap.fromTo('#cena2 h2, #cena2 .sub', { opacity: 0, y: 40, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none', stagger: .08,
     scrollTrigger: { trigger: '#cena2', start: 'top 100%', end: 'top 30%', scrub: 1 } });
   gsap.fromTo('.pilha-area', { opacity: 0, y: 70, scale: .85 }, { opacity: 1, y: 0, scale: 1, ease: 'none',
