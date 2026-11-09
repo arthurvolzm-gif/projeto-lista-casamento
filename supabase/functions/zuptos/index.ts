@@ -135,10 +135,16 @@ Deno.serve(async (req) => {
       if (p === "planner" && meses) {
         // plano com prazo: conta a partir de hoje; se ainda tem dias de um pedido anterior, soma em cima deles
         const fimAtual = a && a.status === "aprovado" && a.expira_em ? new Date(a.expira_em) : null;
+        // Tri, semestral e anual são cobrados uma vez por período; o mensal, todo mês. Cada cobrança aprovada
+        // vale mais um período. A renovação pode chegar com o mesmo código do pedido original: se faltam 10 dias
+        // ou menos para vencer (ou já venceu), é renovação; se o prazo ainda está longe, é o mesmo aviso repetido
+        // (ex.: "Pix pago" e "compra aprovada" da mesma cobrança) e não soma de novo.
         const mesmoPedido = !!(a && pedido && a.pedido === pedido);
+        const perto = !!fimAtual && fimAtual.getTime() - agora.getTime() <= 10 * 864e5;
+        const repetido = mesmoPedido && fimAtual && !perto;
         let fim = somarMeses(agora, meses);
-        if (fimAtual && fimAtual > agora && !mesmoPedido) fim = somarMeses(fimAtual, meses);
-        else if (fimAtual && fimAtual > fim) fim = fimAtual; // evento repetido do mesmo pedido não encurta nem estende
+        if (repetido) fim = fimAtual as Date;
+        else if (fimAtual && fimAtual > agora) fim = somarMeses(fimAtual, meses);
         linha.plano_meses = meses; linha.expira_em = fim.toISOString();
         resultado += " até " + fim.toISOString().slice(0, 10);
       }
