@@ -260,13 +260,16 @@ header{position:sticky;top:0;z-index:40}
 .c1 .lead{font-size:clamp(14px,3.6vw,16.5px);color:var(--suave);margin:10px auto 0;max-width:500px}
 .c1-cta{display:inline-block;margin-top:16px;padding:13px 26px;border-radius:999px;background:var(--roxo);color:#fff;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 12px 26px -12px rgba(122,63,214,.9)}
 .fone{position:relative;z-index:2;width:min(310px,70vw,calc((100svh - 300px) * .5));margin-top:2.5vh;aspect-ratio:390/844;border-radius:38px;border:8px solid #1d1830;background:#fff;overflow:hidden;box-shadow:0 40px 70px -30px rgba(40,10,90,.55),0 0 0 1px rgba(0,0,0,.04);transform-style:preserve-3d;will-change:transform}
-#fone1{width:min(310px,70vw,calc((100svh - 372px) * .488))}
 .fone img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
 @keyframes flutua{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(4deg)}}
 .c1-frase{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 22px;opacity:0;pointer-events:none}
 .c1-frase p{font-size:clamp(26px,6.6vw,48px);font-weight:800;line-height:1.15;color:var(--tinta);max-width:640px}
 .c1-frase p span{display:block;font-size:.55em;font-weight:600;color:var(--suave);margin-bottom:10px}
 .c1-frase p em{font-style:normal;color:var(--roxo)}
+.emo{position:absolute;z-index:1;width:clamp(54px,11vw,104px);pointer-events:none;will-change:transform}
+.emo img{width:100%;animation:flutua var(--t,6s) ease-in-out infinite;animation-delay:var(--dl,0s);filter:drop-shadow(0 14px 18px rgba(60,20,110,.18))}
+.c1 .emo{opacity:0}
+@media (max-width:1000px){.emo.m-esconde{display:none}}
 .c2{height:100vh;height:100svh;min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 16px}
 .c2 h2{font-size:clamp(24px,5.6vw,38px)}
 .c2 .sub{margin-top:8px}
@@ -307,11 +310,7 @@ header{position:sticky;top:0;z-index:40}
   .passos3 li.on{transform:none}
   .passos3 li:not(.on){opacity:0}
   .c3 .fone{width:min(290px,66vw,calc((100svh - 270px) * .49))}
-  #fone1{width:max(185px,min(300px,70vw,calc((100svh - 318px) * .488)));margin-top:2vh}
-}
-@media (max-width:759px) and (max-height:700px){
-  .c1{padding-top:10px}
-  #fone1{width:max(160px,min(300px,70vw,calc((100svh - 292px) * .488)));margin-top:1.5vh}
+  .emo.m-esconde{display:none}
 }
 /* celular realista: a moldura já vem na imagem */
 .fone{aspect-ratio:560/1146;border:0;border-radius:0;background:none;overflow:visible;box-shadow:none;filter:drop-shadow(0 34px 34px rgba(40,10,90,.32)) drop-shadow(0 6px 10px rgba(40,10,90,.12))}
@@ -368,6 +367,7 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 <header><div class="wrap"><span class="logo">CheckLove</span><a class="mini" href="#planos">Quero o meu</a></div></header>
 
 <section class="cena c1" id="cena1">
+  <div class="emo" style="left:8%;top:34%" data-dx="-60" data-dy="-30"><img src="/img/emoji/ring.webp" alt="" width="180" height="180" style="--t:6s;--dl:0s"></div><div class="emo" style="left:80%;top:30%" data-dx="60" data-dy="-40"><img src="/img/emoji/bouquet.webp" alt="" width="180" height="180" style="--t:7s;--dl:0.6s"></div><div class="emo" style="left:14%;top:70%" data-dx="-70" data-dy="40"><img src="/img/emoji/birthday_cake.webp" alt="" width="180" height="180" style="--t:6.5s;--dl:0.3s"></div><div class="emo" style="left:78%;top:66%" data-dx="70" data-dy="30"><img src="/img/emoji/love_letter.webp" alt="" width="180" height="180" style="--t:5.5s;--dl:1s"></div><div class="emo m-esconde" style="left:11%;top:50%" data-dx="-90" data-dy="0"><img src="/img/emoji/clinking_glasses.webp" alt="" width="180" height="180" style="--t:7.5s;--dl:0.8s"></div><div class="emo m-esconde" style="left:83%;top:47%" data-dx="90" data-dy="10"><img src="/img/emoji/money_bag.webp" alt="" width="180" height="180" style="--t:6s;--dl:1.2s"></div><div class="emo" style="left:4%;top:86%" data-dx="-50" data-dy="60"><img src="/img/emoji/spiral_calendar.webp" alt="" width="180" height="180" style="--t:6.8s;--dl:0.4s"></div><div class="emo" style="left:88%;top:86%" data-dx="50" data-dy="60"><img src="/img/emoji/sparkling_heart.webp" alt="" width="180" height="180" style="--t:5.8s;--dl:0.2s"></div>
   <div class="c1-txt">
     <h1>Organize seu casamento inteiro <em>pelo celular</em></h1>
     <p class="lead">Orçamento, fornecedores, convidados, mesas e tarefas com prazo, salvos na sua conta.</p>
@@ -597,8 +597,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
   gsap.matchMedia().add({ cel: '(max-width: 759px)', pc: '(min-width: 760px)' }, function (ctx) {
   var cel = ctx.conditions.cel;
-  /* cena 1: o celular fica parado, os cards aparecem um a um com o scroll, e depois a frase */
-  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: function () { return 'top ' + ((document.querySelector('header') || { offsetHeight: 0 }).offsetHeight) + 'px'; }, end: cel ? '+=150%' : '+=170%', scrub: 1, pin: true, invalidateOnRefresh: true } });
+  /* cena 1: os objetos se afastam, o app gira e some, e a frase aparece */
+  var tl1 = gsap.timeline({ scrollTrigger: { trigger: '#cena1', start: 'top top', end: cel ? '+=115%' : '+=130%', scrub: 1, pin: true, invalidateOnRefresh: true } });
+  tl1.to('.c1-txt', { y: -50, opacity: 0, filter: 'blur(8px)', ease: 'none', duration: .45 }, 0)
+     .to('#fone1', { rotateX: 16, rotateY: -14, scale: .82, y: -30, ease: 'none', duration: .55 }, 0)
+     .to('#fone1', { opacity: 0, y: -90, scale: .7, filter: 'blur(6px)', ease: 'none', duration: .35 }, .5);
   /* os 4 cards saem de dentro do celular e ficam flutuando em volta dele */
   var voa = gsap.utils.toArray('.kpi-voa');
   gsap.set(voa, { opacity: 0, scale: .55 });
@@ -610,15 +613,20 @@ window.addEventListener('DOMContentLoaded', function () {
       var f = document.getElementById('fone1').getBoundingClientRect(), L = f.left + c.offsetLeft, w = c.offsetWidth, m = 8;
       return lado < 0 ? m - L + (esc - 1) * w / 2 : innerWidth - m - (L + w) - (esc - 1) * w / 2;
     };
-    tl1.to(c, { opacity: 1, scale: esc, x: cel ? xCel : 0, xPercent: cel ? 0 : lado * 118 + lado * baixo * 12, yPercent: baixo ? (cel ? 20 : 40) : (cel ? -30 : -50), rotation: lado * (baixo ? 4 : -3), ease: 'power1.out', duration: .25 }, .12 + i * .14);
+    tl1.to(c, { opacity: 1, scale: esc, x: cel ? xCel : 0, xPercent: cel ? 0 : lado * 118 + lado * baixo * 12, yPercent: baixo ? (cel ? 20 : 40) : (cel ? -30 : -50), rotation: lado * (baixo ? 4 : -3), ease: 'power1.out', duration: .3 }, i * .025);
   });
-  /* o título e o celular com os cards ficam parados um trecho; depois saem juntos e a frase entra */
-  tl1.to('#fone1, .c1-txt', { opacity: 0, scale: .9, filter: 'blur(6px)', ease: 'power1.in', duration: .3 }, 1.15);
-  tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .3 }, 1.3);
+  tl1.to(voa, { opacity: 0, y: -40, ease: 'none', duration: .2 }, .55);
+  /* os emojis surgem em volta da frase, cada um vindo de um lado */
+  document.querySelectorAll('.c1 .emo').forEach(function (e, i) {
+    var dx = +e.dataset.dx * (cel ? .6 : 1), dy = +e.dataset.dy * (cel ? .6 : 1);
+    tl1.fromTo(e, { opacity: 0, x: dx * 1.6, y: dy * 1.6, scale: .5, rotation: (i % 2 ? 1 : -1) * 20 }, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, ease: 'power2.out', duration: .35 }, .55 + i * .02);
+  });
+  tl1.fromTo('#frase1', { opacity: 0, scale: .94, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', ease: 'none', duration: .3 }, .55);
 
   /* a frase fica parada e nítida por um trecho do scroll, para dar tempo de ler */
   /* ligação 1 → 2: a frase cresce e se desfaz enquanto o título da cena 2 entra saindo do desfoque */
-  tl1.to('#frase1', { opacity: 0, scale: 1.12, filter: 'blur(12px)', ease: 'none', duration: .25 }, 2.05);
+  tl1.to('#frase1', { opacity: 0, scale: 1.12, filter: 'blur(12px)', ease: 'none', duration: .25 }, 1.4);
+  tl1.to('.c1 .emo', { opacity: 0, scale: .6, ease: 'none', duration: .25 }, 1.4);
   gsap.fromTo('#cena2 h2, #cena2 .sub', { opacity: 0, y: 40, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none', stagger: .08,
     scrollTrigger: { trigger: '#cena2', start: 'top 100%', end: 'top 30%', scrub: 1 } });
   gsap.fromTo('.pilha-area', { opacity: 0, y: 70, scale: .85 }, { opacity: 1, y: 0, scale: 1, ease: 'none',
@@ -631,15 +639,29 @@ window.addEventListener('DOMContentLoaded', function () {
   tl2.from('.pilha-in', { rotateX: 0, rotateZ: 0, scale: .9, ease: 'none', duration: .3 }, 0).to('.pilha', { scale: cel ? .8 : .9, y: cel ? function () { return Math.min(26, innerHeight * .035); } : 0, ease: 'none', duration: .7 }, .25);
   cams.forEach(function (c) { var i = +c.dataset.i; tl2.to(c, { z: (i - (NC - 1) / 2) * gap * 2, y: '-50%', ease: 'none', duration: .7 }, .25); });
   /* final: os títulos e os tópicos somem e as camadas se espalham em grade, 2 por linha, ocupando a tela */
+  /* a grade fica entre o subtítulo e os tópicos (no computador, à esquerda dos tópicos) */
+  var gy = function (el) { return gsap.getProperty(el, 'y') || 0; }, gx = function (el) { return gsap.getProperty(el, 'x') || 0; };
+  function desceRot() {
+    if (!cel) return 0;
+    var sec = document.getElementById('cena2').getBoundingClientRect(), r = document.querySelector('.rotulos'), b = r.getBoundingClientRect();
+    return (innerHeight - 14) - (b.bottom - sec.top - gy(r));
+  }
   function espaco() {
-    var sec = document.getElementById('cena2').getBoundingClientRect(), pl = document.querySelector('.pilha').getBoundingClientRect();
-    var topo = (document.querySelector('header') || { offsetHeight: 60 }).offsetHeight;
-    var ini = topo + 10, fim = innerHeight - 10;
-    return { h: fim - ini, ini: ini, dy: (ini + fim) / 2 - (pl.top + pl.height / 2 - sec.top) };
+    var sec = document.getElementById('cena2').getBoundingClientRect(), pe = document.querySelector('.pilha'), pl = pe.getBoundingClientRect();
+    var sub = document.querySelector('#cena2 .sub'), sb = sub.getBoundingClientRect(), r = document.querySelector('.rotulos'), rb = r.getBoundingClientRect();
+    var ini = sb.bottom - sec.top - gy(sub) + (cel ? 12 : 18);
+    var fim = cel ? (rb.top - sec.top - gy(r)) + desceRot() - 12 : innerHeight - 14;
+    return { h: fim - ini, ini: ini, dy: (ini + fim) / 2 - (pl.top + pl.height / 2 - sec.top - gy(pe)) };
+  }
+  function zona() {
+    var a = document.getElementById('cena2').getBoundingClientRect();
+    if (cel) return { cx: a.left + a.width / 2, larg: Math.min(innerWidth - 16, 1000) };
+    var rl = document.querySelector('.rotulos').getBoundingClientRect().left, L = a.left + 24, R = rl - 28;
+    return { cx: (L + R) / 2, larg: Math.min(R - L, 1000) };
   }
   var alturaGrade = 0;
   function grade(c) {
-    var W = c.offsetWidth, g = cel ? 8 : 12, linhas = Math.ceil(NC / 2), larg = Math.min(innerWidth - (cel ? 16 : 40), 1000), k = (larg / 2 - g / 2) / W;
+    var W = c.offsetWidth, g = cel ? 8 : 12, linhas = Math.ceil(NC / 2), larg = zona().larg, k = (larg / 2 - g / 2) / W;
     var bruto = function (l) { return Math.max.apply(null, cams.filter(function (x) { return Math.floor(+x.dataset.o / 2) === l; }).map(function (x) { return x.offsetHeight; })); };
     var soma = 0; for (var q = 0; q < linhas; q++) soma += bruto(q);
     k = Math.min(k, (espaco().h - g * (linhas - 1)) / soma);
@@ -650,9 +672,11 @@ window.addEventListener('DOMContentLoaded', function () {
     alturaGrade = total;
     return { k: k, x: (col ? 1 : -1) * (cel1 / 2 + g / 2), y: topo + alt[lin] / 2 };
   }
-  function centro() { var a = document.getElementById('cena2').getBoundingClientRect(), p = document.querySelector('.pilha').getBoundingClientRect(); return (a.left + a.width / 2) - (p.left + p.width / 2); }
+  function centro() { var pe = document.querySelector('.pilha'), p = pe.getBoundingClientRect(); return zona().cx - (p.left + p.width / 2 - gx(pe)); }
   tl2.add(function () { r2.forEach(function (li) { li.classList.add('on'); }); }, .95)
-     .to('#cena2 h2, #cena2 .sub, .rotulos', { opacity: 0, y: -24, filter: 'blur(8px)', ease: 'power2.in', duration: .35 }, 1.0);
+     /* os textos ficam, só ficam mais claros; no celular os tópicos descem para o pé da tela e abrem espaço para a grade */
+     .to('#cena2 h2, #cena2 .sub, .rotulos', { opacity: .5, ease: 'power2.inOut', duration: .5 }, 1.05)
+     .to('.rotulos', { y: desceRot, ease: 'power2.inOut', duration: .6 }, 1.1);
   tl2.to('.pilha', { scale: 1, x: centro, y: function () { return espaco().dy; }, ease: 'power2.inOut', duration: .6 }, 1.1)
      .to('.pilha-in', { rotateX: 0, rotateZ: 0, ease: 'power2.inOut', duration: .6 }, 1.1);
   cams.forEach(function (c) {
