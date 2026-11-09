@@ -687,6 +687,7 @@ window.addEventListener('DOMContentLoaded', function () {
   /* ligação 2 → 3: a grade se junta no centro e encolhe, virando o celular da próxima cena */
   tl2.to(cams, { x: 0, y: 0, scale: .25, opacity: 0, rotation: function (i) { return (i % 2 ? 6 : -6); }, ease: 'power2.in', duration: .45 }, '>')
   tl2.to('.pilha', { x: 0, y: 0, ease: 'power2.in', duration: .45 }, '<');
+  tl2.to('#cena2 h2, #cena2 .sub, .rotulos', { opacity: 0, filter: 'blur(6px)', ease: 'power2.in', duration: .45 }, '<');
 
   /* cena 3: a tela do celular troca a cada passo */
   ScrollTrigger.create({ trigger: '#cena3', start: 'top top', end: '+=190%', pin: true, scrub: true,
