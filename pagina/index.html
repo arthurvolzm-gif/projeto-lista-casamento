@@ -269,7 +269,8 @@ header{position:sticky;top:0;z-index:40}
 .emo{position:absolute;z-index:1;width:clamp(54px,11vw,104px);pointer-events:none;will-change:transform}
 .emo img{width:100%;animation:flutua var(--t,6s) ease-in-out infinite;animation-delay:var(--dl,0s);filter:drop-shadow(0 14px 18px rgba(60,20,110,.18))}
 .c1 .emo{opacity:0}
-@media (max-width:1000px){.emo.m-esconde{display:none}}
+/* no celular e no tablet as taças e o saco de dinheiro vão para o alto e o pé da tela, longe da frase */
+@media (max-width:1000px){.c1 .emo.m-esconde{left:44%!important;top:14%!important}.c1 .emo.m-esconde+.emo.m-esconde{left:46%!important;top:72%!important}}
 .c2{height:100vh;height:100svh;min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 16px}
 .c2 h2{font-size:clamp(24px,5.6vw,38px)}
 .c2 .sub{margin-top:8px}
@@ -310,7 +311,6 @@ header{position:sticky;top:0;z-index:40}
   .passos3 li.on{transform:none}
   .passos3 li:not(.on){opacity:0}
   .c3 .fone{width:min(290px,66vw,calc((100svh - 270px) * .49))}
-  .emo.m-esconde{display:none}
 }
 /* celular realista: a moldura já vem na imagem */
 .fone{aspect-ratio:560/1146;border:0;border-radius:0;background:none;overflow:visible;box-shadow:none;filter:drop-shadow(0 34px 34px rgba(40,10,90,.32)) drop-shadow(0 6px 10px rgba(40,10,90,.12))}
