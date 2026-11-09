@@ -1,0 +1,18 @@
+{
+  "id": "/app",
+  "name": "CheckLove · Planner do casamento",
+  "short_name": "CheckLove",
+  "description": "Organize o casamento inteiro pelo celular.",
+  "lang": "pt-BR",
+  "start_url": "/app",
+  "scope": "/app",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f5fb",
+  "theme_color": "#7a45d8",
+  "icons": [
+    { "src": "/app/icones/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

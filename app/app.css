@@ -784,3 +784,20 @@ a.aviso-item{text-decoration:none}
 .acesso-plano span{font-weight:600;font-size:14px}
 .acesso-plano b{font-size:20px;color:var(--acc-esc)}.acesso-plano small{font-size:12px;color:var(--suave);font-weight:500;margin-left:2px}
 .acesso-fim a.btn{display:block;width:100%;text-align:center;text-decoration:none}
+/* convite para instalar o app (fica fora do body, por isso repete a fonte) */
+.inst{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:0 10px max(10px,env(safe-area-inset-bottom,0px));background:rgba(20,10,35,0);transition:background .3s;font-family:var(--corpo);font-size:14.5px;line-height:1.5;color:var(--texto);-webkit-font-smoothing:antialiased}
+.inst.in{background:rgba(20,10,35,.45)}
+.inst-caixa{width:100%;max-width:420px;background:#fff;border-radius:22px;padding:20px 18px 12px;box-shadow:0 -10px 40px -10px rgba(20,8,40,.4);display:flex;flex-direction:column;gap:14px;transform:translateY(110%);transition:transform .38s cubic-bezier(.2,.9,.3,1)}
+.inst.in .inst-caixa{transform:none}
+.inst-topo{display:flex;gap:13px;align-items:center}
+.inst-topo img{width:56px;height:56px;border-radius:14px;flex:none;box-shadow:0 6px 14px -6px rgba(90,40,170,.6)}
+.inst-topo b{display:block;font-size:16.5px;color:var(--tinta);line-height:1.25}
+.inst-topo small{display:block;font-size:13px;color:var(--suave);margin-top:3px;line-height:1.4}
+.inst-passos{list-style:none;margin:0;padding:12px 14px;display:flex;flex-direction:column;gap:11px;background:var(--bg);border-radius:14px}
+.inst-passos li{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;color:var(--texto);line-height:1.45}
+.inst-passos b{color:var(--tinta)}
+.inst-n{flex:none;width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.inst-ic{display:inline-flex;vertical-align:-4px;width:20px;height:20px;color:#0a84ff}
+.inst-ic svg{width:100%;height:100%}
+.inst-caixa .btn{width:100%;padding:13px;font-size:15px}
+.inst-depois{border:0;background:none;color:var(--suave);font:inherit;font-size:13.5px;font-weight:600;padding:8px;cursor:pointer}
