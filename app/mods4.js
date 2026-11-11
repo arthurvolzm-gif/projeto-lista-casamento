@@ -109,8 +109,7 @@
       return '<div class="vip">' +
         '<header class="vip-cab"><span class="vip-pill">Área exclusiva</span><h1>Seus <i>bônus</i></h1><p>Presentes feitos para quem está organizando o casamento com a gente.</p></header>' +
         '<section class="vip-grupo">' +
-          '<div class="vip-selo"><span>Exclusivo para clientes</span></div>' +
-          '<img class="vip-ilustra" src="/img/bonus-grupo-ilustra.webp?v=2" alt="Ilustração de uma casa nova com uma sacola de compras e um coração">' +
+          '<div class="vip-selo"><span>Exclusivo</span></div>' +
           '<h2>Grupo de promoções <i>para casa nova</i></h2>' +
           '<p>Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para montar sua casa.</p>' +
           grupo +

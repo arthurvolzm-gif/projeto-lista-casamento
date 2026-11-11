@@ -809,3 +809,8 @@ a.aviso-item{text-decoration:none}
 .kpi-orc-form{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .kpi-orc-form input{font-size:16px;font-weight:700;padding:8px 10px}
 .kpi-orc-bt{display:flex;gap:6px}.kpi-orc-bt .btn{flex:1;padding:7px 8px}
+/* selo "Exclusivo" do grupo de promoções na cor do botão do WhatsApp */
+.vip-selo span{background:#25D366;color:#fff;letter-spacing:.18em;box-shadow:0 6px 14px -6px rgba(37,211,102,.7)}
+.vip-selo::before{background:linear-gradient(90deg,transparent,#25D366)}
+.vip-selo::after{background:linear-gradient(270deg,transparent,#25D366)}
+.vip-grupo h2{margin-top:14px}
