@@ -92,11 +92,6 @@
           return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
         }).join('') + '</div></div></section>';
       if (PL.conta) html += compartilhar();
-      html += '<h2 class="pf-titulo">Seus dados</h2><section class="card pf-grupo">' +
-        acao('backup', 'pasta', 'Baixar backup') +
-        '<label class="pf-linha pf-acao"><span class="pf-ic">' + PL.ic('mais') + '</span><span class="pf-rot">Importar backup</span><span class="pf-seta">' + PL.ic('baixo') + '</span><input type="file" accept="application/json,.json" data-arquivo="backup" hidden></label>' +
-        acao('tour', 'livro', 'Ver o tour do app') + acao('exemplo', 'foto', 'Ver com dados de exemplo') + '</section>' +
-        '<p class="pf-nota">' + (PL.conta ? 'Tudo fica salvo na sua conta e neste aparelho. O backup é uma garantia extra.' : 'Tudo fica salvo neste navegador, neste aparelho. Baixe o backup de vez em quando.') + '</p>';
       html += '<section class="card pf-grupo">' + (PL.conta ? acao('sair', 'user', 'Sair da conta') : '') + acao('zerar', 'lixo', 'Apagar tudo', 'pf-perigo') + '</section>';
       return '<div class="pf">' + html + '</div>';
     }
@@ -157,7 +152,7 @@
       var html = U.cab('Planejamento', 'Controle <i>financeiro</i>', 'Anote cada gasto com o valor total e o que já foi pago. O planner calcula o resto.',
         [U.btnPrint()]);
       html += U.kpis([
-        { r: 'Orçamento', v: PL.brl(orc), s: orc ? '' : 'defina no perfil' },
+        { r: 'Orçamento', v: PL.brl(orc), s: orc ? '' : 'toque no lápis para definir', cls: 'kpi-orc', btn: '<button type="button" class="kpi-editar" data-act="editarOrc" aria-label="Editar o orçamento" title="Editar o orçamento">' + PL.ic('lapis') + '</button>' },
         { r: 'Previsto', v: PL.brl(t.prev), s: PL.t('{n} itens', { n: s.gastos.length }), cls: 'acc' },
         { r: 'Pago', v: PL.brl(t.pago), cls: 'ok' },
         { r: 'A pagar', v: PL.brl(t.falta), cls: t.falta ? 'alerta' : '' },
@@ -193,6 +188,20 @@
       return '<div><div class="lin" style="font-size:13px"><span>' + e(x[0]) + '</span><span class="esp"></span><b style="font-variant-numeric:tabular-nums">' + PL.brl(x[1]) + '</b></div><div class="barra" style="margin-top:4px"><i style="width:' + Math.max(3, x[1] / max * 100) + '%"></i></div></div>';
     }).join('') + '</div>';
   }
+  /* editar o orçamento direto no card de Finanças */
+  PL.acoes.editarOrc = function (d, el) {
+    var k = el.closest('.kpi'); if (!k || k.querySelector('.kpi-orc-form')) return;
+    var orc = PL.num(PL.s.perfil.orcamento);
+    k.innerHTML = '<span>Orçamento (' + e(PL.simbolo()) + ')</span><form class="kpi-orc-form"><input inputmode="decimal" autocomplete="off" aria-label="Valor do orçamento" placeholder="0,00" value="' + (orc ? e(String(orc).replace('.', ',')) : '') + '">' +
+      '<div class="kpi-orc-bt"><button type="button" class="btn sec peq" data-orc="cancelar">Cancelar</button><button type="submit" class="btn peq">Salvar</button></div></form>';
+    var f = k.querySelector('form'), i = f.querySelector('input'); i.focus(); i.select();
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault(); ev.stopPropagation();
+      PL.s.perfil.orcamento = PL.num(i.value) || 0; PL.salvar(); PL.render(); PL.toast('Orçamento atualizado.');
+    });
+    f.querySelector('[data-orc="cancelar"]').addEventListener('click', function () { PL.render(); });
+    i.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') PL.render(); });
+  };
   PL.forms.gasto = function (d) {
     if (!d.desc && !d.valor) { PL.toast('Preencha a descrição ou o valor.'); return false; }
     PL.add('gastos', { cat: d.cat, desc: d.desc, valor: PL.num(d.valor), pago: PL.num(d.pago), venc: d.venc });

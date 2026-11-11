@@ -101,7 +101,6 @@
       '<div class="tc-ic">' + MAPA + '</div>' +
       '<h2 id="tc-t">Quer conhecer o app?</h2>' +
       '<p>Um tour rápido, de menos de 1 minuto, mostrando onde fica cada parte do planner.</p>' +
-      '<p class="tc-nota">Se preferir ver depois, é só abrir o <b>Perfil</b> e tocar em <b>Ver o tour do app</b>.</p>' +
       '<div class="tc-botoes"><button type="button" class="btn sec" data-tc="depois">Agora não</button><button type="button" class="btn" data-tc="tour">Fazer o tour</button></div></div>';
     document.body.appendChild(c);
     /* as boas-vindas terminam de sumir por baixo do convite */
@@ -119,7 +118,7 @@
         sair(function () { PL.tour(r); });
       } else {
         PL.s.tourVisto = true; PL.salvar();
-        sair(function () { PL.toast('Quando quiser, o tour fica no Perfil.'); });
+        sair();
       }
     });
   };

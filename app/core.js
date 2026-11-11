@@ -375,6 +375,7 @@
 
   /* ---------- componentes ---------- */
   var IC = {
+    lapis: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
     casa: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
     user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
     din: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9.5v5M18 9.5v5"/>',
@@ -457,7 +458,7 @@
   };
   U.vazio = function (txt) { return '<div class="vazio">' + txt + '</div>'; };
   U.kpis = function (itens) {
-    return '<div class="kpis">' + itens.map(function (k) { return '<div class="kpi ' + (k.cls || '') + '"><span>' + PL.esc(k.r) + '</span><b>' + k.v + '</b>' + (k.s ? '<small>' + k.s + '</small>' : '') + '</div>'; }).join('') + '</div>';
+    return '<div class="kpis">' + itens.map(function (k) { return '<div class="kpi ' + (k.cls || '') + '">' + (k.btn || '') + '<span>' + PL.esc(k.r) + '</span><b>' + k.v + '</b>' + (k.s ? '<small>' + k.s + '</small>' : '') + '</div>'; }).join('') + '</div>';
   };
   U.prog = function (feitos, total) {
     var pc = PL.pct(feitos, total);
