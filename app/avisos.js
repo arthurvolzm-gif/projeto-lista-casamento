@@ -7,6 +7,20 @@
   var SINO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
   var painel = null;
 
+  /* ---------- suporte: troque aqui o contato (WhatsApp com DDI e DDD, só números, ou e-mail) ---------- */
+  PL.SUPORTE = { whatsapp: '', email: '' };
+  PL.linkSuporte = function () {
+    var S = PL.SUPORTE, quem = PL.conta && PL.conta.email ? ' (conta: ' + PL.conta.email + ')' : '';
+    if (S.whatsapp) return 'https://wa.me/' + S.whatsapp.replace(/\D/g, '') + '?text=' + encodeURIComponent('Olá! Preciso de ajuda com o app de planejamento do casamento' + quem + '.');
+    if (S.email) return 'mailto:' + S.email + '?subject=' + encodeURIComponent('Ajuda com o app') + '&body=' + encodeURIComponent('Olá! Preciso de ajuda com' + quem + ':\n\n');
+    return '';
+  };
+  PL.acoes.suporte = function () {
+    var url = PL.linkSuporte();
+    if (!url) { PL.toast('O canal de suporte está sendo configurado. Volte em breve.'); return; }
+    if (/^mailto:/.test(url)) location.href = url; else window.open(url, '_blank', 'noopener');
+  };
+
   function dif(iso) { return Math.round((new Date(iso + 'T12:00:00') - new Date(PL.hoje() + 'T12:00:00')) / 864e5); }
   function quando(n) { return n === 0 ? 'hoje' : n === 1 ? 'amanhã' : 'em ' + n + ' dias'; }
   function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
@@ -54,6 +68,8 @@
       var falta = dif(p.data);
       if (falta >= 0 && falta <= 30) r.push({ id: 'data-' + falta, tipo: 'acc', ic: 'taca', ir: 'inicio', titulo: falta === 0 ? 'É hoje! 💍' : falta === 1 ? 'Falta 1 dia para o casamento' : 'Faltam ' + falta + ' dias para o casamento', sub: 'Confira as tarefas da última semana e o roteiro do dia.' });
     }
+    /* sempre na lista: lembra que dá para falar com o suporte */
+    r.push({ id: 'suporte', tipo: 'info', ic: 'ajuda', suporte: true, titulo: 'Precisa de ajuda? Fale com o suporte', sub: 'Se tiver alguma dúvida ou problema no app, é só chamar a gente. Toque para falar com o suporte.' });
     if (p.data && !s.tarefas.length) r.push({ id: 'sem-tarefas', tipo: 'info', ic: 'tarefa', ir: 'tarefas', titulo: 'Gere o cronograma de tarefas', sub: 'Os prazos são calculados pela data do casamento.' });
     return r;
   };
@@ -75,6 +91,7 @@
     var lista = PL.avisos();
     painel.innerHTML = '<div class="avisos-cab"><b>Avisos</b><button type="button" class="ic" data-avisos="fechar" aria-label="Fechar">' + PL.ic('mais') + '</button></div>' +
       (lista.length ? '<ul>' + lista.map(function (a) {
+        if (a.suporte) return '<li><button type="button" class="aviso-item ' + a.tipo + '" data-act="suporte"><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></button></li>';
         if (a.url) return '<li><a class="aviso-item ' + a.tipo + '" href="' + a.url + '" target="_blank" rel="noopener" data-extra-abrir="' + a.extraAbrir + '"><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></a></li>';
         return '<li><button type="button" class="aviso-item ' + a.tipo + '" data-avisos-ir="' + a.ir + '"' + (a.extra ? ' data-avisos-extra="' + a.extra + '"' : '') + '><span class="aviso-ic">' + PL.ic(a.ic) + '</span><span class="aviso-txt"><b>' + e(a.titulo) + '</b><small>' + e(a.sub) + '</small></span></button></li>';
       }).join('') + '</ul>' : '<div class="avisos-vazio"><span>' + SINO + '</span><b>Tudo em dia por aqui</b><small>Quando houver tarefa ou pagamento perto do prazo, o aviso aparece aqui.</small></div>');
@@ -103,7 +120,7 @@
     if (!painel) return;
     var ir = ev.target.closest('[data-avisos-ir]');
     if (ir) { var ex = ir.getAttribute('data-avisos-extra'); fechar(); document.body.classList.remove('menu-aberto'); PL.ir(ir.getAttribute('data-avisos-ir')); if (ex && PL.acoes.liberarExtra) setTimeout(function () { PL.acoes.liberarExtra({ extra: ex }); }, 350); return; }
-    if (ev.target.closest('[data-avisos="fechar"]') || !painel.contains(ev.target)) fechar();
+    if (ev.target.closest('[data-avisos="fechar"]') || ev.target.closest('[data-act="suporte"]') || !painel.contains(ev.target)) fechar();
   });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fechar(); });
   window.addEventListener('resize', fechar);

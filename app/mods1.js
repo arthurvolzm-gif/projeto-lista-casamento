@@ -92,6 +92,7 @@
           return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
         }).join('') + '</div></div></section>';
       if (PL.conta) html += compartilhar();
+      html += '<h2 class="pf-titulo">Ajuda</h2><section class="card pf-grupo">' + acao('suporte', 'ajuda', 'Falar com o suporte') + '</section>';
       html += '<section class="card pf-grupo">' + (PL.conta ? acao('sair', 'user', 'Sair da conta') : '') + acao('zerar', 'lixo', 'Apagar tudo', 'pf-perigo') + '</section>';
       return '<div class="pf">' + html + '</div>';
     }
