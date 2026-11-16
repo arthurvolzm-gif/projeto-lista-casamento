@@ -15,7 +15,8 @@ const PLANOS: Record<string, number> = {
   "721ed651c9903949": 1,   // Mensal (assinatura: cada cobrança aprovada renova por mais 1 mês)
   "53f1e7f37d3718e7": 3,   // Trimestral
   "ab981fecc2be343c": 6,   // Semestral
-  "43e409b9b4e4d4a0": 12,  // Anual
+  "a6ef1c2dd9c2b2a6": 12,  // Anual
+  "43e409b9b4e4d4a0": 12,  // Anual (checkout anterior)
   "5282de95bfa5e7bd": 12,  // Anual (checkout antigo)
 };
 // (a folga de 3 dias para a renovação do mensal cair fica na função meus_acessos, no banco)
