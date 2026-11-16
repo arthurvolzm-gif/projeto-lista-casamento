@@ -8,7 +8,7 @@
   var painel = null;
 
   /* ---------- suporte: troque aqui o contato (WhatsApp com DDI e DDD, só números, ou e-mail) ---------- */
-  PL.SUPORTE = { whatsapp: '', email: '' };
+  PL.SUPORTE = { whatsapp: '5541987975115', email: '' };
   PL.linkSuporte = function () {
     var S = PL.SUPORTE, quem = PL.conta && PL.conta.email ? ' (conta: ' + PL.conta.email + ')' : '';
     if (S.whatsapp) return 'https://wa.me/' + S.whatsapp.replace(/\D/g, '') + '?text=' + encodeURIComponent('Olá! Preciso de ajuda com o app de planejamento do casamento' + quem + '.');
