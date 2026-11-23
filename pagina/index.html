@@ -378,7 +378,6 @@ section[style*="padding-top:0"]{padding-bottom:34px}
 
 <section class="cena c2" id="cena2">
   <h2>Veja o casamento inteiro <em>de uma vez</em></h2>
-  <p class="sub">Cada parte do casamento numa camada do app.</p>
   <div class="pilha-area">
     <div class="pilha"><div class="pilha-in">
       <div class="camada" data-i="0" data-o="7"><img src="/img/pagina/camada-enxoval.webp?v=2" alt="Enxoval da casa nova no app" loading="lazy" width="460" height="323"></div>
@@ -647,7 +646,7 @@ window.addEventListener('DOMContentLoaded', function () {
   }
   function espaco() {
     var sec = document.getElementById('cena2').getBoundingClientRect(), pe = document.querySelector('.pilha'), pl = pe.getBoundingClientRect();
-    var sub = document.querySelector('#cena2 .sub'), sb = sub.getBoundingClientRect(), r = document.querySelector('.rotulos'), rb = r.getBoundingClientRect();
+    var sub = document.querySelector('#cena2 .sub') || document.querySelector('#cena2 h2'), sb = sub.getBoundingClientRect(), r = document.querySelector('.rotulos'), rb = r.getBoundingClientRect();
     var ini = sb.bottom - sec.top - gy(sub) + (cel ? 12 : 18);
     var fim = cel ? (rb.top - sec.top - gy(r)) + desceRot() - 12 : innerHeight - 14;
     return { h: fim - ini, ini: ini, dy: (ini + fim) / 2 - (pl.top + pl.height / 2 - sec.top - gy(pe)) };
