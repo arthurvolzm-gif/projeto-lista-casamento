@@ -38,7 +38,7 @@
       nova: ['Criar senha nova', 'Escolha a nova senha da sua conta.', 'Salvar senha']
     }[modo];
     document.body.innerHTML = '<main class="entrada"><div class="entrada-card">' +
-      '<div class="marca"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></div>' +
+      '<div class="marca"><div><b>Check<i>Love</i></b></div></div>' +
       '<h1>' + t[0] + '</h1><p class="nota">' + t[1] + '</p>' +
       (aviso ? '<div class="aviso ok">' + e(aviso) + '</div>' : '') + (erro ? '<div class="aviso erro" role="alert">' + e(erro) + '</div>' : '') +
       '<form data-login="' + modo + '" class="entrada-form">' +
@@ -112,7 +112,7 @@
   function telaPendente(email, erro) {
     clearTimeout(tAcesso);
     document.body.innerHTML = '<main class="entrada"><div class="entrada-card acesso-pend">' +
-      '<div class="marca"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></div>' +
+      '<div class="marca"><div><b>Check<i>Love</i></b></div></div>' +
       '<div class="acesso-ic"><span></span></div>' +
       '<h1>Estamos confirmando sua compra</h1>' +
       '<p class="nota">Ainda não encontramos uma compra aprovada para <b>' + e(email) + '</b>.</p>' +
@@ -130,7 +130,7 @@
     clearTimeout(tAcesso);
     var data = /^\d{4}-\d{2}-\d{2}$/.test(fim || '') ? fim.split('-').reverse().join('/') : '';
     document.body.innerHTML = '<main class="entrada"><div class="entrada-card acesso-pend acesso-fim">' +
-      '<div class="marca"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></div>' +
+      '<div class="marca"><div><b>Check<i>Love</i></b></div></div>' +
       '<div class="acesso-ic fim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>' +
       '<h1>Seu acesso terminou</h1>' +
       '<p class="nota">O plano da conta <b>' + e(email) + '</b> venceu' + (data ? ' em <b>' + data + '</b>' : '') + '.</p>' +

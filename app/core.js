@@ -488,7 +488,7 @@
     document.body.innerHTML =
       '<div class="topo-movel"><button type="button" class="ic menu-btn" data-act="menu" aria-label="Abrir o menu">' + PL.ic('menu') + '</button><a class="marca topo-centro" href="#inicio" data-act="ir" data-to="inicio" id="topo-centro"><b>Check<i>Love</i></b></a>' +
       '<a class="ic" id="topo-bonus" href="#bonus" data-act="ir" data-to="bonus" aria-label="Bônus">' + PL.ic('presente') + '</a></div>' +
-      '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b><small>Planner do casamento</small></div></a>' +
+      '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
       '<div class="lado-rodape" id="rodape"><a href="#bonus" data-act="ir" data-to="bonus">' + PL.ic('presente') + 'Bônus</a>' + (PL.rodapeLado || '') + '</div></aside>' +
       '<main class="principal"><div class="conteudo" id="main"></div></main></div><nav class="abas-baixo" id="baixo" aria-label="Áreas"></nav><div class="veu" data-act="fechar"></div><div class="toast" id="toast" hidden role="status"></div>';
