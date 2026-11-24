@@ -11,7 +11,7 @@
   function statusGasto(g) {
     var v = PL.num(g.valor), p = PL.num(g.pago);
     if (v && p >= v) return ['Pago', 'ok'];
-    if (p > 0) return ['Parcial', 'alerta'];
+    if (p > 0) return ['Parcial', 'azul'];
     return ['Pendente', ''];
   }
   PL.totaisGastos = totaisGastos;
@@ -156,14 +156,14 @@
         { r: 'Orçamento', v: PL.brl(orc), s: orc ? '' : 'toque no lápis para definir', cls: 'kpi-orc', btn: '<button type="button" class="kpi-editar" data-act="editarOrc" aria-label="Editar o orçamento" title="Editar o orçamento">' + PL.ic('lapis') + '</button>' },
         { r: 'Previsto', v: PL.brl(t.prev), s: PL.t('{n} itens', { n: s.gastos.length }), cls: 'acc' },
         { r: 'Pago', v: PL.brl(t.pago), cls: 'ok' },
-        { r: 'A pagar', v: PL.brl(t.falta), cls: t.falta ? 'alerta' : '' },
+        { r: 'A pagar', v: PL.brl(t.falta), cls: t.falta ? 'azul' : '' },
         { r: orc && disp < 0 ? 'Acima do orçamento' : 'Disponível', v: PL.brl(Math.abs(disp)), cls: orc && disp < 0 ? 'erro' : '' }
       ]);
-      var base = Math.max(orc, t.prev) || 1, C = 2 * Math.PI * 52, partes = [[t.pago, 'var(--ok)'], [t.falta, '#e2a33a'], [Math.max(0, orc - t.prev), 'var(--linha)']], off = 0;
+      var base = Math.max(orc, t.prev) || 1, C = 2 * Math.PI * 52, partes = [[t.pago, 'var(--ok)'], [t.falta, 'var(--azul)'], [Math.max(0, orc - t.prev), 'var(--linha)']], off = 0;
       var arcos = partes.map(function (x) { var l = x[0] / base * C; var a = '<circle cx="70" cy="70" r="52" fill="none" stroke="' + x[1] + '" stroke-width="16" stroke-dasharray="' + l.toFixed(2) + ' ' + (C - l).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 70 70)"/>'; off += l; return a; }).join('');
       html += '<div class="g2"><section class="card"><h2>Distribuição</h2><div class="rosca"><svg viewBox="0 0 140 140" role="img" aria-label="Pago, a pagar e disponível"><circle cx="70" cy="70" r="52" fill="none" stroke="var(--bg)" stroke-width="16"/>' + arcos +
         '<text x="70" y="68" text-anchor="middle" font-size="20" font-weight="700" fill="var(--tinta)">' + PL.pct(t.pago, t.prev) + '%</text><text x="70" y="86" text-anchor="middle" font-size="10" fill="var(--suave)">pago</text></svg>' +
-        '<div class="legenda"><div><i style="background:var(--ok)"></i>Pago<b>' + PL.brl(t.pago) + '</b></div><div><i style="background:#e2a33a"></i>A pagar<b>' + PL.brl(t.falta) + '</b></div><div><i style="background:var(--linha)"></i>Livre no orçamento<b>' + PL.brl(Math.max(0, orc - t.prev)) + '</b></div></div></div></section>' +
+        '<div class="legenda"><div><i style="background:var(--ok)"></i>Pago<b>' + PL.brl(t.pago) + '</b></div><div><i style="background:var(--azul)"></i>A pagar<b>' + PL.brl(t.falta) + '</b></div><div><i style="background:var(--linha)"></i>Livre no orçamento<b>' + PL.brl(Math.max(0, orc - t.prev)) + '</b></div></div></div></section>' +
         '<section class="card"><h2>Por categoria</h2>' + porCategoria() + '</section></div>';
       html += '<section class="card"><h2>Adicionar gasto</h2>' + U.form('gasto', [
         U.f('cat', 'Categoria', { opts: D.gastos }), U.f('desc', 'Descrição', { ph: 'Ex.: nome do fornecedor' }),

@@ -840,3 +840,7 @@ a.aviso-item{text-decoration:none}
 .entrada::before{height:clamp(220px,calc(100svh - 380px),66svh);background-position:center 66%}
 .entrada .entrada-card{flex:1 0 auto;width:100%;max-width:none;margin-top:-28px;border:0;border-radius:26px 26px 0 0;box-shadow:0 -12px 30px -18px rgba(30,10,60,.35);padding:26px max(22px,calc((100% - 420px) / 2)) max(26px,env(safe-area-inset-bottom,0px))}
 @media (max-width:700px){.entrada .entrada-card{width:100%;margin-top:-26px}}
+/* Finanças: "a pagar" em azul (no lugar do amarelo) */
+:root{--azul:#2f6fd6;--azul-sua:#e6eefc}
+.kpi.azul b{color:var(--azul)}
+.chip.azul{background:var(--azul-sua);color:#2459b3}
