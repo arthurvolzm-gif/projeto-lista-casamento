@@ -32,14 +32,14 @@
   });
   function tela(modo, aviso, erro) {
     var t = {
-      entrar: ['Entrar no planner', 'Use o e-mail e a senha da sua conta.', 'Entrar'],
+      entrar: ['', 'Use o e-mail e a senha da sua conta.', 'Entrar'],
       criar: ['Criar sua conta', 'Seus dados ficam salvos na conta e aparecem em qualquer aparelho.', 'Criar conta'],
       esqueci: ['Recuperar a senha', 'Enviamos um link para você criar uma senha nova.', 'Enviar link'],
       nova: ['Criar senha nova', 'Escolha a nova senha da sua conta.', 'Salvar senha']
     }[modo];
     document.body.innerHTML = '<main class="entrada"><div class="entrada-card">' +
       '<div class="marca"><div><b>Check<i>Love</i></b></div></div>' +
-      '<h1>' + t[0] + '</h1><p class="nota">' + t[1] + '</p>' +
+      (t[0] ? '<h1>' + t[0] + '</h1>' : '') + '<p class="nota">' + t[1] + '</p>' +
       (aviso ? '<div class="aviso ok">' + e(aviso) + '</div>' : '') + (erro ? '<div class="aviso erro" role="alert">' + e(erro) + '</div>' : '') +
       '<form data-login="' + modo + '" class="entrada-form">' +
       (modo !== 'nova' ? '<label class="campo">E-mail<input name="email" type="email" autocomplete="email" required></label>' : '') +
