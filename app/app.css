@@ -834,3 +834,9 @@ a.aviso-item{text-decoration:none}
 .entrada .acesso-ic.fim svg{background:var(--acc-sua);border-color:transparent}
 .entrada .entrada-idiomas{border-top-color:var(--linha)}
 @media (max-width:700px){.entrada{align-items:center;padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}.entrada .entrada-card{margin-top:-26px;width:calc(100% - 24px)}}
+/* login: foto ocupando a maior parte da tela e o cartão branco cobrindo embaixo, de lado a lado */
+.entrada{background:#fff;padding:0}
+.entrada{min-height:100vh;min-height:100dvh}
+.entrada::before{height:clamp(220px,calc(100svh - 380px),66svh);background-position:center 66%}
+.entrada .entrada-card{flex:1 0 auto;width:100%;max-width:none;margin-top:-28px;border:0;border-radius:26px 26px 0 0;box-shadow:0 -12px 30px -18px rgba(30,10,60,.35);padding:26px max(22px,calc((100% - 420px) / 2)) max(26px,env(safe-area-inset-bottom,0px))}
+@media (max-width:700px){.entrada .entrada-card{width:100%;margin-top:-26px}}
