@@ -816,3 +816,21 @@ a.aviso-item{text-decoration:none}
 .vip-grupo h2{margin-top:14px}
 /* login no celular: o cartão fica na parte de baixo da tela, deixando a foto aparecer em cima */
 @media (max-width:700px){.entrada{align-items:flex-end;padding-bottom:max(22px,env(safe-area-inset-bottom,0px))}}
+/* ===== login: foto em cima e cartão branco embaixo (substitui o cartão transparente sobre a foto) ===== */
+.entrada{flex-direction:column;align-items:center;justify-content:flex-start;padding:0 0 max(24px,env(safe-area-inset-bottom,0px));background:var(--bg)}
+.entrada::before{content:'';display:block;flex:none;width:100%;height:40vh;height:40svh;min-height:210px;background:url(/img/login-fundo.webp) center 62%/cover no-repeat}
+.entrada .entrada-card{position:relative;margin-top:-34px;width:calc(100% - 28px);max-width:420px;background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid var(--linha);color:var(--texto);box-shadow:0 22px 50px -26px rgba(40,10,90,.4)}
+.entrada .entrada-card h1{color:var(--tinta);text-shadow:none}
+.entrada .entrada-card .marca b,.entrada .entrada-card .campo{color:var(--tinta);text-shadow:none}
+.entrada .entrada-card .campo{color:var(--suave)}
+.entrada .entrada-card .marca b i{color:var(--acc)}
+.entrada .entrada-card .nota,.entrada .entrada-links,.entrada .entrada-links span{color:var(--suave);text-shadow:none}
+.entrada .entrada-links button,.entrada .acesso-loja a,.entrada .acesso-loja button{color:var(--acc-esc);text-shadow:none;text-decoration:none}
+.entrada .acesso-loja{color:var(--suave);text-shadow:none}
+.entrada .entrada-card input{background:#fff}
+.entrada .acesso-dicas{background:var(--bg)}
+.entrada .acesso-plano{background:var(--bg)}
+.entrada .acesso-ic.fim{color:var(--acc)}
+.entrada .acesso-ic.fim svg{background:var(--acc-sua);border-color:transparent}
+.entrada .entrada-idiomas{border-top-color:var(--linha)}
+@media (max-width:700px){.entrada{align-items:center;padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}.entrada .entrada-card{margin-top:-26px;width:calc(100% - 24px)}}
