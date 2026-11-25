@@ -46,9 +46,6 @@
           var atras = g.venc < hoje;
           return '<li><div class="txt" style="padding:4px 0">' + e(g.desc || g.cat) + '<small style="padding:0">' + e(PL.t('{cat} · vence {d}', { cat: PL.t(g.cat), d: PL.dataBR(g.venc) })) + '</small></div><b style="font-variant-numeric:tabular-nums">' + PL.brl(PL.num(g.valor) - PL.num(g.pago)) + '</b>' + (atras ? '<span class="chip erro">Vencido</span>' : '') + '</li>';
         }).join('') + '</ul>' : U.vazio('Nenhum pagamento com vencimento marcado.')) + '</section></div>';
-      var fotos = s.moodboard.slice(0, 6);
-      html += '<section class="card"><h2>Mural de inspiração <button type="button" class="btn leve peq" data-act="ir" data-to="moodboard">Abrir mural</button></h2>' +
-        (fotos.length ? '<div class="galeria">' + fotos.map(function (f) { return '<figure><img src="' + e(f.src) + '" alt="' + e(f.cat) + '" loading="lazy"></figure>'; }).join('') + '</div>' : U.vazio('Adicione fotos de referência no mural de inspiração.')) + '</section>';
       return html;
     }
   });

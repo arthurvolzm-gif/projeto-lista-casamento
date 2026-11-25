@@ -64,14 +64,5 @@
     return PL.t('{n} palavras · cerca de {t}', { n: n, t: s < 60 ? s + ' s' : Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s' });
   }
 
-  PL.mod('civil', {
-    titulo: 'Civil e cartório', icone: 'selo', menu: 'Civil',
-    render: function () {
-      var c = PL.s.civil;
-      var html = U.cab('Cerimônia', 'Civil e <i>cartório</i>', 'Os documentos e prazos mudam de um cartório para outro. Confirmem tudo no cartório escolhido.', [U.btnPrint()]);
-      html += '<div class="g2"><section class="card"><h2>Documentação <small>' + feitos(c.docs) + '/' + c.docs.length + '</small></h2>' + U.checklist('civil/docs', c.docs, 'Adicionar documento') + '</section>' +
-        '<section class="card"><h2>Itens do dia <small>' + feitos(c.itens) + '/' + c.itens.length + '</small></h2>' + U.checklist('civil/itens', c.itens) + '</section></div>';
-      return html;
-    }
-  });
+  /* aba Civil removida a pedido do usuário (os dados antigos continuam em PL.s.civil) */
 })();
