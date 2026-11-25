@@ -882,4 +882,4 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pf-avatar:hover .pf-avatar-cam{background:var(--acc-sua)}
 .pf-avatar-tirar{display:block;margin:-4px auto 8px;border:0;background:none;color:var(--suave);font:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 /* cards com um contorno roxo leve */
-.card,.kpi,.bcard,.pf-topo,.vip-extra,.vip-outro,.mes{border-color:color-mix(in srgb,var(--acc) 26%,#fff)}
+.card,.kpi,.bcard,.pf-topo,.vip-extra,.vip-outro,.mes{border-color:color-mix(in srgb,var(--acc) 45%,#fff)}
