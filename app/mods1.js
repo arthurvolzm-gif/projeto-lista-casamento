@@ -97,9 +97,10 @@
           '<div class="pf-capa-bts">' +
           '<label class="btn leve peq">Trocar<input type="file" accept="image/*" data-arquivo="capa" hidden></label>' +
           (p.fotoCapa ? '<button type="button" class="btn sec peq" data-act="capaPadrao">Usar a padrão</button>' : '') + '</div></div></div>' +
-        '<div class="pf-linha pf-col"><span class="pf-ic">' + PL.ic('gota') + '</span><span class="pf-rot">Cor do planner</span><div class="temas">' + D.temas.map(function (t) {
-          return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
-        }).join('') + '</div></div></section>';
+        /* cor do planner: bolinha da cor em uso + botão que abre as opções */
+        (function () { var t = D.temas.filter(function (x) { return x.id === (p.tema || 'roxo'); })[0] || D.temas[0];
+          return '<div class="pf-linha"><span class="pf-ic pf-cor-atual" aria-hidden="true"><i style="background:' + t.cor + '"></i></span><span class="pf-rot">Cor do planner<small class="pf-cor-nome">' + e(t.nome) + '</small></span>' +
+            '<span class="pf-ctrl"><button type="button" class="btn leve peq" data-act="trocarTema">Trocar Tema</button></span></div>'; })() + '</section>';
       if (PL.conta) html += compartilhar();
       html += '<h2 class="pf-titulo">Ajuda</h2><section class="card pf-grupo">' + acao('suporte', 'ajuda', 'Falar com o suporte') + '</section>';
       html += '<section class="card pf-grupo">' + (PL.conta ? acao('sair', 'user', 'Sair da conta') : '') + acao('zerar', 'lixo', 'Apagar tudo', 'pf-perigo') + '</section>';
@@ -130,7 +131,22 @@
     var m = (PL.conta.membros || []).filter(function (x) { return x !== d.email; });
     PL.salvarMembros(m).then(function () { PL.render(true); PL.toast('Compartilhamento removido.'); }, function () { PL.toast('Não deu para remover agora.'); });
   };
-  PL.acoes.tema = function (d) { PL.s.perfil.tema = d.tema; PL.salvar(); PL.render(true); };
+  PL.acoes.tema = function (d) { PL.s.perfil.tema = d.tema; PL.salvar(); PL.render(true); var f = document.querySelector('.folha-tema'); if (f) fecharTema(f); };
+  /* janela de baixo com as cores disponíveis */
+  function fecharTema(f) { f.classList.remove('in'); setTimeout(function () { f.remove(); }, 300); }
+  PL.acoes.trocarTema = function () {
+    if (document.querySelector('.folha-tema')) return;
+    var atual = PL.s.perfil.tema || 'roxo', f = document.createElement('div');
+    f.className = 'folha-tema';
+    f.innerHTML = '<div class="ft-caixa" role="dialog" aria-modal="true" aria-label="Trocar Tema"><div class="ft-puxa"></div><h3>Trocar Tema</h3>' +
+      '<div class="ft-cores">' + D.temas.map(function (t) {
+        return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (t.id === atual ? 'on' : '') + '"><i style="background:' + t.cor + '"></i><span>' + e(t.nome) + '</span></button>';
+      }).join('') + '</div></div>';
+    document.body.appendChild(f);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { f.classList.add('in'); }); });
+    f.addEventListener('click', function (ev) { if (ev.target === f) fecharTema(f); });
+  };
+  document.addEventListener('keydown', function (ev) { var f = document.querySelector('.folha-tema'); if (f && ev.key === 'Escape') fecharTema(f); });
   PL.acoes.backup = function () {
     PL.baixar('planner-checklove-' + PL.hoje() + '.json', JSON.stringify(PL.s), 'application/json');
   };

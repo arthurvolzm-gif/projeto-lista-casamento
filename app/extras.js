@@ -41,6 +41,10 @@
     { id: 'salvia', nome: 'Sálvia', cor: '#4f7d62' },
     { id: 'serenity', nome: 'Serenity', cor: '#3f6fb6' },
     { id: 'terracota', nome: 'Terracota', cor: '#b0603f' },
-    { id: 'grafite', nome: 'Grafite', cor: '#3d3d4a' }
+    { id: 'grafite', nome: 'Grafite', cor: '#3d3d4a' },
+    { id: 'dourado', nome: 'Dourado', cor: '#b08a3e' },
+    { id: 'prata', nome: 'Prata', cor: '#7f8896' },
+    { id: 'marsala', nome: 'Marsala', cor: '#8c3a4b' },
+    { id: 'marinho', nome: 'Azul marinho', cor: '#2c4a7c' }
   ];
 })();

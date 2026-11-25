@@ -11,6 +11,10 @@ html[data-tema="salvia"]{--acc:#4f7d62;--acc-esc:#3a604a;--acc-sua:#eaf3ed;--acc
 html[data-tema="serenity"]{--acc:#3f6fb6;--acc-esc:#2e5694;--acc-sua:#ebf1fb;--acc-borda:#cddcf2}
 html[data-tema="terracota"]{--acc:#b0603f;--acc-esc:#8d4a2e;--acc-sua:#fbefe9;--acc-borda:#efd4c7}
 html[data-tema="grafite"]{--acc:#3d3d4a;--acc-esc:#26262f;--acc-sua:#eeeef2;--acc-borda:#d8d8e0}
+html[data-tema="dourado"]{--acc:#b08a3e;--acc-esc:#8a6a26;--acc-sua:#f8f1e2;--acc-borda:#ecdcb8}
+html[data-tema="prata"]{--acc:#7f8896;--acc-esc:#5c6472;--acc-sua:#f0f2f5;--acc-borda:#d9dde3}
+html[data-tema="marsala"]{--acc:#8c3a4b;--acc-esc:#6d2836;--acc-sua:#f8eaed;--acc-borda:#ebcdd3}
+html[data-tema="marinho"]{--acc:#2c4a7c;--acc-esc:#1e365e;--acc-sua:#e8eef7;--acc-borda:#c9d6ea}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -1002,3 +1006,25 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pf-capa-txt b{font-size:14.5px;font-weight:600;color:var(--tinta)}
 .pf-capa-txt small{font-size:12px;color:var(--suave);line-height:1.35}
 .pf-capa-bts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+/* Perfil: cor do planner em uso + janela para trocar o tema */
+.pf-cor-atual{background:#fff!important}
+.pf-cor-atual i{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--linha)}
+.pf-cor-nome{display:block;font-size:12px;color:var(--suave);font-weight:500;margin-top:1px}
+.folha-tema{position:fixed;inset:0;z-index:2000;background:rgba(20,10,35,0);display:flex;align-items:flex-end;justify-content:center;transition:background .3s}
+.folha-tema.in{background:rgba(20,10,35,.45)}
+.ft-caixa{width:100%;max-width:520px;background:#fff;border-radius:24px 24px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.9,.3,1);box-shadow:0 -12px 36px -12px rgba(20,8,40,.35)}
+.folha-tema.in .ft-caixa{transform:none}
+.ft-puxa{width:42px;height:5px;border-radius:9px;background:var(--linha);margin:0 auto 12px}
+.ft-caixa h3{font-family:var(--disp);font-size:21px;font-weight:600;color:var(--tinta);text-align:center;margin-bottom:16px}
+.ft-cores{display:grid;grid-template-columns:repeat(5,1fr);gap:14px 6px}
+.ft-cores button{display:flex;flex-direction:column;align-items:center;gap:7px;border:0;background:none;cursor:pointer;font:inherit;font-size:11.5px;font-weight:600;color:var(--texto);padding:0}
+.ft-cores i{width:46px;height:46px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--linha);transition:transform .2s}
+.ft-cores button.on i{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--acc)}
+.ft-cores button.on span{color:var(--acc-esc)}
+.ft-cores button:active i{transform:scale(.94)}
+.ft-cores span{text-align:center;line-height:1.2}
+.ft-cores i[style*="#b08a3e"]{background:linear-gradient(135deg,#e2c27a,#b08a3e 55%,#8a6a26)!important}
+.ft-cores i[style*="#7f8896"]{background:linear-gradient(135deg,#d9dee6,#9aa3b1 50%,#6a7282)!important}
+@media (max-width:380px){.ft-cores{grid-template-columns:repeat(4,1fr)}}
+/* o degradê do rodapé segue a cor do tema escolhido */
+@media (max-width:900px){.abas-baixo{background:linear-gradient(100deg,color-mix(in srgb,var(--acc) 78%,#fff) 0%,var(--acc) 45%,var(--acc-esc) 100%)}}
