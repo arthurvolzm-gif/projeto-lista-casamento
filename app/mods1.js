@@ -29,7 +29,7 @@
       var prox = s.tarefas.filter(function (x) { return !x.ok; }).sort(function (a, b) { return (a.prazo || '9999').localeCompare(b.prazo || '9999'); }).slice(0, 6);
       var venc = s.gastos.filter(function (g) { return g.venc && PL.num(g.valor) > PL.num(g.pago); }).sort(function (a, b) { return a.venc.localeCompare(b.venc); }).slice(0, 5);
       var nome = p.noiva || p.noivo;
-      var html = U.cab('Bem-vindos', nome ? 'Olá, <i>' + e(nome) + '</i>' : 'Seu <i>planner</i>', 'Tudo do casamento em um só lugar. Comece pelo perfil e siga pelo menu.') + U.contagem();
+      var html = U.contagem();   /* sem o título "Bem-vindos / Seu planner" (pedido do usuário) */
       html += U.kpis([
         { r: 'Orçamento usado', v: p.orcamento ? PL.pct(t.prev, PL.num(p.orcamento)) + '%' : PL.brl(t.prev), s: p.orcamento ? PL.t('{a} de {b}', { a: PL.brl(t.prev), b: PL.brl(PL.num(p.orcamento)) }) : 'defina o orçamento no perfil', cls: p.orcamento && t.prev > PL.num(p.orcamento) ? 'erro' : 'acc' },
         { r: 'Já pago', v: PL.brl(t.pago), s: PL.t('falta {v}', { v: PL.brl(t.falta) }), cls: 'ok' },

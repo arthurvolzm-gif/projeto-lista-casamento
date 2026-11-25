@@ -862,3 +862,6 @@ img,svg{-webkit-user-drag:none;user-drag:none;pointer-events:auto}
 input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 /* evita o zoom automático do iPhone ao tocar num campo: fonte mínima de 16px nos campos */
 @media (max-width:900px){input,textarea,select{font-size:16px!important}}
+/* barra de abas (ex.: Visão geral / Tarefas) centralizada na tela */
+.abas-caixa{margin-left:auto;margin-right:auto}
+@media (max-width:900px){.abas-caixa{width:max-content;max-width:100%}}
