@@ -210,18 +210,19 @@
       if (tc.getAttribute('data-frase') !== frase) {
         tc.setAttribute('data-frase', frase);
         tc.classList.toggle('cursiva', !!frase);
-        tc.innerHTML = frase ? '<span class="topo-faltam">' + PL.esc(frase) + '</span>' : '<b>Check<i>Love</i></b>';
+        /* em 2 linhas: "Faltam X dias" / "para o seu casamento" */
+        var cort = frase.indexOf(' para '), l1 = cort > 0 ? frase.slice(0, cort) : frase, l2 = cort > 0 ? frase.slice(cort + 1) : '';
+        tc.innerHTML = frase ? '<span class="topo-faltam duas"><span>' + PL.esc(l1) + '</span>' + (l2 ? '<span>' + PL.esc(l2) + '</span>' : '') + '</span>' : '<b>Check<i>Love</i></b>';
       }
       ajustarFaltam();
     }
     miniCasal.innerHTML = '<b>' + PL.esc(PL.casal()) + '</b><span>' + PL.esc(p.data ? (d > 1 ? PL.t('Faltam {n} dias', { n: d }) : d === 1 ? PL.t('Falta 1 dia') : d === 0 ? PL.t('É hoje!') : PL.dataBR(p.data)) : PL.t('Defina a data no perfil')) + '</span>';
   }
-  /* diminui a letra até a frase caber numa linha só */
+  /* diminui a letra até cada linha da frase caber */
   function ajustarFaltam() {
     var el = document.querySelector('.topo-faltam'), cx = el && el.parentNode; if (!el || !cx.clientWidth) return;
-    var t = 25; el.style.fontSize = t + 'px'; el.classList.remove('duas');
+    var t = 26; el.style.fontSize = t + 'px';
     while (el.scrollWidth > cx.clientWidth && t > 16) { t -= 0.5; el.style.fontSize = t + 'px'; }
-    if (el.scrollWidth > cx.clientWidth) { el.style.fontSize = '19px'; el.classList.add('duas'); }
   }
   window.addEventListener('resize', ajustarFaltam);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarFaltam);

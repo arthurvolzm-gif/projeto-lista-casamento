@@ -904,3 +904,10 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .abas-baixo a svg,.abas-baixo .menu-btn svg{width:25px;height:25px}
   .principal{padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))}
 }
+/* frase do topo em 2 linhas, alinhada à esquerda (logo depois do menu) */
+@media (max-width:900px){
+  #topo-centro.cursiva{justify-self:start;justify-content:flex-start;text-align:left;padding-left:2px;min-width:0}
+  .topo-faltam.duas{display:flex;flex-direction:column;align-items:flex-start;margin:0;white-space:nowrap;line-height:1.05;text-align:left;max-width:100%}
+  .topo-faltam.duas span{display:block}
+}
+@media (max-width:900px){.topo-movel{grid-template-columns:46px minmax(0,1fr) auto!important;gap:6px!important}}
