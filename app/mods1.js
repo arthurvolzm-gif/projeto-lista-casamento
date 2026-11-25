@@ -90,17 +90,16 @@
         linha('cal', 'Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) +
         linha('din', 'Orçamento total (' + PL.simbolo() + ')', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</section>';
       var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
-      html += '<h2 class="pf-titulo">Preferências</h2><section class="card pf-grupo">' +
-        linha('din', 'Moeda', U.sel('perfil', '', 'moeda', p.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda')).replace(/<span class="pf-ic">[\s\S]*?<\/span>/, '<span class="pf-ic pf-bandeira" aria-hidden="true">' + (BANDEIRAS[PL.moeda()] || '\uD83C\uDF0E') + '</span>') +
-        /* foto da contagem: imagem na metade esquerda, texto e botões na direita */
-        '<div class="pf-capa"><span class="pf-capa-img"' + U.heroFoto() + '></span><div class="pf-capa-txt"><b>Foto da contagem</b>' +
-          '<div class="pf-capa-bts">' +
-          '<label class="btn leve peq">Trocar<input type="file" accept="image/*" data-arquivo="capa" hidden></label>' +
-          (p.fotoCapa ? '<button type="button" class="btn sec peq" data-act="capaPadrao">Usar a padrão</button>' : '') + '</div></div></div>' +
-        /* cor do planner: bolinha da cor em uso + botão que abre as opções */
-        (function () { var t = D.temas.filter(function (x) { return x.id === (p.tema || 'roxo'); })[0] || D.temas[0];
-          return '<div class="pf-linha"><span class="pf-ic pf-cor-atual" aria-hidden="true"><i style="background:' + t.cor + '"></i></span><span class="pf-rot">Cor do planner<small class="pf-cor-nome">' + e(t.nome) + '</small></span>' +
-            '<span class="pf-ctrl"><button type="button" class="btn leve peq" data-act="trocarTema">Trocar Tema</button></span></div>'; })() + '</section>';
+      var temaAt = D.temas.filter(function (x) { return x.id === (p.tema || 'roxo'); })[0] || D.temas[0];
+      html += '<h2 class="pf-titulo">Preferências</h2><section class="card pf-grupo pf-pref">' +
+        /* foto da contagem em destaque, com o botão Trocar por cima */
+        '<div class="pf-capa2"' + U.heroFoto() + '><div class="pf-capa2-txt"><small>Foto da contagem</small><b>' + e(PL.casal()) + '</b></div>' +
+          '<div class="pf-capa2-bts">' + (p.fotoCapa ? '<button type="button" class="pf-capa2-bt sec" data-act="capaPadrao">Usar a padrão</button>' : '') +
+          '<label class="pf-capa2-bt">' + PL.ic('foto') + 'Trocar<input type="file" accept="image/*" data-arquivo="capa" hidden></label></div></div>' +
+        /* cor do planner: a linha inteira abre as opções */
+        '<button type="button" class="pf-linha pf-acao pf-tema" data-act="trocarTema"><span class="pf-ic pf-cor-atual" aria-hidden="true"><i style="background:' + temaAt.cor + '"></i></span>' +
+          '<span class="pf-rot">Cor do planner</span><span class="pf-valor">' + e(temaAt.nome) + '<em>Trocar Tema</em></span><span class="pf-seta">' + PL.ic('baixo') + '</span></button>' +
+        linha('din', 'Moeda', U.sel('perfil', '', 'moeda', p.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda')).replace(/<span class="pf-ic">[\s\S]*?<\/span>/, '<span class="pf-ic pf-bandeira" aria-hidden="true">' + (BANDEIRAS[PL.moeda()] || '\uD83C\uDF0E') + '</span>') + '</section>';
       if (PL.conta) html += compartilhar();
       html += '<h2 class="pf-titulo">Ajuda</h2><section class="card pf-grupo">' + acao('suporte', 'ajuda', 'Falar com o suporte') + '</section>';
       html += '<section class="card pf-grupo">' + (PL.conta ? acao('sair', 'user', 'Sair da conta') : '') + acao('zerar', 'lixo', 'Apagar tudo', 'pf-perigo') + '</section>';
