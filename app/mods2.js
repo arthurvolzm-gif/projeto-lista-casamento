@@ -13,11 +13,7 @@
     render: function () {
       var c = PL.s.convites, cv = PL.s.convidados, env = cv.filter(function (x) { return x.convite; }).length;
       var html = U.cab('Cerimônia', 'Controle dos <i>convites</i>', 'Tipo de convite, prazo de entrega e quem já recebeu.');
-      html += '<div class="g2"><section class="card"><h2>Tipo de convite</h2><div class="filtros">' + [['virtual', 'Virtual'], ['fisico', 'Impresso'], ['ambos', 'Os dois']].map(function (t) {
-        return '<button type="button" class="' + (c.tipo === t[0] ? 'on' : '') + '" data-act="tipoConvite" data-tipo="' + t[0] + '">' + t[1] + '</button>';
-      }).join('') + '</div><div class="form" style="margin-top:14px">' +
-        U.campo('Começar a entregar em', U.inp('convites', '', 'inicio', c.inicio, { tipo: 'date' })) + U.campo('Terminar até', U.inp('convites', '', 'fim', c.fim, { tipo: 'date' })) +
-        U.campo('Prazo para confirmar presença', U.inp('convites', '', 'prazo', c.prazo, { tipo: 'date' })) + U.campo('Link do convite virtual', U.inp('convites', '', 'link', c.link, { tipo: 'url', ph: 'https://...' })) + '</div></section>' +
+      html += '<div>' +
         '<section class="card"><h2>Entregues</h2>' + (cv.length ? U.prog(env, cv.length) + '<p class="nota" style="margin-top:10px">Marque na lista abaixo quem já recebeu. Os nomes vêm da lista de convidados.</p>' : U.vazio('Cadastre os convidados para controlar a entrega.<br><br><button type="button" class="btn leve peq" data-act="ir" data-to="convidados">Ir para convidados</button>')) + '</section></div>';
       if (cv.length) html += '<section class="card"><h2>Quem já recebeu</h2><input type="search" placeholder="Buscar convidado" data-busca="#lista-conv tr" aria-label="Buscar convidado" style="margin-bottom:10px;max-width:320px">' +
         '<div class="tabela"><table class="tb" id="lista-conv"><tbody>' + cv.map(function (x) {
