@@ -865,3 +865,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 /* barra de abas (ex.: Visão geral / Tarefas) centralizada na tela */
 .abas-caixa{margin-left:auto;margin-right:auto}
 @media (max-width:900px){.abas-caixa{width:max-content;max-width:100%}}
+/* celular: rodapé do app (Início, Finanças...) em roxo, e a faixa da barra do sistema logo abaixo em preto */
+@media (max-width:900px){
+  .abas-baixo{background:var(--acc);backdrop-filter:none;border-top:0;box-shadow:0 -8px 20px -12px rgba(40,10,90,.45);padding-bottom:6px}
+  .abas-baixo a,.abas-baixo .menu-btn{color:rgba(255,255,255,.78)}
+  .abas-baixo a.on{color:#fff;background:rgba(255,255,255,.18)}
+  .abas-baixo::after{content:'';position:absolute;left:0;right:0;top:100%;height:env(safe-area-inset-bottom,0px);background:#000}
+  .abas-baixo{bottom:env(safe-area-inset-bottom,0px)}
+}
