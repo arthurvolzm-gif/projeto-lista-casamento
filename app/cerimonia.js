@@ -58,7 +58,7 @@
           var foto = FOTOS[id];
           return '<button type="button" class="cer-card' + (foto ? ' tem-foto' : '') + '" data-act="ir" data-to="' + id + '"' + (foto ? ' style="--cer-foto:url(\'' + foto + '\')"' : '') + '>' +
             (foto ? '' : '<span class="cer-ic">' + PL.ic(m.icone || 'tarefa') + '</span>') +
-            '<span class="cer-txt"><small>' + e(resumo(id)) + '</small><b>' + e(m.menu || m.titulo) + '</b></span></button>';
+            '<span class="cer-txt"><b>' + e(m.menu || m.titulo) + '</b></span></button>';
         }).join('') + '</div>';
       });
       return html;
