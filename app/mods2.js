@@ -73,10 +73,6 @@
     render: function () {
       var c = PL.s.civil;
       var html = U.cab('Cerimônia', 'Civil e <i>cartório</i>', 'Os documentos e prazos mudam de um cartório para outro. Confirmem tudo no cartório escolhido.', [U.btnPrint()]);
-      html += '<section class="card"><h2>Dados do cartório</h2><div class="form">' + U.campo('Cartório', U.inp('civil', '', 'cartorio', c.cartorio)) + U.campo('Endereço', U.inp('civil', '', 'endereco', c.endereco)) +
-        U.campo('Data do civil', U.inp('civil', '', 'data', c.data, { tipo: 'date' })) + U.campo('Horário', U.inp('civil', '', 'hora', c.hora, { tipo: 'time' })) +
-        U.campo('Oficial ou responsável', U.inp('civil', '', 'oficial', c.oficial)) + U.campo('Número do processo', U.inp('civil', '', 'processo', c.processo)) +
-        U.campo('Observações', U.inp('civil', '', 'obs', c.obs), 'largo') + '</div></section>';
       html += '<div class="g2"><section class="card"><h2>Documentação <small>' + feitos(c.docs) + '/' + c.docs.length + '</small></h2>' + U.checklist('civil/docs', c.docs, 'Adicionar documento') + '</section>' +
         '<section class="card"><h2>Itens do dia <small>' + feitos(c.itens) + '/' + c.itens.length + '</small></h2>' + U.checklist('civil/itens', c.itens) + '</section></div>';
       return html;
