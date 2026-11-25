@@ -1045,3 +1045,5 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pf-cor-atual i{background-clip:padding-box}
 .pf-linha.pf-tema{flex-wrap:nowrap}.pf-tema .pf-rot{white-space:nowrap}
 .pf-valor{white-space:nowrap;flex:none}.pf-valor em{white-space:nowrap}
+/* rodapé do celular com 4 itens (Início, Finanças, Cerimônia, Perfil) */
+@media (max-width:900px){.abas-baixo{grid-template-columns:repeat(4,minmax(0,1fr))}}
