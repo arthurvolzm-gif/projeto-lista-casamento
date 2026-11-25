@@ -11,6 +11,12 @@
   ];
   PL.grupoCer = function (id) { return PL.GRUPOS_CER.filter(function (g) { return g.mods.indexOf(id) >= 0; })[0] || null; };
 
+  /* foto de fundo de cada card (coloque o arquivo em /img/cerimonia/ e o caminho aqui) */
+  var FOTOS = {
+    convidados: '', padrinhos: '', convites: '',
+    cortejo: '', mesas: '', votos: '',
+    playlist: '', eventos: '', moodboard: ''
+  };
   function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
   /* resumo de cada parte, a partir do que já foi preenchido */
   function resumo(id) {
@@ -49,8 +55,10 @@
       PL.GRUPOS_CER.forEach(function (g) {
         html += '<h2 class="cer-grupo">' + e(g.nome) + '</h2><div class="cer-cards">' + g.mods.map(function (id) {
           var m = PL.mods[id]; if (!m) return '';
-          return '<button type="button" class="cer-card" data-act="ir" data-to="' + id + '"><span class="cer-ic">' + PL.ic(m.icone || 'tarefa') + '</span>' +
-            '<b>' + e(m.menu || m.titulo) + '</b><small>' + e(resumo(id)) + '</small></button>';
+          var foto = FOTOS[id];
+          return '<button type="button" class="cer-card' + (foto ? ' tem-foto' : '') + '" data-act="ir" data-to="' + id + '"' + (foto ? ' style="--cer-foto:url(\'' + foto + '\')"' : '') + '>' +
+            (foto ? '' : '<span class="cer-ic">' + PL.ic(m.icone || 'tarefa') + '</span>') +
+            '<span class="cer-txt"><small>' + e(resumo(id)) + '</small><b>' + e(m.menu || m.titulo) + '</b></span></button>';
         }).join('') + '</div>';
       });
       return html;
