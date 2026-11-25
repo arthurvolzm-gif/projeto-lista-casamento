@@ -15,7 +15,7 @@
   var FOTOS = {
     convidados: '/img/cerimonia/convidados.webp', padrinhos: '/img/cerimonia/padrinhos.webp', convites: '/img/cerimonia/convites.webp',
     cortejo: '/img/cerimonia/cortejo.webp', mesas: '/img/cerimonia/mesas.webp', votos: '/img/cerimonia/votos.webp',
-    playlist: '/img/cerimonia/playlist.webp', eventos: '/img/cerimonia/eventos.webp', moodboard: ''
+    playlist: '/img/cerimonia/playlist.webp', eventos: '/img/cerimonia/eventos.webp', moodboard: '/img/cerimonia/mural.webp'
   };
   function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
   /* resumo de cada parte, a partir do que já foi preenchido */
