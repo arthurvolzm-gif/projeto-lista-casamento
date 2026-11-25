@@ -51,7 +51,7 @@
   }
   function pintar(el) {
     el.innerHTML = '<div class="inst-caixa" role="dialog" aria-modal="true" aria-labelledby="inst-t">' +
-      '<div class="inst-topo"><img src="/app/icones/icone-192.png" alt="" width="56" height="56"><div><b id="inst-t">Instale o CheckLove no seu celular</b>' +
+      '<div class="inst-topo"><img src="/app/icones/icone-192.png?v=2" alt="" width="56" height="56"><div><b id="inst-t">Instale o CheckLove no seu celular</b>' +
       '<small>Abra o planner direto da tela inicial, como um aplicativo, sem precisar procurar o link.</small></div></div>' +
       passos() +
       '<button type="button" class="inst-depois" data-inst="depois">Agora não</button></div>';
