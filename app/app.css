@@ -991,3 +991,4 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 /* nome do casal no Perfil em letra cursiva */
 .pf-nome{font-family:'Great Vibes','Pinyon Script',cursive;font-weight:400;font-size:44px;line-height:1.05;color:var(--acc-esc);letter-spacing:0}
 @media (max-width:900px){.pf-nome{font-size:42px}}
+.card.pf-sem-titulo{margin-top:16px}
