@@ -140,7 +140,7 @@
   PL.AREAS = [
     { nome: 'Início', icone: 'casa', mods: ['inicio', 'tarefas'] },
     { nome: 'Finanças', icone: 'din', mods: ['financeiro', 'fornecedores'] },
-    { nome: 'Cerimônia', icone: 'taca', mods: ['convidados', 'padrinhos', 'convites', 'cortejo', 'mesas', 'votos', 'playlist', 'eventos', 'moodboard'] },
+    { nome: 'Cerimônia', icone: 'taca', mods: ['cerimonia', 'convidados', 'padrinhos', 'convites', 'cortejo', 'mesas', 'votos', 'playlist', 'eventos', 'moodboard'] },
     { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel', 'promocoes'] }
   ];
   PL.areaDe = function (id) { return PL.AREAS.find(function (a) { return a.mods.indexOf(id) >= 0; }); };
@@ -156,7 +156,13 @@
     var y = window.scrollY;
     var html = '<div class="print-cab">' + PL.esc(PL.casal()) + (PL.s.perfil.data ? ' · ' + PL.dataLonga(PL.s.perfil.data) : '') + ' · ' + PL.esc(PL.t(m.titulo)) + '</div>';
     var area = PL.areaDe(id);
-    if (area && area.mods.length > 1) html += '<div class="abas-caixa no-print"><button type="button" class="abas-seta esq" data-act="abasRolar" data-dir="-1" aria-label="Ver abas anteriores" tabindex="-1">' + PL.ic('baixo') + '</button><nav class="abas no-print" aria-label="' + PL.esc(area.nome) + '">' + area.mods.map(function (mid) {
+    /* Cerimônia: a tela de entrada não tem abas; dentro de uma parte, só as abas do mesmo grupo e o caminho de volta */
+    var grupo = area && area.mods[0] === 'cerimonia' && PL.grupoCer ? PL.grupoCer(id) : null;
+    if (area && area.mods[0] === 'cerimonia') {
+      if (grupo) html += '<div class="cer-volta no-print"><button type="button" data-act="ir" data-to="cerimonia">' + PL.ic('baixo') + 'Cerimônia</button><span>' + PL.esc(grupo.nome) + '</span></div>';
+    }
+    var abasArea = area && area.mods[0] === 'cerimonia' ? (grupo ? { nome: grupo.nome, mods: grupo.mods } : null) : area;
+    if (abasArea && abasArea.mods.length > 1) html += '<div class="abas-caixa no-print"><button type="button" class="abas-seta esq" data-act="abasRolar" data-dir="-1" aria-label="Ver abas anteriores" tabindex="-1">' + PL.ic('baixo') + '</button><nav class="abas no-print" aria-label="' + PL.esc(abasArea.nome) + '">' + abasArea.mods.map(function (mid) {
       var mm = PL.mods[mid]; return '<a href="#' + mid + '" data-act="ir" data-to="' + mid + '" class="' + (mid === id ? 'on' : '') + '"' + (mid === id ? ' aria-current="page"' : '') + '>' + PL.ic(mm.icone || 'tarefa') + '<span>' + PL.esc(mm.menu || mm.titulo) + '</span></a>';
     }).join('') + '</nav><button type="button" class="abas-seta dir" data-act="abasRolar" data-dir="1" aria-label="Ver mais abas" tabindex="-1">' + PL.ic('baixo') + '</button></div>';
     main.innerHTML = html + m.render();
