@@ -64,7 +64,10 @@
       var linha = function (ic, rot, ctrl, extra) { return '<div class="pf-linha' + (extra || '') + '"><span class="pf-ic">' + PL.ic(ic) + '</span><span class="pf-rot">' + rot + '</span><span class="pf-ctrl">' + ctrl + '</span></div>'; };
       var acao = function (act, ic, rot, cls) { return '<button type="button" class="pf-linha pf-acao' + (cls ? ' ' + cls : '') + '" data-act="' + act + '"><span class="pf-ic">' + PL.ic(ic) + '</span><span class="pf-rot">' + rot + '</span><span class="pf-seta">' + PL.ic('baixo') + '</span></button>'; };
       var html = '<section class="pf-topo">' +
-        '<div class="pf-avatar">' + (ini ? e(ini) : PL.ic('taca')) + '</div>' +
+        '<label class="pf-avatar' + (p.fotoPerfil ? ' tem-foto' : '') + '" title="Trocar a foto de perfil" aria-label="Trocar a foto de perfil">' +
+          (p.fotoPerfil ? '<img src="' + e(p.fotoPerfil) + '" alt="">' : (ini ? e(ini) : PL.ic('taca'))) +
+          '<span class="pf-avatar-cam">' + PL.ic('foto') + '</span><input type="file" accept="image/*" data-arquivo="perfil" hidden></label>' +
+        (p.fotoPerfil ? '<button type="button" class="pf-avatar-tirar" data-act="tirarFotoPerfil">Tirar foto</button>' : '') +
         '<h1 class="pf-nome">' + e(PL.casal()) + '</h1>' +
         (PL.conta ? '<p class="pf-email">' + e(PL.conta.email) + '</p>' : '') +
         '<div class="pf-chips">' + (p.data ? '<span class="chip acc">' + PL.ic('cal') + PL.dataLonga(p.data) + '</span>' : '<span class="chip">' + PL.ic('cal') + 'Defina a data abaixo</span>') + (p.cidade ? '<span class="chip">' + e(p.cidade) + '</span>' : '') + '</div>' +

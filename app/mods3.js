@@ -259,6 +259,27 @@
     }, 1400);
     el.value = '';
   });
+  /* foto de perfil do casal (círculo no topo do Perfil) */
+  document.addEventListener('change', function (ev) {
+    var el = ev.target; if (el.getAttribute('data-arquivo') !== 'perfil' || !el.files[0]) return;
+    var antigo = PL.s.perfil.fotoPerfilPath;
+    PL.toast('Preparando a foto...');
+    reduzir(el.files[0], function (src) {
+      if (!src) { PL.toast('Não deu para abrir essa foto. Tente outra.'); return; }
+      var pronto = function (url, path) {
+        PL.s.perfil.fotoPerfil = url; PL.s.perfil.fotoPerfilPath = path || ''; PL.salvar(); PL.render(true); PL.toast('Foto de perfil atualizada.');
+        if (antigo && PL.apagarFoto) PL.apagarFoto(antigo);
+      };
+      if (PL.nuvemFoto) PL.nuvemFoto(src).then(function (r) { pronto(r.url, r.path); }, function () { pronto(src, ''); });
+      else pronto(src, '');
+    }, 500);
+    el.value = '';
+  });
+  PL.acoes.tirarFotoPerfil = function () {
+    var antigo = PL.s.perfil.fotoPerfilPath;
+    PL.s.perfil.fotoPerfil = ''; PL.s.perfil.fotoPerfilPath = ''; PL.salvar(); PL.render(true); PL.toast('Foto de perfil removida.');
+    if (antigo && PL.apagarFoto) PL.apagarFoto(antigo);
+  };
   PL.acoes.capaPadrao = function () {
     var antigo = PL.s.perfil.fotoCapaPath;
     PL.s.perfil.fotoCapa = ''; PL.s.perfil.fotoCapaPath = ''; PL.salvar(); PL.render(true); PL.toast('Voltou para a foto padrão.');

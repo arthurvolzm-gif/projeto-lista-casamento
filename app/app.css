@@ -873,3 +873,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .abas-baixo::after{content:'';position:absolute;left:0;right:0;top:100%;height:env(safe-area-inset-bottom,0px);background:#000}
   .abas-baixo{bottom:env(safe-area-inset-bottom,0px)}
 }
+/* foto de perfil: o círculo vira botão para escolher a foto */
+.pf-avatar{position:relative;cursor:pointer;overflow:visible}
+.pf-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.pf-avatar.tem-foto{background:#fff}
+.pf-avatar-cam{position:absolute;right:-2px;bottom:-2px;width:32px;height:32px;border-radius:50%;background:#fff;color:var(--acc);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px -4px rgba(40,10,90,.45);border:1px solid var(--linha)}
+.pf-avatar .pf-avatar-cam svg{width:16px;height:16px}
+.pf-avatar:hover .pf-avatar-cam{background:var(--acc-sua)}
+.pf-avatar-tirar{display:block;margin:-4px auto 8px;border:0;background:none;color:var(--suave);font:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
