@@ -80,9 +80,6 @@
         linha('user', 'Nome da noiva', U.inp('perfil', '', 'noiva', p.noiva, { ph: 'Digite o nome' })) +
         linha('user', 'Nome do noivo', U.inp('perfil', '', 'noivo', p.noivo, { ph: 'Digite o nome' })) +
         linha('cal', 'Data do casamento', U.inp('perfil', '', 'data', p.data, { tipo: 'date' })) +
-        linha('cal', 'Horário', U.inp('perfil', '', 'hora', p.hora, { tipo: 'time' })) +
-        linha('casa', 'Cidade', U.inp('perfil', '', 'cidade', p.cidade, { ph: 'Ex.: Curitiba' })) +
-        linha('taca', 'Local da cerimônia', U.inp('perfil', '', 'local', p.local, { ph: 'Ex.: Igreja, sítio, salão' })) +
         linha('din', 'Orçamento total (' + PL.simbolo() + ')', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</section>';
       var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
       html += '<h2 class="pf-titulo">Preferências</h2><section class="card pf-grupo">' +
