@@ -1100,3 +1100,4 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 /* enquadramento das fotos dos cards (pessoas fora do centro) */
 .cer-card[data-to="votos"]{background-position:62% center}
 .cer-card[data-to="cortejo"]{background-position:center 30%}
+.cer-card[data-to="playlist"]{background-position:56% center}
