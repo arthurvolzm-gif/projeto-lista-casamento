@@ -934,3 +934,42 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl{max-width:none}
   .pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input{width:100%;min-width:0}
 }
+/* ===== Perfil mais bonito: estilo de ajustes de app, valor à direita sem caixa cinza ===== */
+.pf-titulo{color:var(--acc-esc);letter-spacing:.12em;margin:26px 10px 10px;display:flex;align-items:center;gap:8px}
+.pf-titulo::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--acc) 30%,#fff),transparent)}
+.card.pf-grupo{border-radius:20px;box-shadow:0 12px 30px -20px rgba(60,25,130,.35)}
+.pf-linha{min-height:60px;padding:10px 16px}
+.pf-linha+.pf-linha{border-top:1px solid color-mix(in srgb,var(--acc) 10%,#fff);}
+.pf-ic{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 16%,#fff),color-mix(in srgb,var(--acc) 8%,#fff));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 14%,#fff)}
+.pf-ic svg{width:19px;height:19px}
+.pf-rot{font-weight:500;color:var(--texto)}
+.pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input{background:transparent;border:1px solid transparent;border-radius:12px;font-weight:600;color:var(--tinta);font-size:15px;padding:9px 12px;transition:background .18s,border-color .18s,box-shadow .18s}
+.pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input::placeholder{color:var(--mudo);font-weight:500}
+.pf-linha:not(.pf-acao):not(.pf-col):hover .pf-ctrl input{background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input:focus{background:#fff;border-color:color-mix(in srgb,var(--acc) 45%,#fff);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 12%,#fff)}
+.pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input[type=date]{max-width:170px;margin-left:auto}
+.pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input[type=date]::-webkit-calendar-picker-indicator{opacity:.55;filter:invert(32%) sepia(60%) saturate(1800%) hue-rotate(245deg)}
+.pf-ctrl .sel-btn{background:transparent;font-weight:600;color:var(--tinta);justify-content:flex-end;gap:8px}
+.pf-ctrl .sel-btn:hover{background:color-mix(in srgb,var(--acc) 5%,#fff)}
+.pf-acao .pf-seta{color:var(--mudo)}
+@media (max-width:900px){
+  .pf-linha:not(.pf-acao):not(.pf-col) .pf-rot{font-size:14px}
+  .pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input{padding:8px 10px}
+}
+.pf,.pf>*,.pf-linha{min-width:0;max-width:100%}
+.pf-ctrl>*,.pf-ctrl .sel,.pf-ctrl .sel-btn{min-width:0;max-width:100%}
+.pf-ctrl .sel-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:900px){
+  .pf-linha:not(.pf-acao):not(.pf-col) .pf-rot{flex:none;white-space:nowrap}
+  .pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl{flex:1 1 0;min-width:0}
+  .pf-linha:has(input[type=date]) .pf-rot{flex:0 1 auto;white-space:normal;max-width:96px}
+  .pf-linha:not(.pf-acao):not(.pf-col) .pf-ctrl input[type=date]{max-width:none;padding-right:4px;font-size:15px}
+}
+@media (max-width:900px){
+  .pf-linha:not(.pf-acao):not(.pf-col):has(input[type=date]) .pf-rot{flex:0 1 auto;white-space:normal;max-width:100px}
+}
+@media (max-width:380px){
+  .pf-linha:not(.pf-acao):not(.pf-col) .pf-rot{flex:0 1 auto;white-space:normal;max-width:104px;font-size:13.5px}
+  .pf-ic{width:34px;height:34px}
+  .pf-linha{gap:10px;padding:10px 12px}
+}
