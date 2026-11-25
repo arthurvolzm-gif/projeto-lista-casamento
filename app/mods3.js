@@ -200,8 +200,7 @@
       var html = U.cab('Inspiração', 'Mural de <i>inspiração</i>', (PL.conta ? 'Junte as referências de cada parte do casamento. As fotos ficam guardadas na sua conta.' : 'Junte as referências de cada parte do casamento. As fotos ficam guardadas neste aparelho.'));
       html += '<section class="card"><h2>Adicionar foto</h2><div class="form"><label class="campo">Categoria<select id="mural-cat" data-act-cat>' + CATS.map(function (c) { return '<option' + (c === cat ? ' selected' : '') + '>' + e(c) + '</option>'; }).join('') + '</select></label>' +
         '<label class="btn">' + PL.ic('foto') + 'Escolher fotos<input type="file" accept="image/*" multiple data-arquivo="mural" hidden></label></div>' +
-        '<form class="add-linha" data-form="muralUrl"><input name="url" type="url" placeholder="Ou cole o endereço de uma imagem (terminado em .jpg, .png...)" aria-label="Endereço da imagem"><button class="btn leve" type="submit">' + PL.ic('link') + 'Adicionar</button></form>' +
-        '<p class="nota" style="margin-top:8px">Links de páginas do Pinterest ou do Instagram não funcionam: salve a imagem no aparelho e escolha a foto.</p></section>';
+        '</section>';
       var tem = false;
       CATS.forEach(function (c) {
         var g = mb.filter(function (x) { return x.cat === c; }); if (!g.length) return; tem = true;
