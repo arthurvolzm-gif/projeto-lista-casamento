@@ -263,19 +263,7 @@
     PL.csv('fornecedores-casamento', ['Categoria', 'Nome', 'Contato', 'Valor', 'Status', 'Contrato', 'Observações'], PL.s.fornecedores.map(function (x) { return [x.cat, x.nome, x.contato, PL.dec(PL.num(x.valor)), x.status, x.contrato || '', x.obs]; }));
   };
 
-  PL.mod('agenda', {
-    titulo: 'Agenda e contagem', icone: 'cal', menu: 'Agenda do dia',
-    render: function () {
-      var a = PL.s.agenda.slice().sort(function (x, y) { return (x.hora || '').localeCompare(y.hora || ''); });
-      var html = U.cab('Planejamento', 'Agenda e <i>contagem</i>', 'O cronograma do grande dia, hora a hora. Entregue para a cerimonialista e para os fornecedores.', [U.btnPrint()]) + U.contagem();
-      html += '<section class="card"><h2>Cronograma do dia</h2>' + U.form('agenda', [U.f('hora', 'Horário', { tipo: 'time', req: true }), U.f('t', 'O que acontece', { req: true, ph: 'Ex.: Making of da noiva' }), U.f('resp', 'Responsável ou local')]) +
-        (a.length ? '<div class="tabela" style="margin-top:16px"><table class="tb"><thead><tr><th>Horário</th><th>O que acontece</th><th>Responsável ou local</th><th></th></tr></thead><tbody>' + a.map(function (x) {
-          return '<tr><td style="width:130px">' + U.inp('agenda', x.id, 'hora', x.hora, { tipo: 'time', aria: 'Horário' }) + '</td><td>' + U.inp('agenda', x.id, 't', x.t, { r: 0, aria: 'Evento' }) + '</td><td>' + U.inp('agenda', x.id, 'resp', x.resp, { r: 0, aria: 'Responsável' }) + '</td><td>' + U.del('agenda', x.id) + '</td></tr>';
-        }).join('') + '</tbody></table></div>' : '<div style="margin-top:14px">' + U.vazio('Monte o roteiro: arrumação, chegada dos fornecedores, cerimônia, fotos, entrada na festa, jantar, bolo, saída.') + '</div>') + '</section>';
-      return html;
-    }
-  });
-  PL.forms.agenda = function (d) { PL.add('agenda', { hora: d.hora, t: d.t, resp: d.resp }); };
+  /* aba Agenda do dia removida a pedido do usuário (os dados antigos continuam salvos em PL.s.agenda) */
 
   PL.mod('tarefas', {
     titulo: 'Tarefas e prazos', icone: 'tarefa', menu: 'Tarefas',
