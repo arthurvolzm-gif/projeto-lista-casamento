@@ -92,10 +92,11 @@
       var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
       html += '<h2 class="pf-titulo">Preferências</h2><section class="card pf-grupo">' +
         linha('din', 'Moeda', U.sel('perfil', '', 'moeda', p.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda')).replace(/<span class="pf-ic">[\s\S]*?<\/span>/, '<span class="pf-ic pf-bandeira" aria-hidden="true">' + (BANDEIRAS[PL.moeda()] || '\uD83C\uDF0E') + '</span>') +
-        '<div class="pf-linha"><span class="pf-ic">' + PL.ic('foto') + '</span><span class="pf-rot">Foto da contagem</span><span class="pf-ctrl pf-foto">' +
-          '<span class="pf-foto-mini"' + U.heroFoto() + '></span>' +
-          '<label class="btn leve peq">Trocar foto<input type="file" accept="image/*" data-arquivo="capa" hidden></label>' +
-          (p.fotoCapa ? '<button type="button" class="btn sec peq" data-act="capaPadrao">Usar a padrão</button>' : '') + '</span></div>' +
+        /* foto da contagem: imagem na metade esquerda, texto e botões na direita */
+        '<div class="pf-capa"><span class="pf-capa-img"' + U.heroFoto() + '></span><div class="pf-capa-txt"><b>Foto da contagem</b>' +
+          '<div class="pf-capa-bts">' +
+          '<label class="btn leve peq">Trocar<input type="file" accept="image/*" data-arquivo="capa" hidden></label>' +
+          (p.fotoCapa ? '<button type="button" class="btn sec peq" data-act="capaPadrao">Usar a padrão</button>' : '') + '</div></div></div>' +
         '<div class="pf-linha pf-col"><span class="pf-ic">' + PL.ic('gota') + '</span><span class="pf-rot">Cor do planner</span><div class="temas">' + D.temas.map(function (t) {
           return '<button type="button" data-act="tema" data-tema="' + t.id + '" class="' + (p.tema === t.id ? 'on' : '') + '"><i style="background:' + t.cor + '"></i>' + e(t.nome) + '</button>';
         }).join('') + '</div></div></section>';
