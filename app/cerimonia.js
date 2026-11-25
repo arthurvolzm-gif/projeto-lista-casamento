@@ -14,7 +14,7 @@
   /* foto de fundo de cada card (coloque o arquivo em /img/cerimonia/ e o caminho aqui) */
   var FOTOS = {
     convidados: '/img/cerimonia/convidados.webp', padrinhos: '/img/cerimonia/padrinhos.webp', convites: '/img/cerimonia/convites.webp',
-    cortejo: '', mesas: '', votos: '',
+    cortejo: '/img/cerimonia/cortejo.webp', mesas: '/img/cerimonia/mesas.webp', votos: '/img/cerimonia/votos.webp',
     playlist: '', eventos: '', moodboard: ''
   };
   function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }

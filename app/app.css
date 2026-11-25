@@ -1097,3 +1097,6 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .cer-txt small{font-size:9.5px!important;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.88)!important;line-height:1.3}
 .cer-txt b{font-family:'Great Vibes','Pinyon Script',cursive;font-weight:400!important;font-size:26px!important;line-height:1.05!important;color:#fff!important}
 @media (min-width:901px){.cer-card{min-height:190px;padding:16px!important}.cer-txt b{font-size:32px!important}.cer-txt small{font-size:10.5px!important}}
+/* enquadramento das fotos dos cards (pessoas fora do centro) */
+.cer-card[data-to="votos"]{background-position:62% center}
+.cer-card[data-to="cortejo"]{background-position:center 30%}
