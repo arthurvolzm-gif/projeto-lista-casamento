@@ -412,7 +412,7 @@
 
   var U = PL.ui = {};
   U.cab = function (pre, titulo, sub, acoes) {
-    return '<header class="cab"><div><div class="pre">' + PL.esc(pre) + '</div><h1>' + titulo + '</h1>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>' +
+    return '<header class="cab"><div><div class="pre">' + PL.esc(pre) + '</div><h1>' + titulo + '</h1></div>' +   /* sem a descrição embaixo do título (pedido do usuário) */
       (acoes && acoes.join('') ? '<div class="acoes no-print">' + acoes.join('') + '</div>' : '') + '</header>';
   };
   U.btn = function (act, rotulo, icone, cls, extra) {
