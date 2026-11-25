@@ -911,3 +911,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .topo-faltam.duas span{display:block}
 }
 @media (max-width:900px){.topo-movel{grid-template-columns:46px minmax(0,1fr) auto!important;gap:6px!important}}
+/* frase do topo centralizada entre o menu e os ícones da direita */
+@media (max-width:900px){
+  #topo-centro.cursiva{justify-self:center;justify-content:center;text-align:center;padding-left:0}
+  .topo-faltam.duas{align-items:center;text-align:center;margin:0 auto}
+}
