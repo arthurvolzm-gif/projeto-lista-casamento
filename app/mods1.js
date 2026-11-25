@@ -76,6 +76,14 @@
           '<div><b>' + PL.pct(td, tf) + '%</b><span>das tarefas feitas</span></div>' +
           '<div><b>' + conf + '</b><span>' + (conf === 1 ? 'convidado confirmado' : 'convidados confirmados') + '</span></div>' +
         '</div></section>';
+      /* mural de inspiração entre o cartão do casal e os dados: as fotos mais recentes, em faixa que rola para o lado */
+      var mural = (s.moodboard || []).filter(function (x) { return x.src; }).slice(-12).reverse();
+      html += '<h2 class="pf-titulo">Mural de inspiração</h2><section class="card pf-mural">' +
+        (mural.length
+          ? '<div class="pf-mural-fotos">' + mural.map(function (x) { return '<button type="button" data-act="ir" data-to="moodboard" aria-label="Abrir o mural"><img src="' + e(x.src) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>' +
+            '<button type="button" class="pf-mural-ver" data-act="ir" data-to="moodboard">Ver o mural completo' + PL.ic('baixo') + '</button>'
+          : '<button type="button" class="pf-mural-vazio" data-act="ir" data-to="moodboard"><span class="pf-ic">' + PL.ic('foto') + '</span><span><b>Monte o mural de vocês</b><small>Guarde as referências de vestido, decoração, flores e bolo.</small></span>' + PL.ic('baixo') + '</button>') +
+        '</section>';
       html += '<h2 class="pf-titulo">Dados do casamento</h2><section class="card pf-grupo">' +
         linha('user', 'Nome da noiva', U.inp('perfil', '', 'noiva', p.noiva, { ph: 'Digite o nome' })) +
         linha('user', 'Nome do noivo', U.inp('perfil', '', 'noivo', p.noivo, { ph: 'Digite o nome' })) +
