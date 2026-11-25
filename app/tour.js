@@ -11,8 +11,8 @@
   var PASSOS = [
     { titulo: 'Contagem regressiva', txt: 'Aqui fica quanto falta para o grande dia. Toque no ícone da foto, no canto do cartão, para colocar uma foto de vocês.', alvo: function () { return visivel(document.querySelector('#main .hero')); } },
     { titulo: 'Finanças', txt: 'Anote os gastos, veja o que já foi pago e quanto ainda sobra do orçamento. Os fornecedores também ficam aqui.', alvo: function () { return area('Finanças'); } },
-    { titulo: 'Convidados', txt: 'Lista de convidados, confirmações, mapa de mesas, padrinhos, convites e cortejo.', alvo: function () { return area('Convidados'); } },
-    { titulo: 'Cerimônia', txt: 'Civil, votos, playlist, chás e eventos e o mural de inspiração.', alvo: function () { return area('Cerimônia'); } },
+    { titulo: 'Convidados', txt: 'Lista de convidados, confirmações, padrinhos, convites e cortejo.', alvo: function () { return area('Convidados'); } },
+    { titulo: 'Cerimônia', txt: 'Civil, mapa de mesas, votos, playlist, chás e eventos e o mural de inspiração.', alvo: function () { return area('Cerimônia'); } },
     { titulo: 'Tarefas', txt: 'Gere o cronograma com os prazos calculados pela data do casamento e marque o que já foi feito.', alvo: function () { return visivel(document.querySelector('#main .abas a[data-to="tarefas"]')); } },
     { titulo: 'Avisos', txt: 'O sininho avisa quando uma tarefa ou um pagamento está perto do prazo.', alvo: function () { return visivel(document.querySelector(celular() ? '.sino-topo' : '.sino-lado')); } },
     { titulo: 'Bônus', txt: 'Seus bônus ficam aqui: o guia do casamento econômico, o enxoval, a lua de mel e o grupo de promoções.', alvo: function () { return visivel(document.querySelector(celular() ? '#topo-bonus' : '#rodape a[data-to="bonus"]')); } },

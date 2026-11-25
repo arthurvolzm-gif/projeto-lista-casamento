@@ -12,7 +12,7 @@
       var c = PL.s.convidados, n = function (s) { return c.filter(function (x) { return x.status === s; }).length; };
       var filtro = PL.temp.filtroConv || 'Todos', lista = filtro === 'Todos' ? c : c.filter(function (x) { return x.status === filtro; });
       var mesas = {}; PL.s.mesas.forEach(function (m) { mesas[m.id] = m.nome; });
-      var html = U.cab('Convidados', 'Lista de <i>convidados</i>', 'Quem vai, quem ainda não respondeu e de que lado é cada um. As mesas se montam em Mapa de mesas.', [U.btnPrint()]);
+      var html = U.cab('Convidados', 'Lista de <i>convidados</i>', 'Quem vai, quem ainda não respondeu e de que lado é cada um.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Total', v: c.length, s: n('Não vai') ? PL.t('sem contar quem não vai: {n}', { n: c.length - n('Não vai') }) : '' }, { r: 'Confirmados', v: n('Confirmado'), cls: 'ok' }, { r: 'Pendentes', v: n('Pendente'), cls: 'alerta' }, { r: 'Não vão', v: n('Não vai'), cls: n('Não vai') ? 'erro' : '' },
         { r: 'Crianças e bebês', v: c.filter(function (x) { return x.faixa !== 'Adulto'; }).length }]);
       html += '<div class="g2"><section class="card"><h2>Adicionar convidado</h2>' + U.form('conv', [U.f('nome', 'Nome', { req: true }), U.f('grupo', 'Grupo', { opts: D.gruposConvidados }), U.f('faixa', 'Idade', { opts: FX }), U.f('status', 'Presença', { opts: ST }), U.f('tel', 'Telefone')]) + '</section>' +
@@ -46,7 +46,7 @@
     render: function () {
       var c = PL.s.convidados.filter(function (x) { return x.status !== 'Não vai'; }), m = PL.s.mesas;
       var sem = c.filter(function (x) { return !x.mesa || !m.some(function (y) { return y.id === x.mesa; }); });
-      var html = U.cab('Convidados', 'Mapa de <i>mesas</i>', 'Crie as mesas e escolha quem senta em cada uma. Quem marcou que não vai fica de fora.', [U.btnPrint()]);
+      var html = U.cab('Cerimônia', 'Mapa de <i>mesas</i>', 'Crie as mesas e escolha quem senta em cada uma. Quem marcou que não vai fica de fora.', [U.btnPrint()]);
       html += U.kpis([{ r: 'Mesas', v: m.length }, { r: 'Lugares', v: m.reduce(function (n, x) { return n + PL.num(x.lugares); }, 0) }, { r: 'Sentados', v: c.length - sem.length, cls: 'ok' }, { r: 'Sem mesa', v: sem.length, cls: sem.length ? 'alerta' : '' }]);
       html += '<section class="card"><h2>Nova mesa</h2>' + U.form('mesa', [U.f('nome', 'Nome da mesa', { v: 'Mesa ' + (m.length + 1) }), U.f('lugares', 'Lugares', { tipo: 'number', v: 8 })], 'Criar mesa') + '</section>';
       if (m.length) html += '<div class="lista-cards">' + m.map(function (mesa) {

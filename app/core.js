@@ -140,8 +140,8 @@
   PL.AREAS = [
     { nome: 'Início', icone: 'casa', mods: ['inicio', 'tarefas'] },
     { nome: 'Finanças', icone: 'din', mods: ['financeiro', 'fornecedores'] },
-    { nome: 'Convidados', icone: 'grupo', mods: ['convidados', 'mesas', 'padrinhos', 'convites', 'cortejo'] },
-    { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'votos', 'playlist', 'eventos', 'moodboard'] },
+    { nome: 'Convidados', icone: 'grupo', mods: ['convidados', 'padrinhos', 'convites', 'cortejo'] },
+    { nome: 'Cerimônia', icone: 'taca', mods: ['civil', 'mesas', 'votos', 'playlist', 'eventos', 'moodboard'] },
     { nome: 'Bônus', icone: 'presente', mods: ['bonus', 'guia', 'enxoval', 'luamel', 'promocoes'] }
   ];
   PL.areaDe = function (id) { return PL.AREAS.find(function (a) { return a.mods.indexOf(id) >= 0; }); };
