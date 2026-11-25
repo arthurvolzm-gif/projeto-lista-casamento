@@ -13,7 +13,7 @@
 
   /* foto de fundo de cada card (coloque o arquivo em /img/cerimonia/ e o caminho aqui) */
   var FOTOS = {
-    convidados: '', padrinhos: '', convites: '',
+    convidados: '/img/cerimonia/convidados.webp', padrinhos: '/img/cerimonia/padrinhos.webp', convites: '/img/cerimonia/convites.webp',
     cortejo: '', mesas: '', votos: '',
     playlist: '', eventos: '', moodboard: ''
   };
