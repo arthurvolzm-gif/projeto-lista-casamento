@@ -28,3 +28,24 @@
   setTimeout(sair, reduz ? 700 : 2900);
   el.addEventListener('click', sair);
 })();
+/* bloqueia copiar, arrastar imagens e zoom por gesto em todo o app (campos de digitar continuam livres) */
+(function () {
+  function campo(t) { return t && t.closest && t.closest('input,textarea,select,[contenteditable="true"]'); }
+  document.addEventListener('copy', function (e) { if (!campo(e.target)) e.preventDefault(); });
+  document.addEventListener('cut', function (e) { if (!campo(e.target)) e.preventDefault(); });
+  document.addEventListener('contextmenu', function (e) { if (!campo(e.target)) e.preventDefault(); });
+  document.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });
+  document.addEventListener('selectstart', function (e) { if (!campo(e.target)) e.preventDefault(); });
+  /* iPhone ignora user-scalable=no: barra o gesto de pinça e o toque duplo */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) { document.addEventListener(n, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  var ultimo = 0;
+  document.addEventListener('touchend', function (e) {
+    var agora = Date.now();
+    if (agora - ultimo < 300 && !campo(e.target) && !(e.target.closest && e.target.closest('button,a,label,[data-act]'))) e.preventDefault();
+    ultimo = agora;
+  }, { passive: false });
+  /* zoom de teclado/trackpad no computador (Ctrl + roda, Ctrl + / -) */
+  document.addEventListener('wheel', function (e) { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+  document.addEventListener('keydown', function (e) { if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].indexOf(e.key) >= 0) e.preventDefault(); });
+})();
