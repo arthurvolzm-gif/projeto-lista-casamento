@@ -993,3 +993,4 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 @media (max-width:900px){.pf-nome{font-size:42px}}
 .card.pf-sem-titulo{margin-top:16px}
 .pf .card.pf-sem-titulo{margin-top:18px!important}
+.pf-ic.pf-bandeira{font-size:22px;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}

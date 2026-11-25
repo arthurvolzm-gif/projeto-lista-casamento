@@ -91,7 +91,7 @@
         linha('din', 'Orçamento total (' + PL.simbolo() + ')', U.inp('perfil', '', 'orcamento', p.orcamento, { n: 1, ph: '0,00' })) + '</section>';
       var auto = (MOEDAS.filter(function (m) { return m[0] === PL.moedaPais; })[0] || [PL.moedaPais, PL.moedaPais])[1];
       html += '<h2 class="pf-titulo">Preferências</h2><section class="card pf-grupo">' +
-        linha('din', 'Moeda', U.sel('perfil', '', 'moeda', p.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda')) +
+        linha('din', 'Moeda', U.sel('perfil', '', 'moeda', p.moeda || '', [['', 'Automática: ' + auto]].concat(MOEDAS), 'Moeda')).replace(/<span class="pf-ic">[\s\S]*?<\/span>/, '<span class="pf-ic pf-bandeira" aria-hidden="true">' + (BANDEIRAS[PL.moeda()] || '\uD83C\uDF0E') + '</span>') +
         '<div class="pf-linha"><span class="pf-ic">' + PL.ic('foto') + '</span><span class="pf-rot">Foto da contagem</span><span class="pf-ctrl pf-foto">' +
           '<span class="pf-foto-mini"' + U.heroFoto() + '></span>' +
           '<label class="btn leve peq">Trocar foto<input type="file" accept="image/*" data-arquivo="capa" hidden></label>' +
@@ -105,6 +105,8 @@
       return '<div class="pf">' + html + '</div>';
     }
   });
+  /* bandeira do país de cada moeda (no lugar do ícone da linha Moeda) */
+  var BANDEIRAS = { BRL: '🇧🇷', USD: '🇺🇸', EUR: '🇪🇺', GBP: '🇬🇧', JPY: '🇯🇵', CAD: '🇨🇦', AUD: '🇦🇺', MXN: '🇲🇽', ARS: '🇦🇷', CLP: '🇨🇱', CHF: '🇨🇭' };
   var MOEDAS = [['BRL', 'Real (R$)'], ['USD', 'Dólar americano (US$)'], ['EUR', 'Euro (€)'], ['GBP', 'Libra esterlina (£)'], ['JPY', 'Iene (¥)'], ['CAD', 'Dólar canadense (CA$)'], ['AUD', 'Dólar australiano (A$)'], ['MXN', 'Peso mexicano (MX$)'], ['ARS', 'Peso argentino (ARS)'], ['CLP', 'Peso chileno (CLP)'], ['CHF', 'Franco suíço (CHF)']];
 
   function compartilhar() {
