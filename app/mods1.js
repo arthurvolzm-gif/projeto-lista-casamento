@@ -103,7 +103,7 @@
     var c = PL.conta;
     if (!c.dono) return '<h2 class="pf-titulo">Planner compartilhado</h2><section class="card pf-bloco"><p>' + PL.t('Você está editando o planner de <b>{email}</b>. O que você muda aparece para os dois.', { email: e(c.donoEmail || PL.t('outra conta')) }) + '</p></section>';
     var m = c.membros || [];
-    return '<h2 class="pf-titulo">Compartilhar o planner</h2><section class="card pf-bloco"><p class="nota" style="margin-bottom:12px">' + PL.t('Coloque o e-mail do noivo, da noiva ou da cerimonialista. A pessoa cria a conta com esse mesmo e-mail em {site} e passa a ver e editar este planner.', { site: e(location.host + '/app') }) + '</p>' +
+    return '<h2 class="pf-titulo">Compartilhar o planner</h2><section class="card pf-bloco">' +
       (m.length ? '<ul class="chk" style="margin-bottom:6px">' + m.map(function (x) { return '<li><div class="txt" style="padding:4px 6px">' + e(x) + '</div><button type="button" class="ic" data-act="tirarMembro" data-email="' + e(x) + '" aria-label="Parar de compartilhar">' + PL.ic('lixo') + '</button></li>'; }).join('') + '</ul>' : '') +
       '<form class="add-linha" data-form="membro"><input name="email" type="email" placeholder="email@exemplo.com" aria-label="E-mail para compartilhar" required><button class="btn leve" type="submit">' + PL.ic('mais') + 'Compartilhar</button></form></section>';
   }
