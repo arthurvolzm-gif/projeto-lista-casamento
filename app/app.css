@@ -1110,3 +1110,4 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .abas-baixo a.baixo-logo img{width:40px;height:auto;display:block}
   .abas-baixo a.baixo-logo:active span{transform:translateX(-50%) scale(.95)}
 }
+@media (max-width:900px){.abas-baixo a.baixo-logo span{box-shadow:0 10px 24px -8px rgba(40,10,90,.55),0 0 0 5px #fff}}
