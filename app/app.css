@@ -1101,3 +1101,12 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .cer-card[data-to="votos"]{background-position:62% center}
 .cer-card[data-to="cortejo"]{background-position:center 30%}
 .cer-card[data-to="playlist"]{background-position:56% center}
+/* rodapé: círculo branco com a logo no meio, saindo um pouco para cima */
+@media (max-width:900px){
+  .abas-baixo{grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}
+  .abas-baixo a.baixo-logo{position:relative;padding:0;background:none!important}
+  .abas-baixo a.baixo-logo span{position:absolute;left:50%;top:-30px;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 24px -8px rgba(40,10,90,.55),0 0 0 4px color-mix(in srgb,var(--acc) 22%,#fff);max-width:none;overflow:visible}
+  .abas-baixo a.baixo-logo img{width:40px;height:auto;display:block}
+  .abas-baixo a.baixo-logo:active span{transform:translateX(-50%) scale(.95)}
+}
