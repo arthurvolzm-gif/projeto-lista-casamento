@@ -1162,3 +1162,4 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .fin-edit-pe b{color:var(--tinta)}
 .fin-item[open] summary{padding-bottom:8px}
 .fin-lista-cab h2{font-family:var(--disp);font-weight:600}
+.cer-card[data-to="luamel"]{background-position:center 60%}

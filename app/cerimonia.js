@@ -7,15 +7,17 @@
   PL.GRUPOS_CER = [
     { nome: 'Convidados', mods: ['convidados', 'padrinhos', 'convites'] },
     { nome: 'O dia', mods: ['cortejo', 'mesas', 'votos'] },
-    { nome: 'Clima da festa', mods: ['playlist', 'eventos', 'moodboard'] }
+    { nome: 'Clima da festa', mods: ['playlist', 'eventos', 'moodboard'] },
+    { nome: 'Vida a dois', mods: ['enxoval', 'luamel'], fora: true }
   ];
-  PL.grupoCer = function (id) { return PL.GRUPOS_CER.filter(function (g) { return g.mods.indexOf(id) >= 0; })[0] || null; };
+  PL.grupoCer = function (id) { return PL.GRUPOS_CER.filter(function (g) { return !g.fora && g.mods.indexOf(id) >= 0; })[0] || null; };
 
   /* foto de fundo de cada card (coloque o arquivo em /img/cerimonia/ e o caminho aqui) */
   var FOTOS = {
     convidados: '/img/cerimonia/convidados.webp', padrinhos: '/img/cerimonia/padrinhos.webp', convites: '/img/cerimonia/convites.webp',
     cortejo: '/img/cerimonia/cortejo.webp', mesas: '/img/cerimonia/mesas.webp', votos: '/img/cerimonia/votos.webp',
-    playlist: '/img/cerimonia/playlist.webp', eventos: '/img/cerimonia/eventos.webp', moodboard: '/img/cerimonia/mural.webp'
+    playlist: '/img/cerimonia/playlist.webp', eventos: '/img/cerimonia/eventos.webp', moodboard: '/img/cerimonia/mural.webp',
+    enxoval: '/img/bonus1-casa.webp', luamel: '/img/bonus-luamel.webp'
   };
   function plural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
   /* resumo de cada parte, a partir do que já foi preenchido */
