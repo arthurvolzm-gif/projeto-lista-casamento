@@ -201,7 +201,7 @@
     /* no celular: Bônus fica no ícone do topo e Perfil entra no lugar dele na barra de baixo */
     baixo.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a, i) {
       /* círculo branco com a logo no meio do rodapé (leva para o Início) */
-      return (i === 2 ? '<a href="#bonus" class="baixo-logo" data-act="ir" data-to="bonus" aria-label="Bônus"><span>' + PL.ic('sacola') + '</span></a>' : '') +
+      return (i === 2 ? '<a href="#loja" class="baixo-logo' + (id === 'loja' ? ' on' : '') + '" data-act="ir" data-to="loja" aria-label="Lojinha"><span>' + PL.ic('sacola') + '</span></a>' : '') +
         '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome) + '</span></a>';
     }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + '<span>Perfil</span></a>';
     var bt = document.getElementById('topo-bonus'); if (bt) bt.classList.toggle('on', !!area && area.mods[0] === 'bonus');

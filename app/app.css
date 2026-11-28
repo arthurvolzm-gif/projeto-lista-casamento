@@ -1169,3 +1169,19 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .topo-logo img{width:38px;height:auto;display:block}
   .abas-baixo a.baixo-logo span svg{width:30px;height:30px;color:var(--acc);stroke-width:1.8}
 }
+/* ===== Lojinha ===== */
+.loja-cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:2px -16px 14px;padding:2px 16px}
+.loja-cats::-webkit-scrollbar{display:none}
+.loja-cats button{flex:none;border:1px solid color-mix(in srgb,var(--acc) 30%,#fff);background:#fff;color:var(--texto);font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.loja-cats button.on{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 6px 14px -8px var(--acc)}
+.loja-grade{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.loja-prod{display:flex;flex-direction:column;text-align:left;border:1px solid color-mix(in srgb,var(--acc) 30%,#fff);background:#fff;border-radius:18px;overflow:hidden;padding:0;font:inherit;cursor:pointer;box-shadow:0 12px 26px -22px rgba(60,25,130,.5);min-width:0}
+.loja-img{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:linear-gradient(150deg,color-mix(in srgb,var(--acc) 16%,#fff),color-mix(in srgb,var(--acc) 6%,#fff)) center/cover no-repeat;color:color-mix(in srgb,var(--acc) 55%,#fff)}
+.loja-img svg{width:38px;height:38px;stroke-width:1.4}
+.loja-info{display:flex;flex-direction:column;gap:3px;padding:10px 12px 12px;min-width:0}
+.loja-info small{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.loja-info b{font-size:13.5px;font-weight:600;color:var(--tinta);line-height:1.25}
+.loja-preco{font-size:15px;font-weight:700;color:var(--tinta);margin-top:2px}
+.loja-ver{align-self:flex-start;margin-top:6px;font-size:11.5px;font-weight:600;color:var(--acc-esc);background:var(--acc-sua);padding:4px 10px;border-radius:999px}
+@media (max-width:900px){.loja-grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.abas-baixo a.baixo-logo.on span{box-shadow:0 10px 24px -8px rgba(40,10,90,.55),0 0 0 5px #fff,inset 0 0 0 3px var(--acc)}
