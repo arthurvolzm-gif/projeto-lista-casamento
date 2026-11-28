@@ -169,41 +169,72 @@
   /* ============ PLANEJAMENTO ============ */
   PL.grupo('Planejamento');
 
+  /* ícone de cada categoria de gasto */
+  function icCat(c) {
+    c = (c || '').toLowerCase();
+    if (/local|cerimonial|assessoria/.test(c)) return 'casa';
+    if (/buffet|bebida|bolo|doce|bem-casado/.test(c)) return 'taca';
+    if (/foto|filmagem/.test(c)) return 'foto';
+    if (/dj|banda|atra/.test(c)) return 'musica';
+    if (/vestido|traje|cabelo|maquiagem|noiva/.test(c)) return 'user';
+    if (/decora|flores/.test(c)) return 'gota';
+    if (/convite|papelaria|cart/.test(c)) return 'carta';
+    if (/lua de mel|transporte|núpcias/.test(c)) return 'aviao';
+    if (/alian|lembran/.test(c)) return 'presente';
+    return 'din';
+  }
   PL.mod('financeiro', {
     titulo: 'Financeiro', icone: 'din',
     render: function () {
-      var s = PL.s, t = totaisGastos(), orc = PL.num(s.perfil.orcamento), disp = orc - t.prev;
-      var html = U.cab('Planejamento', 'Controle <i>financeiro</i>', 'Anote cada gasto com o valor total e o que já foi pago. O planner calcula o resto.',
-        [U.btnPrint()]);
-      html += U.kpis([
-        { r: 'Orçamento', v: PL.brl(orc), s: orc ? '' : 'toque no lápis para definir', cls: 'kpi-orc', btn: '<button type="button" class="kpi-editar" data-act="editarOrc" aria-label="Editar o orçamento" title="Editar o orçamento">' + PL.ic('lapis') + '</button>' },
-        { r: 'Previsto', v: PL.brl(t.prev), s: PL.t('{n} itens', { n: s.gastos.length }), cls: 'acc' },
-        { r: 'Pago', v: PL.brl(t.pago), cls: 'ok' },
-        { r: 'A pagar', v: PL.brl(t.falta), cls: t.falta ? 'azul' : '' },
-        { r: orc && disp < 0 ? 'Acima do orçamento' : 'Disponível', v: PL.brl(Math.abs(disp)), cls: orc && disp < 0 ? 'erro' : '' }
-      ]);
-      var base = Math.max(orc, t.prev) || 1, C = 2 * Math.PI * 52, partes = [[t.pago, 'var(--ok)'], [t.falta, 'var(--azul)'], [Math.max(0, orc - t.prev), 'var(--linha)']], off = 0;
-      var arcos = partes.map(function (x) { var l = x[0] / base * C; var a = '<circle cx="70" cy="70" r="52" fill="none" stroke="' + x[1] + '" stroke-width="16" stroke-dasharray="' + l.toFixed(2) + ' ' + (C - l).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 70 70)"/>'; off += l; return a; }).join('');
-      html += '<div class="g2"><section class="card"><h2>Distribuição</h2><div class="rosca"><svg viewBox="0 0 140 140" role="img" aria-label="Pago, a pagar e disponível"><circle cx="70" cy="70" r="52" fill="none" stroke="var(--bg)" stroke-width="16"/>' + arcos +
-        '<text x="70" y="68" text-anchor="middle" font-size="20" font-weight="700" fill="var(--tinta)">' + PL.pct(t.pago, t.prev) + '%</text><text x="70" y="86" text-anchor="middle" font-size="10" fill="var(--suave)">pago</text></svg>' +
-        '<div class="legenda"><div><i style="background:var(--ok)"></i>Pago<b>' + PL.brl(t.pago) + '</b></div><div><i style="background:var(--azul)"></i>A pagar<b>' + PL.brl(t.falta) + '</b></div><div><i style="background:var(--linha)"></i>Livre no orçamento<b>' + PL.brl(Math.max(0, orc - t.prev)) + '</b></div></div></div></section>' +
-        '<section class="card"><h2>Por categoria</h2>' + porCategoria() + '</section></div>';
-      html += '<section class="card"><h2>Adicionar gasto</h2>' + U.form('gasto', [
+      var s = PL.s, t = totaisGastos(), orc = PL.num(s.perfil.orcamento), disp = orc - t.prev, acima = orc && disp < 0;
+      var filtro = PL.temp.finFiltro || 'tudo';
+      var html = U.cab('Planejamento', 'Controle <i>financeiro</i>');
+      /* destaque: disponível, orçamento e gráfico */
+      var base = Math.max(orc, t.prev) || 1, C = 2 * Math.PI * 52, off = 0;
+      var partes = [[t.pago, 'var(--ok)'], [t.falta, 'var(--azul)']];
+      var arcos = partes.map(function (x) { var l = x[0] / base * C; var a = l > 0 ? '<circle cx="70" cy="70" r="52" fill="none" stroke="' + x[1] + '" stroke-width="14" stroke-linecap="round" stroke-dasharray="' + Math.max(0, l - 3).toFixed(2) + ' ' + (C - l + 3).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 70 70)"/>' : ''; off += l; return a; }).join('');
+      html += '<section class="fin-hero">' +
+        '<div class="fin-topo"><div class="fin-orc"><span>' + (acima ? 'Acima do orçamento' : 'Disponível') + '</span><b class="' + (acima ? 'erro' : '') + '">' + PL.brl(Math.abs(disp)) + '</b>' +
+          '<small>' + (orc ? 'de ' + PL.brl(orc) + ' de orçamento' : 'Defina o orçamento') + '</small></div>' +
+          '<button type="button" class="fin-lapis" data-act="editarOrc" aria-label="Editar o orçamento">' + PL.ic('lapis') + '</button></div>' +
+        '<div class="fin-rosca"><svg viewBox="0 0 140 140" role="img" aria-label="Pago e a pagar"><circle cx="70" cy="70" r="52" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="14"/>' + arcos + '</svg>' +
+          '<div class="fin-rosca-c"><b>' + PL.pct(t.pago, t.prev) + '%</b><span>pago</span></div></div>' +
+        '<div class="fin-trio"><div><i style="background:var(--acc)"></i><span>Previsto</span><b>' + PL.brl(t.prev) + '</b></div>' +
+          '<div><i style="background:var(--ok)"></i><span>Pago</span><b>' + PL.brl(t.pago) + '</b></div>' +
+          '<div><i style="background:var(--azul)"></i><span>A pagar</span><b>' + PL.brl(t.falta) + '</b></div></div>' +
+        '</section>';
+      /* atalhos */
+      html += '<div class="fin-atalhos">' +
+        '<button type="button" class="' + (PL.temp.finAdd ? 'on' : '') + '" data-act="finAdd"><span>' + PL.ic('mais') + '</span>Adicionar gasto</button>' +
+        '<button type="button" data-act="ir" data-to="fornecedores"><span>' + PL.ic('forn') + '</span>Fornecedores</button>' +
+        '<button type="button" data-act="editarOrc"><span>' + PL.ic('lapis') + '</span>Editar orçamento</button></div>';
+      if (PL.temp.finAdd || !s.gastos.length) html += '<section class="card fin-novo"><h2>Novo gasto</h2>' + U.form('gasto', [
         U.f('cat', 'Categoria', { opts: D.gastos }), U.f('desc', 'Descrição', { ph: 'Ex.: nome do fornecedor' }),
         U.f('valor', 'Valor total (' + PL.simbolo() + ')', { n: 1, ph: '0,00' }), U.f('pago', 'Já pago (' + PL.simbolo() + ')', { n: 1, ph: '0,00' }), U.f('venc', 'Próximo vencimento', { tipo: 'date' })
       ]) + '</section>';
       if (!s.gastos.length) return html + '<section class="card">' + U.vazio('Nenhum gasto ainda. Comece pelo local e pelo buffet, que costumam ser os maiores.') + '</section>';
-      html += '<section class="card"><h2>Gastos <small>clique em um valor para editar</small></h2><div class="tabela"><table class="tb"><thead><tr><th>Categoria</th><th>Descrição</th><th class="num">Valor</th><th class="num">Pago</th><th class="num">Falta</th><th>Vencimento</th><th>Status</th><th></th></tr></thead><tbody>' +
-        s.gastos.map(function (g) {
-          var st = statusGasto(g);
-          return '<tr><td style="min-width:150px">' + U.sel('gastos', g.id, 'cat', g.cat, D.gastos, 'Categoria') + '</td><td style="min-width:160px">' + U.inp('gastos', g.id, 'desc', g.desc, { aria: 'Descrição' }) + (g.forn && PL.alvo('fornecedores', g.forn) ? '<small class="nota" style="padding:0 8px">ligado a Fornecedores</small>' : '') + '</td>' +
-            '<td class="num" style="min-width:110px">' + U.inp('gastos', g.id, 'valor', g.valor, { n: 1, aria: 'Valor' }) + '</td><td class="num" style="min-width:110px">' + U.inp('gastos', g.id, 'pago', g.pago, { n: 1, aria: 'Pago' }) + '</td>' +
-            '<td class="num">' + PL.brl(Math.max(0, PL.num(g.valor) - PL.num(g.pago))) + '</td><td style="min-width:140px">' + U.inp('gastos', g.id, 'venc', g.venc, { tipo: 'date', aria: 'Vencimento' }) + '</td>' +
-            '<td><span class="chip ' + st[1] + '">' + st[0] + '</span></td><td>' + U.del('gastos', g.id) + '</td></tr>';
-        }).join('') + '</tbody><tfoot><tr><td colspan="2">Total</td><td class="num">' + PL.brl(t.prev) + '</td><td class="num">' + PL.brl(t.pago) + '</td><td class="num">' + PL.brl(t.falta) + '</td><td colspan="3"></td></tr></tfoot></table></div></section>';
+      /* lista estilo extrato */
+      var lista = s.gastos.filter(function (g) { var st = statusGasto(g)[0]; return filtro === 'tudo' || (filtro === 'pago' ? st === 'Pago' : st !== 'Pago'); });
+      html += '<section class="card fin-lista"><div class="fin-lista-cab"><h2>Gastos</h2><div class="fin-filtro">' +
+        [['tudo', 'Tudo'], ['pago', 'Pago'], ['apagar', 'A pagar']].map(function (f) { return '<button type="button" data-act="finFiltro" data-f="' + f[0] + '" class="' + (filtro === f[0] ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div></div>' +
+        (lista.length ? lista.map(function (g) {
+          var st = statusGasto(g), falta = Math.max(0, PL.num(g.valor) - PL.num(g.pago)), aberto = PL.temp.finAberto === g.id;
+          return '<details class="fin-item"' + (aberto ? ' open' : '') + ' data-id="' + g.id + '"><summary><span class="fin-ic">' + PL.ic(icCat(g.cat)) + '</span>' +
+            '<span class="fin-tx"><b>' + e(g.desc || g.cat) + '</b><small>' + e(g.desc ? g.cat : '') + (g.venc ? (g.desc ? ' · ' : '') + 'vence ' + PL.dataBR(g.venc) : '') + '</small></span>' +
+            '<span class="fin-vl"><b>' + PL.brl(PL.num(g.valor)) + '</b><span class="chip ' + st[1] + '">' + st[0] + '</span></span></summary>' +
+            '<div class="fin-edit">' + U.campo('Categoria', U.sel('gastos', g.id, 'cat', g.cat, D.gastos, 'Categoria')) + U.campo('Descrição', U.inp('gastos', g.id, 'desc', g.desc, { aria: 'Descrição' })) +
+              U.campo('Valor total', U.inp('gastos', g.id, 'valor', g.valor, { n: 1, aria: 'Valor' })) + U.campo('Já pago', U.inp('gastos', g.id, 'pago', g.pago, { n: 1, aria: 'Pago' })) +
+              U.campo('Vencimento', U.inp('gastos', g.id, 'venc', g.venc, { tipo: 'date', aria: 'Vencimento' })) +
+              '<div class="fin-edit-pe"><span>Falta pagar <b>' + PL.brl(falta) + '</b></span>' + U.del('gastos', g.id) + '</div></div></details>';
+        }).join('') : U.vazio(filtro === 'pago' ? 'Nenhum gasto pago por completo ainda.' : 'Nada a pagar. Tudo quitado!')) +
+        '</section>';
+      html += '<section class="card"><h2>Por categoria</h2>' + porCategoria() + '</section>';
       return html;
     }
   });
+  PL.acoes.finFiltro = function (d) { PL.temp.finFiltro = d.f; PL.render(true); };
+  PL.acoes.finAdd = function () { PL.temp.finAdd = !PL.temp.finAdd; PL.render(true); if (PL.temp.finAdd) setTimeout(function () { var f = document.querySelector('.fin-novo'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 60); };
+  document.addEventListener('toggle', function (ev) { var d = ev.target; if (!d.classList || !d.classList.contains('fin-item')) return; if (d.open) PL.temp.finAberto = d.getAttribute('data-id'); else if (PL.temp.finAberto === d.getAttribute('data-id')) PL.temp.finAberto = null; }, true);
   function porCategoria() {
     var m = {}; PL.s.gastos.forEach(function (g) { m[g.cat] = (m[g.cat] || 0) + PL.num(g.valor); });
     var arr = Object.keys(m).map(function (k) { return [k, m[k]]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 7), max = arr.length ? arr[0][1] : 1;
@@ -214,7 +245,8 @@
   }
   /* editar o orçamento direto no card de Finanças */
   PL.acoes.editarOrc = function (d, el) {
-    var k = el.closest('.kpi'); if (!k || k.querySelector('.kpi-orc-form')) return;
+    var k = el.closest('.kpi') || document.querySelector('.fin-orc'); if (!k || k.querySelector('.kpi-orc-form')) return;
+    if (k.classList.contains('fin-orc')) k.scrollIntoView({ behavior: 'smooth', block: 'center' });
     var orc = PL.num(PL.s.perfil.orcamento);
     k.innerHTML = '<span>Orçamento (' + e(PL.simbolo()) + ')</span><form class="kpi-orc-form"><input inputmode="decimal" autocomplete="off" aria-label="Valor do orçamento" placeholder="0,00" value="' + (orc ? e(String(orc).replace('.', ',')) : '') + '">' +
       '<div class="kpi-orc-bt"><button type="button" class="btn sec peq" data-orc="cancelar">Cancelar</button><button type="submit" class="btn peq">Salvar</button></div></form>';
@@ -229,6 +261,7 @@
   PL.forms.gasto = function (d) {
     if (!d.desc && !d.valor) { PL.toast('Preencha a descrição ou o valor.'); return false; }
     PL.add('gastos', { cat: d.cat, desc: d.desc, valor: PL.num(d.valor), pago: PL.num(d.pago), venc: d.venc });
+    PL.temp.finAdd = false;
   };
   PL.acoes.csvGastos = function () {
     PL.csv('gastos-casamento', ['Categoria', 'Descrição', 'Valor', 'Pago', 'Falta', 'Vencimento', 'Status'], PL.s.gastos.map(function (g) {
