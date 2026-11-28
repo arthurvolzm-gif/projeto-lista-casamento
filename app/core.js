@@ -201,7 +201,7 @@
     /* no celular: Bônus fica no ícone do topo e Perfil entra no lugar dele na barra de baixo */
     baixo.innerHTML = PL.AREAS.filter(function (a) { return a.mods[0] !== 'bonus'; }).map(function (a, i) {
       /* círculo branco com a logo no meio do rodapé (leva para o Início) */
-      return (i === 2 ? '<a href="#inicio" class="baixo-logo" data-act="ir" data-to="inicio" aria-label="Início"><span><img src="/app/icones/logo-coracao.png" alt=""></span></a>' : '') +
+      return (i === 2 ? '<a href="#bonus" class="baixo-logo" data-act="ir" data-to="bonus" aria-label="Bônus"><span>' + PL.ic('sacola') + '</span></a>' : '') +
         '<a href="#' + a.mods[0] + '" data-act="ir" data-to="' + a.mods[0] + '" class="' + (a === area ? 'on' : '') + '">' + PL.ic(a.icone) + '<span>' + PL.esc(a.nome) + '</span></a>';
     }).join('') + '<a href="#perfil" data-act="ir" data-to="perfil" class="' + (id === 'perfil' ? 'on' : '') + '">' + PL.ic('user') + '<span>Perfil</span></a>';
     var bt = document.getElementById('topo-bonus'); if (bt) bt.classList.toggle('on', !!area && area.mods[0] === 'bonus');
@@ -413,6 +413,7 @@
     tabela: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>',
     copiar: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
     link: '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
+    sacola: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
     presente: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8M12 8v13"/><path d="M12 8S10.5 3 8 3.5 6.5 8 12 8zM12 8s1.5-5 4-4.5S17.5 8 12 8z"/>',
     menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', mais: '<path d="M12 5v14M5 12h14"/>'
   };
@@ -494,7 +495,7 @@
   /* ---------- casca ---------- */
   PL.iniciar = function () {
     document.body.innerHTML =
-      '<div class="topo-movel"><button type="button" class="ic menu-btn" data-act="menu" aria-label="Abrir o menu">' + PL.ic('menu') + '</button><a class="marca topo-centro" href="#inicio" data-act="ir" data-to="inicio" id="topo-centro"><b>Check<i>Love</i></b></a>' +
+      '<div class="topo-movel"><a class="topo-logo" href="#inicio" data-act="ir" data-to="inicio" aria-label="Início"><img src="/app/icones/logo-coracao.png" alt=""></a><a class="marca topo-centro" href="#inicio" data-act="ir" data-to="inicio" id="topo-centro"><b>Check<i>Love</i></b></a>' +
       '<a class="ic" id="topo-bonus" href="#bonus" data-act="ir" data-to="bonus" aria-label="Bônus">' + PL.ic('presente') + '</a></div>' +
       '<div class="app"><aside class="lado" aria-label="Menu"><a class="marca" href="#inicio" data-act="ir" data-to="inicio"><div><b>Check<i>Love</i></b></div></a>' +
       '<div class="mini-casal" id="mini"></div><nav class="menu" id="menu"></nav>' +
