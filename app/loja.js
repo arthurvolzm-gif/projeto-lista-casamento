@@ -64,6 +64,11 @@
       var nomeCat = function (id) { var c = CATS.filter(function (x) { return x.id === id; })[0]; return c ? c.nome : ''; };
       var icCat = function (id) { var c = CATS.filter(function (x) { return x.id === id; })[0]; return c ? c.icone : 'presente'; };
       var html = U.cab('Lojinha', 'Tudo para o <i>seu casamento</i>');
+      /* aviso do grupo de promoções no topo */
+      var link = PL.grupoPromo ? PL.grupoPromo() : '';
+      html += '<section class="loja-promo"><div class="loja-promo-tx"><span class="loja-promo-selo">Exclusivo</span><b>Grupo de promoções <i>para casa nova</i></b>' +
+        '<small>Ofertas selecionadas de eletrodomésticos, utensílios, cama, mesa, banho e decoração para montar sua casa.</small></div>' +
+        (link ? '<a class="loja-promo-bt" href="' + e(link) + '" target="_blank" rel="noopener">Entrar no grupo</a>' : '<button type="button" class="loja-promo-bt" data-act="grupoEmBreve">Entrar no grupo</button>') + '</section>';
       html += '<div class="loja-cats">' + [{ id: 'todos', nome: 'Todos' }].concat(CATS).map(function (c) {
         return '<button type="button" data-act="lojaCat" data-c="' + c.id + '" class="' + (cat === c.id ? 'on' : '') + '">' + e(c.nome) + '</button>';
       }).join('') + '</div>';

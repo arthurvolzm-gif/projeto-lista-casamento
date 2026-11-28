@@ -1185,3 +1185,12 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .loja-ver{align-self:flex-start;margin-top:6px;font-size:11.5px;font-weight:600;color:var(--acc-esc);background:var(--acc-sua);padding:4px 10px;border-radius:999px}
 @media (max-width:900px){.loja-grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .abas-baixo a.baixo-logo.on span{box-shadow:0 10px 24px -8px rgba(40,10,90,.55),0 0 0 5px #fff,inset 0 0 0 3px var(--acc)}
+/* Lojinha: aviso do grupo de promoções */
+.loja-promo{display:flex;align-items:center;gap:14px;border-radius:20px;padding:16px;margin:0 0 14px;background:linear-gradient(140deg,color-mix(in srgb,var(--acc) 14%,#fff),#fff);border:1px solid color-mix(in srgb,var(--acc) 30%,#fff);box-shadow:0 14px 28px -22px rgba(60,25,130,.5)}
+.loja-promo-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.loja-promo-selo{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:#25D366;padding:3px 9px;border-radius:999px}
+.loja-promo-tx b{font-family:var(--disp);font-size:19px;font-weight:600;color:#2a1650;line-height:1.15}
+.loja-promo-tx b i{color:var(--acc)}
+.loja-promo-tx small{font-size:12.5px;color:var(--suave);line-height:1.4}
+.loja-promo-bt{flex:none;border:0;border-radius:999px;background:#25D366;color:#fff;font:inherit;font-size:13.5px;font-weight:700;padding:11px 16px;text-decoration:none;cursor:pointer;box-shadow:0 10px 20px -10px rgba(37,211,102,.8);white-space:nowrap}
+@media (max-width:600px){.loja-promo{flex-direction:column;align-items:stretch}.loja-promo-bt{text-align:center}}
